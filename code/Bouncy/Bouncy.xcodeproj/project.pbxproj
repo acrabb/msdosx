@@ -1,0 +1,327 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		29D37101160AB882001576F9 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29D37100160AB882001576F9 /* Cocoa.framework */; };
+		29D3710B160AB882001576F9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 29D37109160AB882001576F9 /* InfoPlist.strings */; };
+		29D3710D160AB882001576F9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29D3710C160AB882001576F9 /* main.m */; };
+		29D37111160AB882001576F9 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 29D3710F160AB882001576F9 /* Credits.rtf */; };
+		29D37114160AB882001576F9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 29D37113160AB882001576F9 /* AppDelegate.m */; };
+		29D37117160AB882001576F9 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 29D37115160AB882001576F9 /* MainMenu.xib */; };
+		29D37120160AC771001576F9 /* BouncyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 29D3711E160AC771001576F9 /* BouncyViewController.m */; };
+		29D37121160AC771001576F9 /* BouncyViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 29D3711F160AC771001576F9 /* BouncyViewController.xib */; };
+		29D37124160AC994001576F9 /* BouncyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 29D37123160AC994001576F9 /* BouncyView.m */; };
+		29D6A03E16113A5500A063DD /* BouncyModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 29D6A03D16113A5500A063DD /* BouncyModel.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		29D370FC160AB882001576F9 /* Bouncy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bouncy.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		29D37100160AB882001576F9 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		29D37103160AB882001576F9 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		29D37104160AB882001576F9 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		29D37105160AB882001576F9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		29D37108160AB882001576F9 /* Bouncy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Bouncy-Info.plist"; sourceTree = "<group>"; };
+		29D3710A160AB882001576F9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		29D3710C160AB882001576F9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		29D3710E160AB882001576F9 /* Bouncy-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bouncy-Prefix.pch"; sourceTree = "<group>"; };
+		29D37110160AB882001576F9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		29D37112160AB882001576F9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		29D37113160AB882001576F9 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		29D37116160AB882001576F9 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		29D3711D160AC771001576F9 /* BouncyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BouncyViewController.h; sourceTree = "<group>"; };
+		29D3711E160AC771001576F9 /* BouncyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BouncyViewController.m; sourceTree = "<group>"; };
+		29D3711F160AC771001576F9 /* BouncyViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BouncyViewController.xib; sourceTree = "<group>"; };
+		29D37122160AC994001576F9 /* BouncyView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BouncyView.h; sourceTree = "<group>"; };
+		29D37123160AC994001576F9 /* BouncyView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BouncyView.m; sourceTree = "<group>"; };
+		29D6A03C16113A5500A063DD /* BouncyModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BouncyModel.h; sourceTree = "<group>"; };
+		29D6A03D16113A5500A063DD /* BouncyModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BouncyModel.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		29D370F9160AB882001576F9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				29D37101160AB882001576F9 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		29D370F1160AB882001576F9 = {
+			isa = PBXGroup;
+			children = (
+				29D37106160AB882001576F9 /* Bouncy */,
+				29D370FF160AB882001576F9 /* Frameworks */,
+				29D370FD160AB882001576F9 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		29D370FD160AB882001576F9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				29D370FC160AB882001576F9 /* Bouncy.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		29D370FF160AB882001576F9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				29D37100160AB882001576F9 /* Cocoa.framework */,
+				29D37102160AB882001576F9 /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		29D37102160AB882001576F9 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				29D37103160AB882001576F9 /* AppKit.framework */,
+				29D37104160AB882001576F9 /* CoreData.framework */,
+				29D37105160AB882001576F9 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		29D37106160AB882001576F9 /* Bouncy */ = {
+			isa = PBXGroup;
+			children = (
+				29D37112160AB882001576F9 /* AppDelegate.h */,
+				29D37113160AB882001576F9 /* AppDelegate.m */,
+				29D37115160AB882001576F9 /* MainMenu.xib */,
+				29D37107160AB882001576F9 /* Supporting Files */,
+				29D3711D160AC771001576F9 /* BouncyViewController.h */,
+				29D3711E160AC771001576F9 /* BouncyViewController.m */,
+				29D3711F160AC771001576F9 /* BouncyViewController.xib */,
+				29D37122160AC994001576F9 /* BouncyView.h */,
+				29D37123160AC994001576F9 /* BouncyView.m */,
+				29D6A03C16113A5500A063DD /* BouncyModel.h */,
+				29D6A03D16113A5500A063DD /* BouncyModel.m */,
+			);
+			path = Bouncy;
+			sourceTree = "<group>";
+		};
+		29D37107160AB882001576F9 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				29D37108160AB882001576F9 /* Bouncy-Info.plist */,
+				29D37109160AB882001576F9 /* InfoPlist.strings */,
+				29D3710C160AB882001576F9 /* main.m */,
+				29D3710E160AB882001576F9 /* Bouncy-Prefix.pch */,
+				29D3710F160AB882001576F9 /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		29D370FB160AB882001576F9 /* Bouncy */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 29D3711A160AB882001576F9 /* Build configuration list for PBXNativeTarget "Bouncy" */;
+			buildPhases = (
+				29D370F8160AB882001576F9 /* Sources */,
+				29D370F9160AB882001576F9 /* Frameworks */,
+				29D370FA160AB882001576F9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Bouncy;
+			productName = Bouncy;
+			productReference = 29D370FC160AB882001576F9 /* Bouncy.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29D370F3160AB882001576F9 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0440;
+				ORGANIZATIONNAME = "Amir Khodaei";
+			};
+			buildConfigurationList = 29D370F6160AB882001576F9 /* Build configuration list for PBXProject "Bouncy" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 29D370F1160AB882001576F9;
+			productRefGroup = 29D370FD160AB882001576F9 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				29D370FB160AB882001576F9 /* Bouncy */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		29D370FA160AB882001576F9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				29D3710B160AB882001576F9 /* InfoPlist.strings in Resources */,
+				29D37111160AB882001576F9 /* Credits.rtf in Resources */,
+				29D37117160AB882001576F9 /* MainMenu.xib in Resources */,
+				29D37121160AC771001576F9 /* BouncyViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		29D370F8160AB882001576F9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				29D3710D160AB882001576F9 /* main.m in Sources */,
+				29D37114160AB882001576F9 /* AppDelegate.m in Sources */,
+				29D37120160AC771001576F9 /* BouncyViewController.m in Sources */,
+				29D37124160AC994001576F9 /* BouncyView.m in Sources */,
+				29D6A03E16113A5500A063DD /* BouncyModel.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		29D37109160AB882001576F9 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				29D3710A160AB882001576F9 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		29D3710F160AB882001576F9 /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				29D37110160AB882001576F9 /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		29D37115160AB882001576F9 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				29D37116160AB882001576F9 /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		29D37118160AB882001576F9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		29D37119160AB882001576F9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		29D3711B160AB882001576F9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Bouncy/Bouncy-Prefix.pch";
+				INFOPLIST_FILE = "Bouncy/Bouncy-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		29D3711C160AB882001576F9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Bouncy/Bouncy-Prefix.pch";
+				INFOPLIST_FILE = "Bouncy/Bouncy-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		29D370F6160AB882001576F9 /* Build configuration list for PBXProject "Bouncy" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				29D37118160AB882001576F9 /* Debug */,
+				29D37119160AB882001576F9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		29D3711A160AB882001576F9 /* Build configuration list for PBXNativeTarget "Bouncy" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				29D3711B160AB882001576F9 /* Debug */,
+				29D3711C160AB882001576F9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29D370F3160AB882001576F9 /* Project object */;
+}

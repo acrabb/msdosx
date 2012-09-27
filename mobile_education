@@ -1,0 +1,30 @@
+Moblie Education
+
+Features:
+-Instructurs & GSIs
+	-post assignments
+	-post solutions
+	-post any documents
+	-update grades
+	-post announcements
+	-hold virtual discussions (can we use video?)
+	-check-in into virtual discussions
+	-real time polling during the lecture
+	-send notifications and alerts to all students
+-Students
+	-get notified when something is posted by instructors & GSIs
+	-check their grades
+	-get reminders for their assignments due dates
+	-have a calendar of all events related to their academic life including lectures, sections, due dates, office hours, InfoSessions, seminars, deadlines to drop/add, ...
+	-post questions & answers
+	-share resources with each other, suggest resourses for a specific topic
+	-form study groups
+	-form virtual study groups & check-in into them
+	-submit homework
+	-vote on polls created by instructors and GSIs during the lecture and at other times
+
+-Integrate iClicker functionality into our app for real time polling and voting during lectures
+-Post questions during the lecture that are then selected by GSIs and are answered by the professor at the end of the lecture
+-Great app specially for iPad, can make use of FaceTime for Virtual Video Descussions and Video Lectures
+-helps instructors & GSIs manage the courses they tought easier
+-helps students manage their academic lives easier

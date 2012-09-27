@@ -1,0 +1,14 @@
+Personal Finance Management
+-similar to Mint
+
+-add all your credit card balaces, and your checking and saving balances along with all the APRs they have
+-use the same functions that credit card companies use to predict minimum payment due for future months
+-predict the amount of interest one pays for each credit card
+-desing an algorithm that given the max amount of payments one can pay each month and the interst prediction from previous steps, determines how much one should pay to each credit card that minimizes the amount of interest one pays over a certain period of time
+-list of all recurring expenses like rent, cellphone bill, pg&e, insurance, ... along with a suggested budget for personal and other variable expenses one has
+-sources of income
+
+
+Mainly the goal is to design a finacial plan for someone to minimize the amount of interest he/she pays over time and to pay off his/her credit debt as soon as possible in addition to providing a glance at the current and future (predicted) finacial life of this person.
+
+

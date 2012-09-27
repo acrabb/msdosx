@@ -1,0 +1,127 @@
+Objective C
+***********
+
+Simple extension to C
+No garbage collection.
+Static typing not required.
+Protocols (like interfaces).
+Dynamic runtime.
+Objects on the heap! (Not stack.)
+
+"Instance variable" ("ivar"): data belonging to on object.
+
+Apple came from Next Step. ('NS'). ['UI' is an iOS specidic thing]
+
+NSString -> System level things.
+
+Messages
+[receiver message: argument];
+[receiver message: argument moreMessage: arg2];
+
+method:
+(dashh) - (int) numberOfChildren { ... }
+
+class method (+)
+instance method (-)
+
+
+**FILES
+*****
+.h : header files           (say what methods and things exist)
+.m : implementation files   (define those methods and things)
+
+
+Header File
+***********
+#import (NOT #INCLUDE!!!)
+
+@interface MyImage : NSObject <- Creates a new subclass of NSObject
+{
+    NSString* _name;
+    char pixels[16][16];
+
+}
+- (id)initWithName:(NSString*)name;
+- (void)setFrac:(int)num
+               :(int)denom;
+
+@end
+
+----------------
+id - an anything type. Like a void pointer.
+
+----------------
+
+Implementation File
+*******************
+
+@implementation
+
+
+@end
+
+
+---------------
+NSLog == printf
+- (NSString*) description; == toString();
+
+@"I'm a string!"
+NSLog(@"frag = %d/%d", [frac numerator], [frac denominator]);
+
+(BOOL)
+(SEL)
+
+self
+super
+--------------
+
+
+Creating Objects
+****************
+[[ClassName alloc] init];
+
+- (id) init;
+
+- (id) init
+{
+    self = [super init];
+
+    if(self)
+    {
+        /* do stuff */
+    }
+    return self;
+}
+^^^ Compact this!!! :)
+
+
+  Nil
+*******
+Method calls fail silently.
+Strings == nil.
+Nums == 0; (BOOLs too?)
+
+Nil = don't care.
+
+
+BOOL
+****
+YES = true
+NO = false
+
+
+**Misc Stuff
+*********
+Line things up at colons.
+
+Camel Case for vars.
+Class var, proceed with underscore.
+
+
+@"String" vs "String"
+
+####
+
+
+
+

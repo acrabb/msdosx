@@ -1,0 +1,18 @@
+** Testing
+**********
+Test. It's good for you.
+
+
+Lecture assuming Xcode 4.
+
+
+Logic Tests: shouldn't have to depend on UI elements.
+Application Tests: test (dynamic) code at run time.
+
+
+
+Write Testable Code
+
+SenTestCase class.
+
+

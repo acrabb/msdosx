@@ -1,0 +1,165 @@
+Bjorn Hartman CS162 Website
+
+
+Human Computer Interaction (HCI)
+********************************
+Client that influences with the server side.
+The person using your application is not you!
+
+Interaction
+- Human and comp talk to each other.
+
+
+UI is not limited to the display!
+Includes hardware.
+- Buttons.
+- Sensors
+--- Accelerometer
+--- Gyroscope
+--- Camera
+
+
+Usability
+"Just work."
+- Ease of learning.
+- Recall
+- Productivity
+--- Trade off with ease of learning.
+- Minimal error rates
+- High user satisfaction
+
+
+Design Cycle
+- Back to square one many times.
+
+
+"This is the best way to do it!"
+NO!
+- Go out and see how people already do things.
+- Don't guess. See what is actually going on.
+- Make dummy-apps for peoplo to use.
+
+
+Rapid Prototyping
+
+Design change could make UI changes annoying.
+Make a 'sloppy' looking UI first! That way you can use it and have other people
+look at it, and not worry about small UI details.
+- (?) WHAT WAS THIS???? (?)
+
+
+XCode
+*****
+Interface Builder: drag and drop for UI design.
+- No actual code. (?)
+In code: faster!
+
+
+
+Evaluation
+**********
+Follow rules of thumb.
+Controlled usability studies!
+- Have people test it out and watch them!
+
+
+Waterfall Model
+***************
+Don't do it.
+
+
+
+UI Design Principles
+********************
+Don Norman, 'The Design of Everyday Things'
+Jef Raskin, 'The Human Interface'
+
+"The correct parts must be viible, and they must convey the correct message."
+Establish a clear mapping.
+
+Stove top design.
+
+
+
+Crosswalk buttons are pretty bad. What do elevator close buttons do?
+
+
+Conceptual Models
+*****************
+Internal representations of what's going on.
+Make the user form a mental model that matches the system which matches the
+design.
+
+
+Affordances
+***********
+Create things that give off an 'affordance' of their utility.
+
+Look at the Podcast App UI.
+Computer Desktop is like an actual desktop.
+
+Skewomorphism: When you make an app look like the real thing.
+- Metaphors
+- Use common sense.
+
+
+Good Metaphor
+- Emphasizes the essential aspects
+- Have advanced options not immediately noticeable. (For common user. Not power
+  user).
+
+Design for (Human) Errors.
+- Slip: Human automatic error. (Wrong muscle memory or something.)
+
+
+Modes
+- Air Bears auth. In your face. (Modal Dialog)
+- Caps Lock
+- Insert
+- vim
+- Using modes
+--- temporarily restrict users actions.
+--- USERS must rememeber what mode they're in.
+------ Result, many errors!
+
+Alternatives
+- Quasimodes
+--- Shift. Caps only while you hold down shift.
+--- Pull down menus only while mouse button is pressed.
+
+
+
+************
+** DEBUGGING
+************
+Scribble
+Guard Edges
+Guard Malloc
+Zombie Objects
+
+Project > Profile: 
+Project > Analyse: Static analysis.
+- Blue warnings.
+
+
+
+LLDB: new open source version of the latest Obj-C compiler.
+- Its modular. Apple moving to this.
+- Has scripting built in. (Can attach python scripts to debugging commands.)
+- Has gdb commands.
+- Has an API, your app can attach while its running.
+
+
+Breakpoints
+- You can edit them!
+--- Conditions
+--- Actions
+--- Ignore x times before stopping.
+--- Continue editing at breakpoints.
+
+
+
+
+
+
+

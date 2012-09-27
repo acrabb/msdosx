@@ -1,0 +1,144 @@
+** Model-View-Controller
+************************
+Three parts:
+- The Model
+--- Maintains state. Ex: a 'Fraction' class for a calc app.
+--- Knows NOTHING about the interface/presentation of data.
+--- Contains the data crunching.
+
+- The View
+--- The UI.
+--- Takes input.
+--- Displays the model.
+--- Does not store data. (Might cache state [images, etc].)
+
+- The Controller
+--- Middleman between model and view.
+--- Updates the niew when the model changes.
+--- Tells model to update when user manipulates the view.
+
+In a perfect world, these are clean different parts of code.
+Keeping these cleanly separated makes it very easy to support multiple
+platforms.
+[Wikipedia's depiction is okay but not great.]
+
+
+Autoresizing Views
+******************
+Can customize how elements are going to resize when a user changes the size of a
+window.
+
+
+Outlets & Actions
+*****************
+
+Outlets: Create references in code to UI controls.
+Actions: reactions form UI elements to code. Send messages to objects.
+- Ctrl+Drag to attach.
+
+
+Outlets
+*******
+IBOutlet NSButton* button;
+(Outlets are ignored in the preprocessor.)
+MAIN WORRY: When connecting I elements to code, when launched, objects are
+insanced, things are set, and off it goes. Sometimes you may try to use an
+outlet or something before it has actually been loaded.
+
+NullPointer? Check if everything is loaded.
+
+
+
+Actions
+*******
+- (IBAction) buttonClicked: (NSButton*) sender;
+> Selectors need to be set. Even if you just have one action tied to one button.
+
+Mac: One-to-one target-action.
+- - (void) setTarget: (id) target;
+- - (void) setAction: (SEL) action;
+
+
+Nib Loading
+***********
+A 'nib' is a collection of serialized objects.
+- Or a 'xib' file.
+
+'awakeFromNib' to see if an object has been loaded yet.
+
+
+MVC Example
+***********
+Model: Person class.
+- Handles the state of the application.
+View: Address Card view.
+- Updates the User Interface.
+
+Controller: talks between the two.
+- Ex: email link.
+
+
+
+NSApplication
+*************
+Manages the main 'run loop' of your app.
+- Waits for events from the mouse, keyboard.
+- Dispatches events to the relevant objects (of class NSResponder.).
+- Owns MainMenu.xib
+
+Every xib file has to have an owner.
+
+
+
+NSView
+******
+Super class for ALL views in Cocoa.
+[UIView is super class for all views in iOS.]
+Usually you subclass NSView.
+
+
+NSWindow
+********
+More useful on the Mac side rather than iOS side.
+- [Usually you just have one window that multiple views come in and out of.]
+
+
+NSControl
+*********
+Concept of value.
+
+
+**********
+Delegation
+**********
+Modifies a class's behavior without modifying it or subclassing it.
+Create 'delegates' to do something special when something happens: eg resizes,
+closes.
+
+Main Patterns:
+*************
+Conditionally Before
+- Signals something is about to happen.
+- Name ALWAYS contiains 'should'.
+- 'objectShouldVerb'
+--- ex: 'searchBarShouldEndEditing:'
+
+Unconditionally Before
+- Have 'will' in the name.
+- objectWillVerb
+
+Unconditionally after
+- 'did'
+- objectDidVerb
+--- 'applicationDidFinishLaunching'
+::: DON'T use this method in terms of 'main'. Use this to init an application.
+
+Customizers
+- Request info for how to function.
+- Ex: tableView: viewForHeaderInSection
+
+
+
+
+
+

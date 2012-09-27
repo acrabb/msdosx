@@ -1,0 +1,23 @@
+Memory Management II
+
+
+
+Setter Semantics
+****************
+'assign'    - simple assignment (default)
+'retain'    - invoke retain upon object assignment
+'copy'      - assign a copy of the object. !!![Sets the COPY's ref count to 1]!!
+'retainCount' - DON'T rely on this. 
+
+
+Avoiding Cyclic References
+**************************
+A->B->A
+Classic Rule: Parents retain their children. Children don't retain their parents.
+
+
+
+
+
+
+

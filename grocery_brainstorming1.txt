@@ -1,0 +1,15 @@
+Services
+--------
+**Standalone App**
+-Create a list
+-Create an Item / Request an Item to be fulfilled
+-Add an Item to a List
+-Purchase/Fulfill an Item
+--------
+-User SignUp
+-User SignIn
+-Invite Users to join a List
+-Accept Invitation / Join a list
+-Add Users to an Item
+-DataBase of Recognized Items
+-Item Suggestions

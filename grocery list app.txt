@@ -1,0 +1,66 @@
+grocery list ++ for roomates
+
+('Share a Bill')
+
+users add to a collective groc. list
+Other users can decide whether or not they want to contribute to an item. (Everyone added by default).
+someone pays for the groc.s
+input prices (receipt picture. [maybe OCR])
+Auto split up the bill on who owes what.
+
+Log in with facebook?
+
++ Add utility bills with expenses
+
+
+
+
+
+Items
+*****
+List of 'attendees' (users).
+Price.
+Checkbox.
+- Get price when checked.
+'fullfil
+
+
+Lists
+*****
+A 'Personal List' by default.
+Contain items.
+
+
+
+Users
+*****
+Create item.
+- Add to list. (Or new list).
+Create list.
+Invite other users to List.
+Purchase items.
+
+
+
+Chore list
+**********
+Items (chores.)
+- Attendee (user doing that chore).
+- Multiple attendees?
+'fullfil'
+Auto assign? (By rotation?)
+- Reminders.
+
+
+Bill paying?
+
+PayPal integration?
+Payment reminders. (By week or month.)
+
+
+
+
+Settings
+********
+Enable notifications?
+Sounds?

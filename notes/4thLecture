@@ -1,0 +1,133 @@
+** Collections and Memory Management
+************************************
+
+NSArray
+*******
+In order.
+You get the objects in the order you put them in.
+
+
+NSSet
+*****
+Faster in terms of membership.
+[set containsObject:obj] == YES
+
+
+NSCountedSet
+************
+can have dups.
+countForObject:obj
+
+
+NSDictionary
+************
+'objectForKey'
+** Mutable: setObject: obj forKey: key
+
+
+
+Mutability
+**********
+NSMutable_______
+Change an immutable to mutable with 'mutableCopy'
+
+
+
+Enumerations
+************
+NSEnumerator *enumerator = [collection objectEnumerator];
+Null/Nil terminated.
+
+** Fast enumerator: (in 10.5+)
+    for (MyObject *obj in collection)
+    {
+        /* do stuff
+    }
+
+
+DON'T SUBCLASS COLLECTIONS. Use has-a instead of is-a.
+
+
+NSNumber
+********
++ (id) numberWithInt: (int) i;
+
+- (char) charValue; (intVaule, floatValue)
+
+
+NSDate
+******
+Represents "a single point in time".
+
++ (id) distantFuture; (distantPast)
+- (NSDate *) earlierDate: (NSDate *) otherDate;
+
+
+
+
+** Memory Management
+********************
++ alloc: sets refCount to 1.
+- copy
+
+retain: incs refCount.
+release: decs refCount.
+
+When release hits 0, that memory/object is gone.
+
+
+'alloc', 'copy', 'retain' => 'release'
+
+
+If you create an object and return it. You can be responsible, if you want to be.
+
+
+
+WHO OWNS WHAT???
+
+
+return an object:
+
++ (NSString *)stringWithString:(NSString *)aString {
+    NSString  *newString = [[NSString alloc] initWithString:aString];
+    [newString autorelease];
+    return newString;
+}
+
+
+
+autorelease releases memory sometime later after the runtimeloop finishes. Creates a 'collection pool' that autorelease objects go into.
+Pool doesn't disappear until your callstack is totally empty.
+
+
+
+Collections 'retain' the objects that are added to them.
+When the collection is dealloced, all objects have 'release' called on them.
+Allocate something. autorelease it. stick it in a collection.
+
+
+Overriding 'dealloc'
+********************
+Good for UI and things.
+
+- (void) dealloc {
+    /* do stuff
+        release things
+        */
+    [super dealloc]
+}
+
+
+Read up on 'Schemes' for XCode.
+
+Learn the XCode debugger.
+- Enable Scribble.
+- Enable Zombie Objects.
+- Enable guard edges.
+- Enable guard malloc.
+
+
+
+
+
+
