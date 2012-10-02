@@ -8,7 +8,7 @@
 
 #import "BouncyModel.h"
 
-const NSInteger kBallSize = 48;
+NSInteger kBallSize = 48;
 
 
 @interface Ball : NSObject {
@@ -55,6 +55,8 @@ yVelocity = _yVelocity;
         self.xVelocity = xVel;
         self.yVelocity = yVel;
     }
+    
+    kBallSize = (rand() * 60) + 5;
     
     return self;
 }
@@ -143,12 +145,6 @@ yVelocity = _yVelocity;
     for (Ball* b in _balls) {
         [b updatePositionInBounds:_bounds];
     }
-    // vv Wrong vv
-//    Ball *b;
-//    for (int i=0; i < [self numberOfBalls]; i++) {
-//        b = [_balls objectAtIndex:i];
-//        [b updatePositionInBounds:[self ballBounds:i]];
-//    }
     
 }
 
@@ -182,7 +178,7 @@ yVelocity = _yVelocity;
                                     yVelocity:yVel];
     
     [_balls addObject:newBall];
-    [newBall autorelease];
+    [newBall release];
 }
 
 // Creates and adds new Balls (above) if the newNumberOfBalls is greater than what already exist, and remove Balls from the model if it is less.
@@ -201,6 +197,165 @@ yVelocity = _yVelocity;
     }
     
 }
+
+
+
+-(void)handleCollisions
+
+{
+    
+    if ( [_balls count] > 1 )
+        
+    {
+        
+        for (NSInteger ballIndex = 0; ballIndex < [_balls count]; ballIndex ++)
+            
+        {
+            
+            Ball* ball = [_balls objectAtIndex:ballIndex];
+            
+            NSInteger futurePositionX = ball.xPosition + ball.xVelocity;
+            
+            NSInteger futurePositionY = ball.yPosition + ball.yVelocity;
+            
+            if ([self CheckCollisionWith:futurePositionX andWith:futurePositionY using:ballIndex])
+                
+            {
+                
+                NSInteger futureVerticleX = ball.xPosition;
+                
+                NSInteger futureVerticleY = ball.yPosition + ball.yVelocity;
+                
+                if ([self CheckCollisionWith:futureVerticleX andWith:futureVerticleY using:ballIndex])
+                    
+                {
+                    
+                    ball.yVelocity = -ball.yVelocity;
+                    
+                }
+                
+                NSInteger futureHorizontalX = ball.xPosition + ball.xVelocity;
+                
+                NSInteger futureHorizontalY = ball.yPosition;
+                
+                if ([self CheckCollisionWith:futureHorizontalX andWith:futureHorizontalY using:ballIndex])
+                    
+                {
+                    
+                    ball.xVelocity = -ball.xVelocity;
+                    
+                }
+                
+            }
+            
+        }
+        
+    }
+    
+}
+
+-(BOOL)CheckCollisionWith:(NSInteger)futureX andWith:(NSInteger)futureY using:(NSInteger)thisBallIndex
+
+{
+    
+    NSInteger left = futureX;
+    
+    NSInteger bottom = futureY;
+    
+    NSInteger right = futureX + kBallSize;
+    
+    NSInteger top = futureY + kBallSize;
+    
+    
+    
+    for (NSInteger ballIndex = 0; ballIndex < [_balls count]; ballIndex ++)
+        
+    {
+        
+        if ( ballIndex != thisBallIndex )
+            
+        {
+            
+            CGRect checkBallRect = [self ballBounds:ballIndex];
+            
+            
+            
+            NSInteger checkLeft = checkBallRect.origin.x;
+            
+            NSInteger checkBottom = checkBallRect.origin.y;
+            
+            NSInteger checkRight = checkBallRect.origin.x + checkBallRect.size.width;
+            
+            NSInteger checkTop = checkBallRect.origin.y + checkBallRect.size.height;
+            
+            
+            
+            if (right <= checkLeft)
+                
+            {
+                
+                continue;
+                
+            }
+            
+            else
+            
+            {
+                
+                if (left >= checkRight)
+                    
+                {
+                    
+                    continue;
+                    
+                }
+                
+                else
+                
+                {
+                    
+                    if (top <= checkBottom)
+                        
+                    {
+                        
+                        continue;
+                        
+                    }
+                    
+                    else
+                    
+                    {
+                        
+                        if (bottom >= checkTop)
+                            
+                        {
+                            
+                            continue;
+                            
+                        }
+                        
+                        else
+                        
+                        {
+                            
+                            return YES;
+                            
+                        }
+                        
+                    }
+                    
+                }
+                
+            }
+            
+        }
+        
+    }
+    
+    return NO;
+    
+}
+
 
 
 

@@ -29,20 +29,20 @@
     
     //Outline the frame of the view.
     [[NSColor blackColor] setStroke];
+    [[NSColor greenColor] setFill];
     NSBezierPath* framePath = [NSBezierPath bezierPathWithRect:[self bounds]];
     [framePath stroke];
     
-    
+    //Draw all balls in _balls array.
     for (NSInteger i=0; i< [_ourViewController askModelForNumberOfBalls]; i++) {
         CGRect ballBounds = [_ourViewController askModelForBallBounds:i];
         NSBezierPath* circlePath = [NSBezierPath bezierPathWithOvalInRect:ballBounds];
         [circlePath setLineWidth:4.0];
+        [circlePath fill];
         [circlePath stroke];
     }
-//    for (Ball b in _ourViewController _balls) {
-//        NSBezierPath* circlePath = [NSBezierPath bezierPathWithOvalInRect:[b _bounds]];
-//        [circlePath stroke];
-//    }
+    
+    
     
 }
 

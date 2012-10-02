@@ -16,11 +16,17 @@
     IBOutlet BouncyView* _ourView;
     BouncyModel* _ourModel;
     NSTimer* _timer;
+    IBOutlet NSButton* _startStopButton;
 }
+
+@property BOOL running;
+@property (assign) IBOutlet NSTextField *numBallsLabel;
 
 -(NSInteger)askModelForNumberOfBalls;
 -(CGRect)askModelForBallBounds:(NSInteger)whichBall;
 -(void)timerFireMethod:(NSTimer*)theTimer;
+- (IBAction)ballsSliderMoved:(NSSlider*)sender;
+- (IBAction)startStopButtonPressed:(NSButton*)sender;
 
 
 @end
