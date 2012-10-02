@@ -1339,7 +1339,7 @@
 								<reference key="NSControlView" ref="86528097"/>
 								<double key="NSMaxValue">10</double>
 								<double key="NSMinValue">0.0</double>
-								<double key="NSValue">0.0</double>
+								<double key="NSValue">1</double>
 								<double key="NSAltIncValue">0.0</double>
 								<int key="NSNumberOfTickMarks">11</int>
 								<int key="NSTickMarkPosition">1</int>

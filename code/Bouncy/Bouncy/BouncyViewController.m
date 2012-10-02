@@ -47,11 +47,12 @@
     [_startStopButton setTitle:@"Press me!"];
     
     [_ourModel createAndAddNewBall];
-    _numBallsLabel.intValue = [_ourModel numberOfBalls];
+    self.numBallsLabel.intValue = [_ourModel numberOfBalls];
 }
 
 
 -(void)timerFireMethod:(NSTimer*)theTimer {
+    NSLog(@"In timerFireMethod");
     if (self.running) {
         [_ourModel handleCollisions];
         [_ourModel updateBallPositions];
@@ -64,7 +65,7 @@
     
     NSInteger value = [sender intValue];
     [_ourModel changeNumberOfBalls:value];
-    _numBallsLabel.intValue = [_ourModel numberOfBalls];
+    self.numBallsLabel.intValue = [_ourModel numberOfBalls];
 }
 
 

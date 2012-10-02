@@ -8,8 +8,7 @@
 
 #import "BouncyModel.h"
 
-NSInteger kBallSize = 48;
-
+const NSInteger kBallSize = 48;
 
 @interface Ball : NSObject {
 //    NSInteger _xPosition;
@@ -55,8 +54,6 @@ yVelocity = _yVelocity;
         self.xVelocity = xVel;
         self.yVelocity = yVel;
     }
-    
-    kBallSize = (rand() * 60) + 5;
     
     return self;
 }
