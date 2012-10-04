@@ -1,0 +1,628 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		290F3924161D3A40007DE9BE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 290F3923161D3A40007DE9BE /* UIKit.framework */; };
+		290F3926161D3A40007DE9BE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 290F3925161D3A40007DE9BE /* Foundation.framework */; };
+		290F3928161D3A40007DE9BE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 290F3927161D3A40007DE9BE /* CoreGraphics.framework */; };
+		290F392E161D3A40007DE9BE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 290F392C161D3A40007DE9BE /* InfoPlist.strings */; };
+		290F3930161D3A40007DE9BE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 290F392F161D3A40007DE9BE /* main.m */; };
+		290F3934161D3A40007DE9BE /* HangMengAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 290F3933161D3A40007DE9BE /* HangMengAppDelegate.m */; };
+		290F3936161D3A40007DE9BE /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 290F3935161D3A40007DE9BE /* Default.png */; };
+		290F3938161D3A40007DE9BE /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 290F3937161D3A40007DE9BE /* Default@2x.png */; };
+		290F393A161D3A40007DE9BE /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 290F3939161D3A40007DE9BE /* Default-568h@2x.png */; };
+		290F393D161D3A40007DE9BE /* HangMengViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 290F393C161D3A40007DE9BE /* HangMengViewController.m */; };
+		290F3940161D3A40007DE9BE /* HangMengViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 290F393E161D3A40007DE9BE /* HangMengViewController_iPhone.xib */; };
+		290F3943161D3A40007DE9BE /* HangMengViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 290F3941161D3A40007DE9BE /* HangMengViewController_iPad.xib */; };
+		290F394B161D3A40007DE9BE /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 290F394A161D3A40007DE9BE /* SenTestingKit.framework */; };
+		290F394C161D3A40007DE9BE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 290F3923161D3A40007DE9BE /* UIKit.framework */; };
+		290F394D161D3A40007DE9BE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 290F3925161D3A40007DE9BE /* Foundation.framework */; };
+		290F3955161D3A40007DE9BE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 290F3953161D3A40007DE9BE /* InfoPlist.strings */; };
+		290F3958161D3A40007DE9BE /* HangMengTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 290F3957161D3A40007DE9BE /* HangMengTests.m */; };
+		290F3963161D3AE3007DE9BE /* HangMengView.m in Sources */ = {isa = PBXBuildFile; fileRef = 290F3962161D3AE3007DE9BE /* HangMengView.m */; };
+		290F3967161D3B52007DE9BE /* HangmanWords.m in Sources */ = {isa = PBXBuildFile; fileRef = 290F3965161D3B52007DE9BE /* HangmanWords.m */; };
+		290F3968161D3B52007DE9BE /* words.plist in Resources */ = {isa = PBXBuildFile; fileRef = 290F3966161D3B52007DE9BE /* words.plist */; };
+		290F396B161D3B99007DE9BE /* HangMengModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 290F396A161D3B99007DE9BE /* HangMengModel.m */; };
+		290F398C161D4297007DE9BE /* ._.DS_Store in Resources */ = {isa = PBXBuildFile; fileRef = 290F396D161D4297007DE9BE /* ._.DS_Store */; };
+		290F398D161D4297007DE9BE /* ._Hangman0.gif in Resources */ = {isa = PBXBuildFile; fileRef = 290F396E161D4297007DE9BE /* ._Hangman0.gif */; };
+		290F398E161D4297007DE9BE /* ._Hangman1.gif in Resources */ = {isa = PBXBuildFile; fileRef = 290F396F161D4297007DE9BE /* ._Hangman1.gif */; };
+		290F398F161D4297007DE9BE /* ._Hangman10.gif in Resources */ = {isa = PBXBuildFile; fileRef = 290F3970161D4297007DE9BE /* ._Hangman10.gif */; };
+		290F3990161D4297007DE9BE /* ._Hangman11.gif in Resources */ = {isa = PBXBuildFile; fileRef = 290F3971161D4297007DE9BE /* ._Hangman11.gif */; };
+		290F3991161D4297007DE9BE /* ._Hangman12.gif in Resources */ = {isa = PBXBuildFile; fileRef = 290F3972161D4297007DE9BE /* ._Hangman12.gif */; };
+		290F3992161D4297007DE9BE /* ._Hangman13.gif in Resources */ = {isa = PBXBuildFile; fileRef = 290F3973161D4297007DE9BE /* ._Hangman13.gif */; };
+		290F3993161D4297007DE9BE /* ._Hangman14.gif in Resources */ = {isa = PBXBuildFile; fileRef = 290F3974161D4297007DE9BE /* ._Hangman14.gif */; };
+		290F3994161D4297007DE9BE /* ._Hangman2.gif in Resources */ = {isa = PBXBuildFile; fileRef = 290F3975161D4297007DE9BE /* ._Hangman2.gif */; };
+		290F3995161D4297007DE9BE /* ._Hangman3.gif in Resources */ = {isa = PBXBuildFile; fileRef = 290F3976161D4297007DE9BE /* ._Hangman3.gif */; };
+		290F3996161D4297007DE9BE /* ._Hangman4.gif in Resources */ = {isa = PBXBuildFile; fileRef = 290F3977161D4297007DE9BE /* ._Hangman4.gif */; };
+		290F3997161D4297007DE9BE /* ._Hangman5.gif in Resources */ = {isa = PBXBuildFile; fileRef = 290F3978161D4297007DE9BE /* ._Hangman5.gif */; };
+		290F3998161D4297007DE9BE /* ._Hangman6.gif in Resources */ = {isa = PBXBuildFile; fileRef = 290F3979161D4297007DE9BE /* ._Hangman6.gif */; };
+		290F3999161D4297007DE9BE /* ._Hangman7.gif in Resources */ = {isa = PBXBuildFile; fileRef = 290F397A161D4297007DE9BE /* ._Hangman7.gif */; };
+		290F399A161D4297007DE9BE /* ._Hangman8.gif in Resources */ = {isa = PBXBuildFile; fileRef = 290F397B161D4297007DE9BE /* ._Hangman8.gif */; };
+		290F399B161D4297007DE9BE /* ._Hangman9.gif in Resources */ = {isa = PBXBuildFile; fileRef = 290F397C161D4297007DE9BE /* ._Hangman9.gif */; };
+		290F399C161D4297007DE9BE /* Hangman0.gif in Resources */ = {isa = PBXBuildFile; fileRef = 290F397D161D4297007DE9BE /* Hangman0.gif */; };
+		290F399D161D4297007DE9BE /* Hangman1.gif in Resources */ = {isa = PBXBuildFile; fileRef = 290F397E161D4297007DE9BE /* Hangman1.gif */; };
+		290F399E161D4297007DE9BE /* Hangman10.gif in Resources */ = {isa = PBXBuildFile; fileRef = 290F397F161D4297007DE9BE /* Hangman10.gif */; };
+		290F399F161D4297007DE9BE /* Hangman11.gif in Resources */ = {isa = PBXBuildFile; fileRef = 290F3980161D4297007DE9BE /* Hangman11.gif */; };
+		290F39A0161D4297007DE9BE /* Hangman12.gif in Resources */ = {isa = PBXBuildFile; fileRef = 290F3981161D4297007DE9BE /* Hangman12.gif */; };
+		290F39A1161D4297007DE9BE /* Hangman13.gif in Resources */ = {isa = PBXBuildFile; fileRef = 290F3982161D4297007DE9BE /* Hangman13.gif */; };
+		290F39A2161D4297007DE9BE /* Hangman14.gif in Resources */ = {isa = PBXBuildFile; fileRef = 290F3983161D4297007DE9BE /* Hangman14.gif */; };
+		290F39A3161D4297007DE9BE /* Hangman2.gif in Resources */ = {isa = PBXBuildFile; fileRef = 290F3984161D4297007DE9BE /* Hangman2.gif */; };
+		290F39A4161D4297007DE9BE /* Hangman3.gif in Resources */ = {isa = PBXBuildFile; fileRef = 290F3985161D4297007DE9BE /* Hangman3.gif */; };
+		290F39A5161D4297007DE9BE /* Hangman4.gif in Resources */ = {isa = PBXBuildFile; fileRef = 290F3986161D4297007DE9BE /* Hangman4.gif */; };
+		290F39A6161D4297007DE9BE /* Hangman5.gif in Resources */ = {isa = PBXBuildFile; fileRef = 290F3987161D4297007DE9BE /* Hangman5.gif */; };
+		290F39A7161D4297007DE9BE /* Hangman6.gif in Resources */ = {isa = PBXBuildFile; fileRef = 290F3988161D4297007DE9BE /* Hangman6.gif */; };
+		290F39A8161D4297007DE9BE /* Hangman7.gif in Resources */ = {isa = PBXBuildFile; fileRef = 290F3989161D4297007DE9BE /* Hangman7.gif */; };
+		290F39A9161D4297007DE9BE /* Hangman8.gif in Resources */ = {isa = PBXBuildFile; fileRef = 290F398A161D4297007DE9BE /* Hangman8.gif */; };
+		290F39AA161D4297007DE9BE /* Hangman9.gif in Resources */ = {isa = PBXBuildFile; fileRef = 290F398B161D4297007DE9BE /* Hangman9.gif */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		290F394E161D3A40007DE9BE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 290F3916161D3A40007DE9BE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 290F391E161D3A40007DE9BE;
+			remoteInfo = HangMeng;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		290F391F161D3A40007DE9BE /* HangMeng.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HangMeng.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		290F3923161D3A40007DE9BE /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		290F3925161D3A40007DE9BE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		290F3927161D3A40007DE9BE /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		290F392B161D3A40007DE9BE /* HangMeng-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "HangMeng-Info.plist"; sourceTree = "<group>"; };
+		290F392D161D3A40007DE9BE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		290F392F161D3A40007DE9BE /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		290F3931161D3A40007DE9BE /* HangMeng-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HangMeng-Prefix.pch"; sourceTree = "<group>"; };
+		290F3932161D3A40007DE9BE /* HangMengAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HangMengAppDelegate.h; sourceTree = "<group>"; };
+		290F3933161D3A40007DE9BE /* HangMengAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HangMengAppDelegate.m; sourceTree = "<group>"; };
+		290F3935161D3A40007DE9BE /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		290F3937161D3A40007DE9BE /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		290F3939161D3A40007DE9BE /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		290F393B161D3A40007DE9BE /* HangMengViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HangMengViewController.h; sourceTree = "<group>"; };
+		290F393C161D3A40007DE9BE /* HangMengViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HangMengViewController.m; sourceTree = "<group>"; };
+		290F393F161D3A40007DE9BE /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/HangMengViewController_iPhone.xib; sourceTree = "<group>"; };
+		290F3942161D3A40007DE9BE /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/HangMengViewController_iPad.xib; sourceTree = "<group>"; };
+		290F3949161D3A40007DE9BE /* HangMengTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HangMengTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		290F394A161D3A40007DE9BE /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		290F3952161D3A40007DE9BE /* HangMengTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "HangMengTests-Info.plist"; sourceTree = "<group>"; };
+		290F3954161D3A40007DE9BE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		290F3956161D3A40007DE9BE /* HangMengTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HangMengTests.h; sourceTree = "<group>"; };
+		290F3957161D3A40007DE9BE /* HangMengTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HangMengTests.m; sourceTree = "<group>"; };
+		290F3961161D3AE3007DE9BE /* HangMengView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HangMengView.h; sourceTree = "<group>"; };
+		290F3962161D3AE3007DE9BE /* HangMengView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HangMengView.m; sourceTree = "<group>"; };
+		290F3964161D3B52007DE9BE /* HangmanWords.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HangmanWords.h; path = Words/HangmanWords.h; sourceTree = "<group>"; };
+		290F3965161D3B52007DE9BE /* HangmanWords.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HangmanWords.m; path = Words/HangmanWords.m; sourceTree = "<group>"; };
+		290F3966161D3B52007DE9BE /* words.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = words.plist; path = Words/words.plist; sourceTree = "<group>"; };
+		290F3969161D3B99007DE9BE /* HangMengModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HangMengModel.h; sourceTree = "<group>"; };
+		290F396A161D3B99007DE9BE /* HangMengModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HangMengModel.m; sourceTree = "<group>"; };
+		290F396D161D4297007DE9BE /* ._.DS_Store */ = {isa = PBXFileReference; lastKnownFileType = file; path = ._.DS_Store; sourceTree = "<group>"; };
+		290F396E161D4297007DE9BE /* ._Hangman0.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = ._Hangman0.gif; sourceTree = "<group>"; };
+		290F396F161D4297007DE9BE /* ._Hangman1.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = ._Hangman1.gif; sourceTree = "<group>"; };
+		290F3970161D4297007DE9BE /* ._Hangman10.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = ._Hangman10.gif; sourceTree = "<group>"; };
+		290F3971161D4297007DE9BE /* ._Hangman11.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = ._Hangman11.gif; sourceTree = "<group>"; };
+		290F3972161D4297007DE9BE /* ._Hangman12.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = ._Hangman12.gif; sourceTree = "<group>"; };
+		290F3973161D4297007DE9BE /* ._Hangman13.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = ._Hangman13.gif; sourceTree = "<group>"; };
+		290F3974161D4297007DE9BE /* ._Hangman14.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = ._Hangman14.gif; sourceTree = "<group>"; };
+		290F3975161D4297007DE9BE /* ._Hangman2.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = ._Hangman2.gif; sourceTree = "<group>"; };
+		290F3976161D4297007DE9BE /* ._Hangman3.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = ._Hangman3.gif; sourceTree = "<group>"; };
+		290F3977161D4297007DE9BE /* ._Hangman4.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = ._Hangman4.gif; sourceTree = "<group>"; };
+		290F3978161D4297007DE9BE /* ._Hangman5.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = ._Hangman5.gif; sourceTree = "<group>"; };
+		290F3979161D4297007DE9BE /* ._Hangman6.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = ._Hangman6.gif; sourceTree = "<group>"; };
+		290F397A161D4297007DE9BE /* ._Hangman7.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = ._Hangman7.gif; sourceTree = "<group>"; };
+		290F397B161D4297007DE9BE /* ._Hangman8.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = ._Hangman8.gif; sourceTree = "<group>"; };
+		290F397C161D4297007DE9BE /* ._Hangman9.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = ._Hangman9.gif; sourceTree = "<group>"; };
+		290F397D161D4297007DE9BE /* Hangman0.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Hangman0.gif; sourceTree = "<group>"; };
+		290F397E161D4297007DE9BE /* Hangman1.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Hangman1.gif; sourceTree = "<group>"; };
+		290F397F161D4297007DE9BE /* Hangman10.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Hangman10.gif; sourceTree = "<group>"; };
+		290F3980161D4297007DE9BE /* Hangman11.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Hangman11.gif; sourceTree = "<group>"; };
+		290F3981161D4297007DE9BE /* Hangman12.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Hangman12.gif; sourceTree = "<group>"; };
+		290F3982161D4297007DE9BE /* Hangman13.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Hangman13.gif; sourceTree = "<group>"; };
+		290F3983161D4297007DE9BE /* Hangman14.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Hangman14.gif; sourceTree = "<group>"; };
+		290F3984161D4297007DE9BE /* Hangman2.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Hangman2.gif; sourceTree = "<group>"; };
+		290F3985161D4297007DE9BE /* Hangman3.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Hangman3.gif; sourceTree = "<group>"; };
+		290F3986161D4297007DE9BE /* Hangman4.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Hangman4.gif; sourceTree = "<group>"; };
+		290F3987161D4297007DE9BE /* Hangman5.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Hangman5.gif; sourceTree = "<group>"; };
+		290F3988161D4297007DE9BE /* Hangman6.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Hangman6.gif; sourceTree = "<group>"; };
+		290F3989161D4297007DE9BE /* Hangman7.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Hangman7.gif; sourceTree = "<group>"; };
+		290F398A161D4297007DE9BE /* Hangman8.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Hangman8.gif; sourceTree = "<group>"; };
+		290F398B161D4297007DE9BE /* Hangman9.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Hangman9.gif; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		290F391C161D3A40007DE9BE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				290F3924161D3A40007DE9BE /* UIKit.framework in Frameworks */,
+				290F3926161D3A40007DE9BE /* Foundation.framework in Frameworks */,
+				290F3928161D3A40007DE9BE /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		290F3945161D3A40007DE9BE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				290F394B161D3A40007DE9BE /* SenTestingKit.framework in Frameworks */,
+				290F394C161D3A40007DE9BE /* UIKit.framework in Frameworks */,
+				290F394D161D3A40007DE9BE /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		290F3914161D3A40007DE9BE = {
+			isa = PBXGroup;
+			children = (
+				290F396C161D4297007DE9BE /* hangmanImages1 */,
+				290F3964161D3B52007DE9BE /* HangmanWords.h */,
+				290F3965161D3B52007DE9BE /* HangmanWords.m */,
+				290F3966161D3B52007DE9BE /* words.plist */,
+				290F3929161D3A40007DE9BE /* HangMeng */,
+				290F3950161D3A40007DE9BE /* HangMengTests */,
+				290F3922161D3A40007DE9BE /* Frameworks */,
+				290F3920161D3A40007DE9BE /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		290F3920161D3A40007DE9BE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				290F391F161D3A40007DE9BE /* HangMeng.app */,
+				290F3949161D3A40007DE9BE /* HangMengTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		290F3922161D3A40007DE9BE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				290F3923161D3A40007DE9BE /* UIKit.framework */,
+				290F3925161D3A40007DE9BE /* Foundation.framework */,
+				290F3927161D3A40007DE9BE /* CoreGraphics.framework */,
+				290F394A161D3A40007DE9BE /* SenTestingKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		290F3929161D3A40007DE9BE /* HangMeng */ = {
+			isa = PBXGroup;
+			children = (
+				290F3932161D3A40007DE9BE /* HangMengAppDelegate.h */,
+				290F3933161D3A40007DE9BE /* HangMengAppDelegate.m */,
+				290F393B161D3A40007DE9BE /* HangMengViewController.h */,
+				290F393C161D3A40007DE9BE /* HangMengViewController.m */,
+				290F393E161D3A40007DE9BE /* HangMengViewController_iPhone.xib */,
+				290F3941161D3A40007DE9BE /* HangMengViewController_iPad.xib */,
+				290F392A161D3A40007DE9BE /* Supporting Files */,
+				290F3961161D3AE3007DE9BE /* HangMengView.h */,
+				290F3962161D3AE3007DE9BE /* HangMengView.m */,
+				290F3969161D3B99007DE9BE /* HangMengModel.h */,
+				290F396A161D3B99007DE9BE /* HangMengModel.m */,
+			);
+			path = HangMeng;
+			sourceTree = "<group>";
+		};
+		290F392A161D3A40007DE9BE /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				290F392B161D3A40007DE9BE /* HangMeng-Info.plist */,
+				290F392C161D3A40007DE9BE /* InfoPlist.strings */,
+				290F392F161D3A40007DE9BE /* main.m */,
+				290F3931161D3A40007DE9BE /* HangMeng-Prefix.pch */,
+				290F3935161D3A40007DE9BE /* Default.png */,
+				290F3937161D3A40007DE9BE /* Default@2x.png */,
+				290F3939161D3A40007DE9BE /* Default-568h@2x.png */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		290F3950161D3A40007DE9BE /* HangMengTests */ = {
+			isa = PBXGroup;
+			children = (
+				290F3956161D3A40007DE9BE /* HangMengTests.h */,
+				290F3957161D3A40007DE9BE /* HangMengTests.m */,
+				290F3951161D3A40007DE9BE /* Supporting Files */,
+			);
+			path = HangMengTests;
+			sourceTree = "<group>";
+		};
+		290F3951161D3A40007DE9BE /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				290F3952161D3A40007DE9BE /* HangMengTests-Info.plist */,
+				290F3953161D3A40007DE9BE /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		290F396C161D4297007DE9BE /* hangmanImages1 */ = {
+			isa = PBXGroup;
+			children = (
+				290F396D161D4297007DE9BE /* ._.DS_Store */,
+				290F396E161D4297007DE9BE /* ._Hangman0.gif */,
+				290F396F161D4297007DE9BE /* ._Hangman1.gif */,
+				290F3970161D4297007DE9BE /* ._Hangman10.gif */,
+				290F3971161D4297007DE9BE /* ._Hangman11.gif */,
+				290F3972161D4297007DE9BE /* ._Hangman12.gif */,
+				290F3973161D4297007DE9BE /* ._Hangman13.gif */,
+				290F3974161D4297007DE9BE /* ._Hangman14.gif */,
+				290F3975161D4297007DE9BE /* ._Hangman2.gif */,
+				290F3976161D4297007DE9BE /* ._Hangman3.gif */,
+				290F3977161D4297007DE9BE /* ._Hangman4.gif */,
+				290F3978161D4297007DE9BE /* ._Hangman5.gif */,
+				290F3979161D4297007DE9BE /* ._Hangman6.gif */,
+				290F397A161D4297007DE9BE /* ._Hangman7.gif */,
+				290F397B161D4297007DE9BE /* ._Hangman8.gif */,
+				290F397C161D4297007DE9BE /* ._Hangman9.gif */,
+				290F397D161D4297007DE9BE /* Hangman0.gif */,
+				290F397E161D4297007DE9BE /* Hangman1.gif */,
+				290F397F161D4297007DE9BE /* Hangman10.gif */,
+				290F3980161D4297007DE9BE /* Hangman11.gif */,
+				290F3981161D4297007DE9BE /* Hangman12.gif */,
+				290F3982161D4297007DE9BE /* Hangman13.gif */,
+				290F3983161D4297007DE9BE /* Hangman14.gif */,
+				290F3984161D4297007DE9BE /* Hangman2.gif */,
+				290F3985161D4297007DE9BE /* Hangman3.gif */,
+				290F3986161D4297007DE9BE /* Hangman4.gif */,
+				290F3987161D4297007DE9BE /* Hangman5.gif */,
+				290F3988161D4297007DE9BE /* Hangman6.gif */,
+				290F3989161D4297007DE9BE /* Hangman7.gif */,
+				290F398A161D4297007DE9BE /* Hangman8.gif */,
+				290F398B161D4297007DE9BE /* Hangman9.gif */,
+			);
+			path = hangmanImages1;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		290F391E161D3A40007DE9BE /* HangMeng */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 290F395B161D3A40007DE9BE /* Build configuration list for PBXNativeTarget "HangMeng" */;
+			buildPhases = (
+				290F391B161D3A40007DE9BE /* Sources */,
+				290F391C161D3A40007DE9BE /* Frameworks */,
+				290F391D161D3A40007DE9BE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HangMeng;
+			productName = HangMeng;
+			productReference = 290F391F161D3A40007DE9BE /* HangMeng.app */;
+			productType = "com.apple.product-type.application";
+		};
+		290F3948161D3A40007DE9BE /* HangMengTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 290F395E161D3A40007DE9BE /* Build configuration list for PBXNativeTarget "HangMengTests" */;
+			buildPhases = (
+				290F3944161D3A40007DE9BE /* Sources */,
+				290F3945161D3A40007DE9BE /* Frameworks */,
+				290F3946161D3A40007DE9BE /* Resources */,
+				290F3947161D3A40007DE9BE /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				290F394F161D3A40007DE9BE /* PBXTargetDependency */,
+			);
+			name = HangMengTests;
+			productName = HangMengTests;
+			productReference = 290F3949161D3A40007DE9BE /* HangMengTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		290F3916161D3A40007DE9BE /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = HangMeng;
+				LastUpgradeCheck = 0450;
+				ORGANIZATIONNAME = Crabb;
+			};
+			buildConfigurationList = 290F3919161D3A40007DE9BE /* Build configuration list for PBXProject "HangMeng" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 290F3914161D3A40007DE9BE;
+			productRefGroup = 290F3920161D3A40007DE9BE /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				290F391E161D3A40007DE9BE /* HangMeng */,
+				290F3948161D3A40007DE9BE /* HangMengTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		290F391D161D3A40007DE9BE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				290F392E161D3A40007DE9BE /* InfoPlist.strings in Resources */,
+				290F3936161D3A40007DE9BE /* Default.png in Resources */,
+				290F3938161D3A40007DE9BE /* Default@2x.png in Resources */,
+				290F393A161D3A40007DE9BE /* Default-568h@2x.png in Resources */,
+				290F3940161D3A40007DE9BE /* HangMengViewController_iPhone.xib in Resources */,
+				290F3943161D3A40007DE9BE /* HangMengViewController_iPad.xib in Resources */,
+				290F3968161D3B52007DE9BE /* words.plist in Resources */,
+				290F398C161D4297007DE9BE /* ._.DS_Store in Resources */,
+				290F398D161D4297007DE9BE /* ._Hangman0.gif in Resources */,
+				290F398E161D4297007DE9BE /* ._Hangman1.gif in Resources */,
+				290F398F161D4297007DE9BE /* ._Hangman10.gif in Resources */,
+				290F3990161D4297007DE9BE /* ._Hangman11.gif in Resources */,
+				290F3991161D4297007DE9BE /* ._Hangman12.gif in Resources */,
+				290F3992161D4297007DE9BE /* ._Hangman13.gif in Resources */,
+				290F3993161D4297007DE9BE /* ._Hangman14.gif in Resources */,
+				290F3994161D4297007DE9BE /* ._Hangman2.gif in Resources */,
+				290F3995161D4297007DE9BE /* ._Hangman3.gif in Resources */,
+				290F3996161D4297007DE9BE /* ._Hangman4.gif in Resources */,
+				290F3997161D4297007DE9BE /* ._Hangman5.gif in Resources */,
+				290F3998161D4297007DE9BE /* ._Hangman6.gif in Resources */,
+				290F3999161D4297007DE9BE /* ._Hangman7.gif in Resources */,
+				290F399A161D4297007DE9BE /* ._Hangman8.gif in Resources */,
+				290F399B161D4297007DE9BE /* ._Hangman9.gif in Resources */,
+				290F399C161D4297007DE9BE /* Hangman0.gif in Resources */,
+				290F399D161D4297007DE9BE /* Hangman1.gif in Resources */,
+				290F399E161D4297007DE9BE /* Hangman10.gif in Resources */,
+				290F399F161D4297007DE9BE /* Hangman11.gif in Resources */,
+				290F39A0161D4297007DE9BE /* Hangman12.gif in Resources */,
+				290F39A1161D4297007DE9BE /* Hangman13.gif in Resources */,
+				290F39A2161D4297007DE9BE /* Hangman14.gif in Resources */,
+				290F39A3161D4297007DE9BE /* Hangman2.gif in Resources */,
+				290F39A4161D4297007DE9BE /* Hangman3.gif in Resources */,
+				290F39A5161D4297007DE9BE /* Hangman4.gif in Resources */,
+				290F39A6161D4297007DE9BE /* Hangman5.gif in Resources */,
+				290F39A7161D4297007DE9BE /* Hangman6.gif in Resources */,
+				290F39A8161D4297007DE9BE /* Hangman7.gif in Resources */,
+				290F39A9161D4297007DE9BE /* Hangman8.gif in Resources */,
+				290F39AA161D4297007DE9BE /* Hangman9.gif in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		290F3946161D3A40007DE9BE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				290F3955161D3A40007DE9BE /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		290F3947161D3A40007DE9BE /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		290F391B161D3A40007DE9BE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				290F3930161D3A40007DE9BE /* main.m in Sources */,
+				290F3934161D3A40007DE9BE /* HangMengAppDelegate.m in Sources */,
+				290F393D161D3A40007DE9BE /* HangMengViewController.m in Sources */,
+				290F3963161D3AE3007DE9BE /* HangMengView.m in Sources */,
+				290F3967161D3B52007DE9BE /* HangmanWords.m in Sources */,
+				290F396B161D3B99007DE9BE /* HangMengModel.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		290F3944161D3A40007DE9BE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				290F3958161D3A40007DE9BE /* HangMengTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		290F394F161D3A40007DE9BE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 290F391E161D3A40007DE9BE /* HangMeng */;
+			targetProxy = 290F394E161D3A40007DE9BE /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		290F392C161D3A40007DE9BE /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				290F392D161D3A40007DE9BE /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		290F393E161D3A40007DE9BE /* HangMengViewController_iPhone.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				290F393F161D3A40007DE9BE /* en */,
+			);
+			name = HangMengViewController_iPhone.xib;
+			sourceTree = "<group>";
+		};
+		290F3941161D3A40007DE9BE /* HangMengViewController_iPad.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				290F3942161D3A40007DE9BE /* en */,
+			);
+			name = HangMengViewController_iPad.xib;
+			sourceTree = "<group>";
+		};
+		290F3953161D3A40007DE9BE /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				290F3954161D3A40007DE9BE /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		290F3959161D3A40007DE9BE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		290F395A161D3A40007DE9BE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		290F395C161D3A40007DE9BE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "HangMeng/HangMeng-Prefix.pch";
+				INFOPLIST_FILE = "HangMeng/HangMeng-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		290F395D161D3A40007DE9BE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "HangMeng/HangMeng-Prefix.pch";
+				INFOPLIST_FILE = "HangMeng/HangMeng-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		290F395F161D3A40007DE9BE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/HangMeng.app/HangMeng";
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "HangMeng/HangMeng-Prefix.pch";
+				INFOPLIST_FILE = "HangMengTests/HangMengTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		290F3960161D3A40007DE9BE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/HangMeng.app/HangMeng";
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "HangMeng/HangMeng-Prefix.pch";
+				INFOPLIST_FILE = "HangMengTests/HangMengTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		290F3919161D3A40007DE9BE /* Build configuration list for PBXProject "HangMeng" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				290F3959161D3A40007DE9BE /* Debug */,
+				290F395A161D3A40007DE9BE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		290F395B161D3A40007DE9BE /* Build configuration list for PBXNativeTarget "HangMeng" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				290F395C161D3A40007DE9BE /* Debug */,
+				290F395D161D3A40007DE9BE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		290F395E161D3A40007DE9BE /* Build configuration list for PBXNativeTarget "HangMengTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				290F395F161D3A40007DE9BE /* Debug */,
+				290F3960161D3A40007DE9BE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 290F3916161D3A40007DE9BE /* Project object */;
+}
