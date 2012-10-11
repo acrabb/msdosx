@@ -7,10 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "HangmanWords.h"
 
 @interface HangMengModel : NSObject
 {
     IBOutlet UIImageView* imageView;
 }
+
+@property (retain) HangmanWords* words;
+
+-(NSString*)getRandomWord;
 
 @end

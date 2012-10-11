@@ -1,0 +1,7 @@
+** Special View Controllers
+****************************
+
+Modal View Controller:
+    - Takes up entire screen. Won't go away until you dismiss it.
+
+Add gradients and fonts to be more interesting!

@@ -7,11 +7,18 @@
 //
 
 #import "HangMengModel.h"
+#import "HangmanWords.h"
 
 @implementation HangMengModel
+
+@synthesize words = _words;
 
 //-(id) init {
 //    
 //}
+
+-(NSString*)getRandomWord {
+    return [_words getWord];
+}
 
 @end

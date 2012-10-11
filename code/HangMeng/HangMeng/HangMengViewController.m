@@ -8,11 +8,17 @@
 
 #import "HangMengViewController.h"
 
-@interface HangMengViewController ()
-
-@end
+//@interface HangMengViewController ()
+//
+//@end
 
 @implementation HangMengViewController
+
+@synthesize myModel = _myModel;
+@synthesize myView = _myView;
+@synthesize myLabel = _myLabel;
+@synthesize myImageView = _myImageView;
+
 
 - (void)viewDidLoad
 {
@@ -20,12 +26,13 @@
 	// Do any additional setup after loading the view, typically from a nib.
     
 //    label = [[UILabel alloc] init];
-    [label setText:@"HelloWorld!"];
-    
-    [imageView setImage:[UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Hangman14.gif" ofType:@".gif" inDirectory:@"hangmanImages1"]]];
-                         
-                         
-    NSLog(@"ACACAC %@", imageView);
+    [_myLabel setText:@"HelloWorld!"];
+//
+    NSBundle* bundle = [NSBundle mainBundle];
+    [_myImageView setImage:[UIImage imageWithContentsOfFile:[bundle pathForResource:@"Hangman14" ofType:@".gif" inDirectory:@"hangmanImages1"]]];
+//
+//                         
+//    NSLog(@"ACACAC %@", imageView);
     
 }
 
@@ -33,6 +40,11 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+
+-(NSString*)askModelForRandomWord {
+    return [_myModel getRandomWord];
 }
 
 @end

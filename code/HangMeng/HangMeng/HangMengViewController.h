@@ -7,10 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "HangMengModel.h"
+#import "HangMengView.h"
 
 @interface HangMengViewController : UIViewController
 {
-    IBOutlet UILabel* label;
-    IBOutlet UIImageView* imageView;
+    
 }
+
+@property (retain) HangMengModel* myModel;
+@property (retain) IBOutlet HangMengView* myView;
+@property (retain) IBOutlet UILabel* myLabel;
+@property (retain) IBOutlet UIImageView* myImageView;
+
+-(NSString*)askModelForRandomWord;
+
 @end
