@@ -20,20 +20,37 @@
 @synthesize myImageView = _myImageView;
 
 
+- (void)awakeFromNib
+{
+    //didn't get called on boot?
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
-//    label = [[UILabel alloc] init];
-    [_myLabel setText:@"HelloWorld!"];
-//
-    NSBundle* bundle = [NSBundle mainBundle];
-    [_myImageView setImage:[UIImage imageWithContentsOfFile:[bundle pathForResource:@"Hangman14" ofType:@".gif" inDirectory:@"hangmanImages1"]]];
-//
-//                         
-//    NSLog(@"ACACAC %@", imageView);
+    _myModel = [[HangMengModel alloc] init];
     
+    NSString* word = [self askModelForRandomWord];
+    [_myLabel setText:word];
+
+    
+    // THIS DIDN'T WORK
+//    NSBundle* bundle = [NSBundle mainBundle];
+//    [_myImageView setImage:[UIImage imageWithContentsOfFile:[bundle pathForResource:@"Hangman14" ofType:@".gif" inDirectory:@"hangmanImages1"]]];
+    
+    _myImageView.image = [UIImage imageWithContentsOfFile: [[NSBundle mainBundle] pathForResource:@"Hangman14" ofType:@"gif"]];
+
+    [self tellModelGuessedChar:'a'];
+    [self tellModelGuessedChar:'e'];
+    [self tellModelGuessedChar:'i'];
+    
+//    NSString* val = [_myModel getFilledString:word];
+    
+//    NSLog(@"ACACAC val is: %@", val);
+
+
 }
 
 - (void)didReceiveMemoryWarning
@@ -43,8 +60,13 @@
 }
 
 
--(NSString*)askModelForRandomWord {
+- (NSString*)askModelForRandomWord {
     return [_myModel getRandomWord];
 }
+
+- (void) tellModelGuessedChar:(char) c {
+    [_myModel guessChar:c];
+}
+
 
 @end

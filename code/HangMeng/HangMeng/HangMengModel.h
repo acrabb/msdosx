@@ -11,11 +11,19 @@
 
 @interface HangMengModel : NSObject
 {
-    IBOutlet UIImageView* imageView;
+
 }
 
 @property (retain) HangmanWords* words;
+@property (retain) NSMutableArray* guessedChars;
+@property (retain) NSMutableCharacterSet* wordChars;
+@property (retain) NSString* target;
 
--(NSString*)getRandomWord;
+-(NSString*) getRandomWord;
+-(NSString*) getFilledString:(NSString*)target;
+-(BOOL) guessChar:(char) c;
+-(void) startNewGame;
+-(BOOL) checkGameState;
+-(NSString*) generateDisplayString;
 
 @end
