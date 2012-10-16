@@ -20,6 +20,8 @@
 @property (retain) IBOutlet UILabel* myLabel;
 @property (retain) IBOutlet UIImageView* myImageView;
 
--(NSString*)askModelForRandomWord;
+//-(NSString*)askModelForRandomWord;
+- (IBAction)letterPressed:(UIButton *)sender;
+- (IBAction)resetPressed:(UIButton *)sender;
 
 @end

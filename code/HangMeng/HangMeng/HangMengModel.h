@@ -16,12 +16,13 @@
 
 @property (retain) HangmanWords* words;
 @property (retain) NSMutableArray* guessedChars;
-@property (retain) NSMutableCharacterSet* wordChars;
+@property (retain) NSMutableSet* wordChars;
 @property (retain) NSString* target;
+@property BOOL stringDidChange;
 
 -(NSString*) getRandomWord;
--(NSString*) getFilledString:(NSString*)target;
--(BOOL) guessChar:(char) c;
+-(NSString*) getFilledString;
+-(BOOL) guessChar:(NSString*) c;
 -(void) startNewGame;
 -(BOOL) checkGameState;
 -(NSString*) generateDisplayString;
