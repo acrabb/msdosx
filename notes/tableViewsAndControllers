@@ -1,0 +1,32 @@
+Table Views
+************
+Grouped table view. (Settings)
+Plain table view. (Music)
+
+CocoaWithLove. -> Pretty table views.
+
+
+Displaying Data in a Table View
+    Don't just put/load stuff in an array.
+    Use object to load data as needed.
+        UITableViewDataSource
+        Cell Reusability
+        BOOL values specify editability.
+
+    Don't use selection for state.
+    General rule, item is selected iff your finger is on it.
+    Disable selection: willSelectRowAtIndexPath
+        or tableView.allowsSelection = NO;
+    
+UITableViewController
+    call resetView if the data changes.
+
+    Can set text/image for table view rows.
+    Row Accessories!!
+        Disclosure
+        DetailDisclosure
+        Checkbox
+    
+    Custom Row Heights
+        Talk to Nadine.
+   
