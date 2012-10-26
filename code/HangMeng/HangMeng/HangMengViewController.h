@@ -19,9 +19,13 @@
 @property (retain) IBOutlet HangMengView* myView;
 @property (retain) IBOutlet UILabel* myLabel;
 @property (retain) IBOutlet UIImageView* myImageView;
+@property (retain) NSHashTable* hangmanImages;
 
 //-(NSString*)askModelForRandomWord;
 - (IBAction)letterPressed:(UIButton *)sender;
 - (IBAction)resetPressed:(UIButton *)sender;
+- (void) setHangmanImage:(NSString *) image;
+- (void) setLabelText:(NSString *) text;
+- (void) checkGameState;
 
 @end

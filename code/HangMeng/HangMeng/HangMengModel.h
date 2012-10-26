@@ -10,21 +10,25 @@
 #import "HangmanWords.h"
 
 @interface HangMengModel : NSObject
-{
 
-}
 
 @property (retain) HangmanWords* words;
 @property (retain) NSMutableArray* guessedChars;
 @property (retain) NSMutableSet* wordChars;
 @property (retain) NSString* target;
 @property BOOL stringDidChange;
+@property int numMissedGuesses;
+@property const int MAX_GUESSES;
 
 -(NSString*) getRandomWord;
--(NSString*) getFilledString;
 -(BOOL) guessChar:(NSString*) c;
 -(void) startNewGame;
--(BOOL) checkGameState;
 -(NSString*) generateDisplayString;
+-(BOOL) isWin;
+-(BOOL) isLoss;
+-(void) endWithWin;
+-(void) endWithLoss;
+-(BOOL) isGameOver;
+
 
 @end

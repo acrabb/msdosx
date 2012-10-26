@@ -11,37 +11,47 @@
 
 @implementation HangMengModel
 
-NSString* UNDERSCORE = @"_";
-NSString* SPACE = @" ";
+const NSString* UNDERSCORE = @"_";
+const NSString* SPACE = @" ";
 
 @synthesize words = _words;
 @synthesize guessedChars = _guessedChars;
 @synthesize wordChars = _wordChars;
 @synthesize target = _target;
 @synthesize stringDidChange = _stringDidChange;
+@synthesize numMissedGuesses = _numMissedGuesses;
 
 
 -(id) init {
-    _words = [HangmanWords alloc];
+    _words = [[HangmanWords alloc] init];
     _guessedChars = [NSMutableArray alloc];
     _wordChars = [NSMutableSet alloc];
-    [self startNewGame];
+    _numMissedGuesses = 0;
+    self.MAX_GUESSES = 14;
     
     return self;
 }
 
+/*
+    Initialize new data structures.
+    Get the new word to be guessed.
+    Fill data structures.
+    Reset numMissedGuesses to 0.
+ */
 -(void) startNewGame
 {
-    _words = [_words init];
     _guessedChars = [_guessedChars init];
     _wordChars = [_wordChars init];
+    _numMissedGuesses = 0;
     
     // Get the word to be guessed.
     _target = [self getRandomWord];
+    //_target = [_target uppercaseString];
     
     // Put all characters in a set.
     NSString* charStr;
-    for (NSInteger i=0; i<_target.length; i++) {
+    for (int i=0; i<_target.length; i++)
+    {
         charStr = [NSString stringWithFormat:@"%c", [_target characterAtIndex:i]];
         if(![charStr isEqual:SPACE])
         {
@@ -52,7 +62,7 @@ NSString* SPACE = @" ";
     NSLog(@">> Target word is %@", _target);
     NSLog(@">> Character Set: %@", _wordChars);
     
-    // Tell controller to set image, displayString, and keys.
+    // Tell controller to set image, displayString.
 }
 
 -(BOOL)guessChar:(NSString*) c
@@ -60,49 +70,86 @@ NSString* SPACE = @" ";
     _stringDidChange = NO;
     
     c = [c uppercaseString];
-    NSLog(@">> Guessing char %@...", c);
+    [_guessedChars addObject:c];
+    
+    // If the character is in the target word:
     if ([_wordChars containsObject:c])
     {
         [_wordChars removeObject:c];
-        NSLog(@">> Character %@ is in %@!!", c, _target);
+        NSLog(@">> Good guess on %@!", c);
         _stringDidChange = YES;
     }
     else
     {
-        NSLog(@">> Character %@ is not in %@.", c, _target);
+        _numMissedGuesses++;
+        NSLog(@">> Sorry, %@ is incorrect :(", c);
     }
-    [_guessedChars addObject:c];
-    NSLog(@"ACACAC _guessedChars: %@. _wordChars: %@", _guessedChars.description, _wordChars.description);
-    return NO;
     
+    return _stringDidChange;
 }
 
-    /**/
--(NSString*)getFilledString
+-(NSString*)generateDisplayString
 {
     NSMutableString *retVal = [[NSMutableString alloc] init];
     NSString* c;
-    for (NSInteger i=0; i<_target.length; i++) {
+    for (int i=0; i<_target.length; i++) {
         c = [NSString stringWithFormat:@"%c", [_target characterAtIndex:i]];
         if ([_wordChars containsObject:c]) {
             [retVal appendString:UNDERSCORE];
         } else {
             [retVal appendString:c];
         }
+        [retVal appendString:SPACE];
     }
-     
-    NSLog(@"ACACAC Dashed retVal: %@", retVal);
     
-    // Given the target string, return a string whose characters are identical to target, but with "-"s instead of letters, except for those in 'guessedChars'.
+    NSLog(@"Take a guess: %@", retVal);
     
     return retVal;
-    
 }
-/**/
-
 
 -(NSString*)getRandomWord {
     return [_words getWord];
+}
+
+/*
+    Check if the number of missed guesses is < MAX_GUESSES.
+    Check that the number of words left to guess is 0;
+ */
+-(BOOL) isWin {
+    return (_numMissedGuesses < self.MAX_GUESSES) && ([_wordChars count] == 0);
+}
+
+-(BOOL) isLoss {
+    return (_numMissedGuesses >= self.MAX_GUESSES);
+}
+
+/*
+    Update strings to a win message.
+    Display target string.
+    Set inPlay to false. (?)
+ */
+-(void) endWithWin {
+    NSLog(@"Congratulations! You correctly guessed %@", _target);
+}
+
+/*
+    Update strings to a loss message.
+    Set inPlay to false. (?)
+ */
+-(void) endWithLoss {
+    NSLog(@"Aww, you're out of guesses. Please try again!");
+}
+
+-(BOOL) isGameOver {
+    return [self isWin] || [self isLoss];
+}
+
+-(void) dealloc
+{
+    [_wordChars dealloc];
+    [_guessedChars dealloc];
+    [_words dealloc];
+    [super dealloc];
 }
 
 @end
