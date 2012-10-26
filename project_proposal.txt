@@ -18,3 +18,17 @@ Features:
     [OPTIONAL] Allow live editing
     [OPTIONAL] Record, name, and save sounds
 
+    =============================
+    Record, name, and save sounds.
+    Choose a set of sounds for playback.
+    Via a drum-machine-like GUI, select rhythm of sounds for playback.
+    Select a playback tempo.
+    Playback the rhythm.
+
+    Optional:
+    - Allow live editing of sounds.
+    - Allow tap-and-drag support for sound files that may span more than a 16th
+      note.
+    - Allow any number of sounds.
+    - Record playback.
+
