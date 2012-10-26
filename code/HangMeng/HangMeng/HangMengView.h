@@ -7,9 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+@class HangMengViewController;
 
 @interface HangMengView : UIView
 {
 
 }
+
+@property (retain) IBOutlet HangMengViewController* myController;
+
 @end

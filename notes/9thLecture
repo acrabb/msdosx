@@ -1,0 +1,22 @@
+Delegation
+***********
+
+Delegating object keeps reference to the delegate and sends messages to it when events are triggered.
+
+Window sends 'windowShouldClose' to delegate. Delegate responds No.
+Better than subclassing.
+
+NSApplicationDelegate
+
+-(void) applicationdidFinishLaunching:(NSNotification *) something;
+
+NSWindowDelegate
+- not in iOS
+
+windowWillMiniturize
+...WillEnterFullscreen
+...DidEnterFullscreen
+...ShouldClose
+- Only called when the red 'X' is clicked. Not on Quit.
+
+

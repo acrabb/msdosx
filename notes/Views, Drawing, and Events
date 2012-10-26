@@ -1,0 +1,74 @@
+Representing Points and Areas
+******************************
+Cocoa
+    - NSPoint, a struct
+        - NSMakePoint(x, y) - A FUNCTION! (Not a method).
+        - X ->, Y ^
+    - NSSize, a struct
+        - NSMakeSize(width, height)
+    - NSRect, a struct
+        - an NSPoint and NSSize
+        - NSMakeRect(x,y,width,height)
+        - origin at (0,0) of the NSSize (Bottom left).
+
+    Why functions not methods.
+    - Structs are NOT Objective-C classes.
+    - CGRect; NOT CGRect* rect;
+    - Why? This is faster. You don't have to roll things in and out of pointers.
+    - You can store the whole rect in a 64 bit number. (Split the bits.)
+
+    - NSView
+        - Subclass NSView to do your own drawing. Everything is a NSView.
+        - [window contentView]
+            - [contentView subviews]
+    
+Bounds and Frame
+    - Bounds: always start at (0,0,a,b)
+        - What you draw within.
+        - a,b can be whatever you want!
+        - the OS will handle where it goes.
+    - Frame: Where your bounds are.
+        - (x,y,w,h)
+
+Drawing
+    - drawRect: (NSRect) rect
+        - rect is the 'subrect' of the bounds that needs to be redrawn
+        - rect will be your bounds on start.
+        - don't call directly
+
+Redrawing
+    - setNeedsDisplay: YES
+    - setNeedsDisplayInRect: rect
+CAN ONLY UPDATE DISPLAY ON MAIN THREAD.
+    - setNeedsDisplay just sets a flag.
+
+
+
+
+Events
+*******
+NSApplication: manages the main run loop of application
+    - Dispatches events to relavent objects (of class NSResponder)
+    - Event driven.
+
+Types (Mac)
+    - User input.
+    - OS will sendEvent:(NSEvent *) event
+        - to whichever window is the mouse is over.
+        - window finds appropriate view using hitTest: on its contentView
+    - mouseDown:(NSEvent *)event
+        - mouseUp, mouseDragged, mouseMoved, mouseEntered, mouseExited
+
+MouseEvents
+    - NSPoint locationInWindow
+    - viewPos
+    - clickCount (2 = double click)
+    - deltaX
+    - deltaY
+
+
+Key Events
+    - keyWindow
+    - firstResponder
+    - keyUp, keyDown
+
