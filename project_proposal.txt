@@ -9,23 +9,13 @@ Main Idea:
     For iPad/iPhone: Handle recording, organizing, and playback of recorded sounds
 
 Features:
-    Choose a group of sounds to sample for playback
-    Via a drum-machine-like GUI, select rythym and volume of individual sounds
-    Allow for not just 16th note segments, but 'tap-and-drag' support for longer
-    sound files
-    Select a playback tempo
-    Playback (and possibly record) the sounds in the beat
-    [OPTIONAL] Allow live editing
-    [OPTIONAL] Record, name, and save sounds
-
-    =============================
     Record, name, and save sounds.
     Choose a set of sounds for playback.
     Via a drum-machine-like GUI, select rhythm of sounds for playback.
     Select a playback tempo.
     Playback the rhythm.
 
-    Optional:
+    Optional/Additional
     - Allow live editing of sounds.
     - Allow tap-and-drag support for sound files that may span more than a 16th
       note.
