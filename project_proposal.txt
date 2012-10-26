@@ -1,0 +1,21 @@
+Members:
+    Amir Khodaei
+    Andre Crabb
+
+Project Name:
+    BeatMaker
+
+Main Idea:
+     For iPad/iPhone: Handle recording, organizing, and playback of recorded
+     sounds.
+
+Features:
+    Record, name, and save sounds.
+    Choose a group of sounds to sample for playback.
+    Via a drum-machine-like GUI, select rythym and volume of individual sounds.
+    Allow for not just 16th note segments, but 'tap-and-drag' support for longer
+    sound files.
+    Select a playback tempo.
+    Playback (and possibly record) the sounds in the beat, allowing for live
+    editing.
+
