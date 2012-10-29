@@ -18,7 +18,7 @@
 
 @property (nonatomic, retain) IBOutlet UIButton *recordButton;
 @property (nonatomic, retain) IBOutlet UIButton *playButton;
-@property IBOutlet UILabel *recordLabel;
+@property IBOutlet UILabel *recordStateLabel;
 
 @property BOOL isRecording;
 
