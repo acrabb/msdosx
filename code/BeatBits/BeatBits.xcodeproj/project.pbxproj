@@ -16,9 +16,11 @@
 		29F60B6C163645C700BFF907 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 29F60B6B163645C700BFF907 /* Default.png */; };
 		29F60B6E163645C700BFF907 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 29F60B6D163645C700BFF907 /* Default@2x.png */; };
 		29F60B70163645C700BFF907 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 29F60B6F163645C700BFF907 /* Default-568h@2x.png */; };
-		29F60B76163645C700BFF907 /* BeatBitsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 29F60B75163645C700BFF907 /* BeatBitsViewController.m */; };
-		29F60B7E1636468A00BFF907 /* BeatBitsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 29F60B7D1636468A00BFF907 /* BeatBitsModel.m */; };
 		29F60B8016364A3100BFF907 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 29F60B7F16364A3100BFF907 /* MainStoryboard.storyboard */; };
+		A49509F8163F7ECB00801E3E /* BeatBitsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 29F60B75163645C700BFF907 /* BeatBitsViewController.m */; };
+		A49509F9163F7EDE00801E3E /* BeatBitsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 29F60B7D1636468A00BFF907 /* BeatBitsModel.m */; };
+		A49509FD163F7F2100801E3E /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A49509FC163F7F2100801E3E /* AVFoundation.framework */; };
+		A4950A00163F83D100801E3E /* electronics001.wav in Resources */ = {isa = PBXBuildFile; fileRef = A49509FF163F83D100801E3E /* electronics001.wav */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +42,9 @@
 		29F60B7C1636468A00BFF907 /* BeatBitsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BeatBitsModel.h; sourceTree = "<group>"; };
 		29F60B7D1636468A00BFF907 /* BeatBitsModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BeatBitsModel.m; sourceTree = "<group>"; };
 		29F60B7F16364A3100BFF907 /* MainStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainStoryboard.storyboard; sourceTree = "<group>"; };
+		A49509FA163F7EF900801E3E /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		A49509FC163F7F2100801E3E /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		A49509FF163F83D100801E3E /* electronics001.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = electronics001.wav; path = soundfiles/electronics001.wav; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +52,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A49509FD163F7F2100801E3E /* AVFoundation.framework in Frameworks */,
 				29F60B5A163645C700BFF907 /* UIKit.framework in Frameworks */,
 				29F60B5C163645C700BFF907 /* Foundation.framework in Frameworks */,
 				29F60B5E163645C700BFF907 /* CoreGraphics.framework in Frameworks */,
@@ -59,6 +65,8 @@
 		29F60B4A163645C700BFF907 = {
 			isa = PBXGroup;
 			children = (
+				A49509FC163F7F2100801E3E /* AVFoundation.framework */,
+				A49509FA163F7EF900801E3E /* CoreAudio.framework */,
 				29F60B5F163645C700BFF907 /* BeatBits */,
 				29F60B58163645C700BFF907 /* Frameworks */,
 				29F60B56163645C700BFF907 /* Products */,
@@ -86,6 +94,7 @@
 		29F60B5F163645C700BFF907 /* BeatBits */ = {
 			isa = PBXGroup;
 			children = (
+				A49509FF163F83D100801E3E /* electronics001.wav */,
 				29F60B68163645C700BFF907 /* BeatBitsAppDelegate.h */,
 				29F60B69163645C700BFF907 /* BeatBitsAppDelegate.m */,
 				29F60B7F16364A3100BFF907 /* MainStoryboard.storyboard */,
@@ -93,6 +102,7 @@
 				29F60B75163645C700BFF907 /* BeatBitsViewController.m */,
 				29F60B7C1636468A00BFF907 /* BeatBitsModel.h */,
 				29F60B7D1636468A00BFF907 /* BeatBitsModel.m */,
+				A49509FE163F83D100801E3E /* soundfiles */,
 				29F60B60163645C700BFF907 /* Supporting Files */,
 			);
 			path = BeatBits;
@@ -110,6 +120,13 @@
 				29F60B6F163645C700BFF907 /* Default-568h@2x.png */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		A49509FE163F83D100801E3E /* soundfiles */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = soundfiles;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -168,6 +185,7 @@
 				29F60B6E163645C700BFF907 /* Default@2x.png in Resources */,
 				29F60B70163645C700BFF907 /* Default-568h@2x.png in Resources */,
 				29F60B8016364A3100BFF907 /* MainStoryboard.storyboard in Resources */,
+				A4950A00163F83D100801E3E /* electronics001.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -180,8 +198,8 @@
 			files = (
 				29F60B66163645C700BFF907 /* main.m in Sources */,
 				29F60B6A163645C700BFF907 /* BeatBitsAppDelegate.m in Sources */,
-				29F60B76163645C700BFF907 /* BeatBitsViewController.m in Sources */,
-				29F60B7E1636468A00BFF907 /* BeatBitsModel.m in Sources */,
+				A49509F8163F7ECB00801E3E /* BeatBitsViewController.m in Sources */,
+				A49509F9163F7EDE00801E3E /* BeatBitsModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -255,7 +273,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BeatBits/BeatBits-Prefix.pch";
 				INFOPLIST_FILE = "BeatBits/BeatBits-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
@@ -268,7 +286,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BeatBits/BeatBits-Prefix.pch";
 				INFOPLIST_FILE = "BeatBits/BeatBits-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
@@ -294,6 +312,7 @@
 				29F60B7B163645C700BFF907 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

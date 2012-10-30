@@ -10,9 +10,13 @@
 #import <AVFoundation/AVFoundation.h>
 
 // IS THIS NEEDED? What is it for?
-//@interface BeatBitsViewController ()
-//
-//@end
+@interface BeatBitsViewController ()
+
+@property(nonatomic, strong) AVAudioRecorder *recorder;
+@property(nonatomic, strong) NSURL *tempRecordedFile;
+@property(nonatomic, strong) AVAudioPlayer *player;
+
+@end
 
 @implementation BeatBitsViewController
 
@@ -20,40 +24,59 @@
 @synthesize playButton = _playButton;
 @synthesize isRecording = _isRecording;
 @synthesize recordStateLabel = _recordStateLabel;
-
+@synthesize recorder = _recorder;
+@synthesize tempRecordedFile = _tempRecordedFile;
+@synthesize player = _player;
 
 
 - (IBAction)recording:(id)sender
 {
-    if(!_isRecording)
+    if(!self.isRecording)
     {
-        _isRecording = YES;
-        [_recordButton setTitle:@"STOP" forState:UIControlStateNormal];
-        _playButton.hidden = YES;
-        _recordStateLabel.text = @"Recording";
+        self.isRecording = YES;
+        [self.recordButton setTitle:@"STOP" forState:UIControlStateNormal];
+        self.playButton.hidden = YES;
+        self.recordStateLabel.text = @"Recording";
+
         
-        tempRecordedFile = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:@"file001"]];
-        recorder = [[AVAudioRecorder alloc] initWithURL:tempRecordedFile settings:nil error:nil];
-        [recorder setDelegate:self];
-        [recorder prepareToRecord];
-        [recorder record];
+        self.tempRecordedFile = [NSURL fileURLWithPath:@"soundfiles/temp001"];
+        self.recorder = [[AVAudioRecorder alloc] initWithURL:self.tempRecordedFile settings:nil error:nil];
+        self.recorder.delegate = self;
+        [self.recorder prepareToRecord];
+        [self.recorder record];
+        NSLog(@"ACACAC Recording! Temp file: %@", self.tempRecordedFile);
     }
     else
     {
-        _isRecording = YES;
-        [_recordButton setTitle:@"REC" forState:UIControlStateNormal];
-        _playButton.hidden = NO;
-        _recordStateLabel.text = @"Not Recording";
+        self.isRecording = NO;
+        [self.recordButton setTitle:@"REC" forState:UIControlStateNormal];
+        self.playButton.hidden = NO;
+        self.recordStateLabel.text = @"Not Recording";
         
-        [recorder stop];
+        [self.recorder stop];
     }
 }
 
 - (IBAction)playback:(id)sender
 {
-    AVAudioPlayer *player = [[AVAudioPlayer alloc] initWithContentsOfURL:tempRecordedFile error:nil];
-    player.volume = 1;
+    NSLog(@"in playback");
+    
+    //self.tempRecordedFile = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:@"file001"]];
+    self.tempRecordedFile = [NSURL fileURLWithPath:@"electronics001.wav"];
+    
+    NSString *tempFile = [[NSBundle mainBundle] pathForResource:@"electronics001" ofType:@"wav"];
+    NSURL *tempURL = [[NSURL alloc] initFileURLWithPath:tempFile];
+    
+//    NSData *soundFile = [[NSData alloc] initWithContentsOfFile:@"soundfiles/electronics001.wav"];
+    AVAudioPlayer *player = [[AVAudioPlayer alloc] initWithContentsOfURL:tempURL error:nil];
+    
+    NSLog(@"player obj: %@", [player description]);
+    
+    player.volume = 1.0;
+    
     [player play];
+    
+    NSLog(@"after player is played!: URL: %@", tempURL);
 }
 
 
@@ -63,9 +86,9 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
-    _isRecording = false;
-    _playButton.hidden = YES;
-    _recordStateLabel.text = @"Not Recording";
+    self.isRecording = false;
+    self.playButton.hidden = NO;
+    self.recordStateLabel.text = @"Not Recording";
     
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
     
@@ -76,10 +99,10 @@
 - (void)viewDidUnload
 {
     NSFileManager *fileHandler = [NSFileManager defaultManager];
-    [fileHandler removeItemAtPath:tempRecordedFile error:nil];
-    recorder = nil;
-    tempRecordedFile = nil;
-    _playButton.hidden = YES;
+    [fileHandler removeItemAtPath:[self.tempRecordedFile description] error:nil];
+//    self.recorder = nil;
+//    self.tempRecordedFile = nil;
+    self.playButton.hidden = YES;
 }
 
 - (void)didReceiveMemoryWarning

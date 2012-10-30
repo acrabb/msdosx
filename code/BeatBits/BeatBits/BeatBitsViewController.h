@@ -11,10 +11,6 @@
 #import <CoreAudio/CoreAudioTypes.h>
 
 @interface BeatBitsViewController : UIViewController <AVAudioRecorderDelegate>
-{
-    AVAudioRecorder *recorder;
-    NSURL *tempRecordedFile;
-}
 
 @property (nonatomic, retain) IBOutlet UIButton *recordButton;
 @property (nonatomic, retain) IBOutlet UIButton *playButton;
@@ -23,8 +19,8 @@
 @property BOOL isRecording;
 
 
--(IBAction)recording;
--(IBAction)playback;
+-(IBAction)recording:(id)sender;
+-(IBAction)playback:(id)sender;
 
 
 @end
