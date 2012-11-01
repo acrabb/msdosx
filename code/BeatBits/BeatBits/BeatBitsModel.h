@@ -12,6 +12,7 @@
 
 @interface BeatBitsModel : NSObject
 
-
+// record a sound file.
+// select sounds out of curr
 
 @end
