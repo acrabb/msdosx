@@ -1,0 +1,9 @@
+Handles iCloud for you.
+    Version control handled.
+
+
+
+NSManagedObjectContext
+- Where you make/modify Entities and connections between Entities.
+
+
