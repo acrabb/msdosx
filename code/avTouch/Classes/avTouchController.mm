@@ -71,6 +71,10 @@
 @synthesize updateTimer;
 @synthesize player;
 
+
+@synthesize recorder;
+@synthesize recButton;
+
 @synthesize inBackground;
 
 
@@ -147,6 +151,9 @@ void RouteChangeListener(	void *                  inClientData,
 	[self updateCurrentTimeForPlayer:p];
 }
 
+NSURL *fileURL;
+
+
 - (void)awakeFromNib
 {
 	playBtnBG = [[UIImage imageNamed:@"play.png"] retain];
@@ -165,7 +172,7 @@ void RouteChangeListener(	void *                  inClientData,
 	progressBar.minimumValue = 0.0;	
 	
 	// Load the the sample file, use mono or stero sample
-	NSURL *fileURL = [[NSURL alloc] initFileURLWithPath: [[NSBundle mainBundle] pathForResource:@"sample" ofType:@"m4a"]];
+	fileURL = [[NSURL alloc] initFileURLWithPath: [[NSBundle mainBundle] pathForResource:@"sample" ofType:@"m4a"]];
     //NSURL *fileURL = [[NSURL alloc] initFileURLWithPath: [[NSBundle mainBundle] pathForResource:@"sample2ch" ofType:@"m4a"]];
 
 	self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:fileURL error:nil];	
@@ -177,6 +184,13 @@ void RouteChangeListener(	void *                  inClientData,
 		player.numberOfLoops = 1;
 		player.delegate = self;
 	}
+    
+    
+    
+    self.recorder = [[AVAudioRecorder alloc] initWithURL:fileURL settings:nil error:nil];
+    
+    
+    
 	
 	OSStatus result = AudioSessionInitialize(NULL, NULL, NULL, NULL);
 	if (result)
@@ -195,6 +209,63 @@ void RouteChangeListener(	void *                  inClientData,
 	[fileURL release];
 }
 
+
+
+BOOL isRecording = NO;
+
+-(IBAction)recButtonPressed:(id)sender
+{
+    NSLog(@"ACACAC Recorded pressed");
+    // fileURL
+    if(!isRecording)
+    {
+        
+        
+        NSDictionary *recordSettings =
+        [[NSDictionary alloc] initWithObjectsAndKeys:
+         [NSNumber numberWithFloat: 44100.0], AVSampleRateKey,
+         [NSNumber numberWithInt: kAudioFormatAppleLossless], AVFormatIDKey,
+         [NSNumber numberWithInt: 1], AVNumberOfChannelsKey,
+         [NSNumber numberWithInt: AVAudioQualityMax],
+         AVEncoderAudioQualityKey,
+         nil];
+        
+        self.recorder = [[AVAudioRecorder alloc] initWithURL:fileURL settings:recordSettings error:nil];
+        [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryRecord error: nil];
+        
+        
+        self.recButton.titleLabel.text = @"STOP";
+        NSLog(@"ACACAC Recorder recording at file: %@", fileURL);
+        isRecording = YES;
+        [self.recorder prepareToRecord];
+        [self.recorder record];
+    } else
+    {
+        [self.recorder stop];
+        isRecording = NO;
+        NSLog(@"ACACAC Recorder STOPPED recording");
+        self.recButton.titleLabel.text = @"REC";
+        
+        [[AVAudioSession sharedInstance] setActive: NO error: nil];
+        
+        [self.player initWithContentsOfURL:fileURL error:nil];
+        if (self.player)
+        {
+            fileName.text = [NSString stringWithFormat: @"%@ (%d ch.)", [[player.url relativePath] lastPathComponent], player.numberOfChannels, nil];
+            [self updateViewForPlayerInfo:player];
+            [self updateViewForPlayerState:player];
+            player.numberOfLoops = 1;
+            player.delegate = self;
+        }
+        
+        
+    }
+
+    
+}
+
+
+
 -(void)pausePlaybackForPlayer:(AVAudioPlayer*)p
 {
 	[p pause];
@@ -206,6 +277,7 @@ void RouteChangeListener(	void *                  inClientData,
 	if ([p play])
 	{
 		[self updateViewForPlayerState:p];
+        NSLog(@"ACACAC Player playing file: %@", fileURL);
 	}
 	else
 		NSLog(@"Could not play %@\n", p.url);

@@ -65,6 +65,9 @@
 	IBOutlet UILabel					*currentTime;
 	IBOutlet UILabel					*duration;
 	IBOutlet CALevelMeter				*lvlMeter_in;
+    
+    IBOutlet UIButton                   *recButton;
+    AVAudioRecorder                     *recorder;
 	
 	AVAudioPlayer						*player;
 	UIImage								*playBtnBG;
@@ -75,6 +78,10 @@
 	
 	BOOL								inBackground;
 }
+
+
+- (IBAction)recButtonPressed:(UIButton*)sender;
+
 
 - (IBAction)playButtonPressed:(UIButton*)sender;
 - (IBAction)rewButtonPressed:(UIButton*)sender;
@@ -98,6 +105,10 @@
 
 @property (nonatomic, retain)	NSTimer			*updateTimer;
 @property (nonatomic, assign)	AVAudioPlayer	*player;
+
+
+@property (nonatomic, assign)   AVAudioRecorder *recorder;
+@property (nonatomic, retain)   UIButton        *recButton;
 
 @property (nonatomic, assign)	BOOL			inBackground;
 @end
