@@ -52,7 +52,7 @@ Copyright (C) 2012 Apple Inc. All Rights Reserved.
 int main(int argc, char *argv[]) {
 	
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	int retVal = UIApplicationMain(argc, argv, nil, nil);
+	int retVal = UIApplicationMain(argc, argv, nil, @"SpeakHereAppDelegate");
 	[pool release];
 	return retVal;
 }
