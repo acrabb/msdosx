@@ -1,0 +1,100 @@
+What is it?:
+    Look at sample code!! Don't read documentation.
+    Audio Units
+        Plug-in arch for handling input and output of raw data &
+        synchronization.
+    Audio file, Covnerter and codec Services
+        Reading and writing
+    Clock
+        Represent stuff via a graph.
+    Hardware & drivers
+        Synch of audio
+    MIDI & Music Sequencing Services
+        Synch of audio and MIDI data during recording.
+    HAL
+        If you have special hardware.
+
+
+Interfaces:
+    Microphone
+    Mixer Unit
+        Incredibly customizable!
+    List of interfaces on slides.
+    Clock API for synch.
+    OpenAL is cool.
+    Audio Unit Services:
+        Talk to devices without talking to hardware.
+    Audio Processing Graph API
+        Can change pitch in real time w/o changing tempo.
+        Delay unit. Echo effects.
+        Gets all compressed to a generic file, goes into mixer, and then saved
+        or whatever.
+        NEVER send data from one core audio unit to multiple units. USE A
+        SPLITTER UNIT.
+    Audio File and Conversion Services
+        Adio converters andcodects.
+        File Format information.
+        Audio Metadata.
+        Core Audio File Format.
+            .caf files.
+            neutral format. intermediate format.
+    HAL Services
+        Better than dealing with HW device drivers.
+    Music Player API
+        Coordinating and organizing MIDI tracks.
+    Core MIDI
+        Core MIDI -> MIDI Server -> MIDI Instrument
+            MIDI Server: Synchronization
+    Clock API
+        Reference clock to synch applications or devices.
+        A standalone timing source.
+        Playback rate can be globally adjusted.
+        Time can be translated to SMTPE or MIDI coding.
+    OpenAL
+        Simulates 3D sound.
+        Cross platform.
+
+
+Common Tasks:
+    Reading/Writing Audio Data
+        Can be circular and happen in real time.
+    Aggregate Devices
+        Layer of abstraction.
+        Things appear as one single device.
+    Handling MIDI
+        lots of stuff.
+        Recording real time.
+        Mixing audio sources.
+
+
+Frameworks:
+    AudioToolbox.framework
+    AudioUnit.framework
+    CoreAudioKit.
+    CoreAudio
+    CoreMIDI
+    CoreMIDIServer
+
+
+What's been shipping?:
+    AUHighPass
+        A high pass filter.
+    AUTimePitch
+        Change pitch/time without changing the time/pitch.
+    AUNetReceive
+        Generate noise and things.
+
+
+Supported Audio and Data Formats:
+    aac
+    aifc
+    aiff
+    caf
+    mp3
+    alac
+
+http://www.subfurther.com/blog/2009/04/28/an-iphone-core-audio-brain-dump/
+
+
+
+
