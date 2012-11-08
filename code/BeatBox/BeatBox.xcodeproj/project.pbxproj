@@ -25,6 +25,8 @@
 		65592AFC1648C4CD001FA5E6 /* BeatBoxTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 65592AFB1648C4CD001FA5E6 /* BeatBoxTests.m */; };
 		65592B061648C5B1001FA5E6 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65592B051648C5B1001FA5E6 /* AudioToolbox.framework */; };
 		65CADD06164B5CEF00A720A2 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65CADD05164B5CEF00A720A2 /* AVFoundation.framework */; };
+		65CADD0E164B701600A720A2 /* BeatBoxModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CADD0D164B701600A720A2 /* BeatBoxModel.m */; };
+		65CADD11164B7B7F00A720A2 /* BeatBoxSoundRow.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CADD10164B7B7F00A720A2 /* BeatBoxSoundRow.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +64,10 @@
 		65592AFB1648C4CD001FA5E6 /* BeatBoxTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BeatBoxTests.m; sourceTree = "<group>"; };
 		65592B051648C5B1001FA5E6 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		65CADD05164B5CEF00A720A2 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		65CADD0C164B701600A720A2 /* BeatBoxModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BeatBoxModel.h; sourceTree = "<group>"; };
+		65CADD0D164B701600A720A2 /* BeatBoxModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BeatBoxModel.m; sourceTree = "<group>"; };
+		65CADD0F164B7B7F00A720A2 /* BeatBoxSoundRow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BeatBoxSoundRow.h; sourceTree = "<group>"; };
+		65CADD10164B7B7F00A720A2 /* BeatBoxSoundRow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BeatBoxSoundRow.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,6 +137,10 @@
 				65592AE31648C4CC001FA5E6 /* BeatBoxViewController.m */,
 				65592AE51648C4CC001FA5E6 /* BeatBoxViewController.xib */,
 				65592AD11648C4CC001FA5E6 /* Supporting Files */,
+				65CADD0C164B701600A720A2 /* BeatBoxModel.h */,
+				65CADD0D164B701600A720A2 /* BeatBoxModel.m */,
+				65CADD0F164B7B7F00A720A2 /* BeatBoxSoundRow.h */,
+				65CADD10164B7B7F00A720A2 /* BeatBoxSoundRow.m */,
 			);
 			path = BeatBox;
 			sourceTree = "<group>";
@@ -282,6 +292,8 @@
 				65592AD71648C4CC001FA5E6 /* main.m in Sources */,
 				65592ADB1648C4CC001FA5E6 /* BeatBoxAppDelegate.m in Sources */,
 				65592AE41648C4CC001FA5E6 /* BeatBoxViewController.m in Sources */,
+				65CADD0E164B701600A720A2 /* BeatBoxModel.m in Sources */,
+				65CADD11164B7B7F00A720A2 /* BeatBoxSoundRow.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

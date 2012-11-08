@@ -8,18 +8,29 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
+#import "BeatBoxSoundRow.h"
 
 @interface BeatBoxViewController : UIViewController
 <AVAudioPlayerDelegate, AVAudioRecorderDelegate, UIAlertViewDelegate>
 
-- (void)recordSound;
+- (void)recordSoundWithName:(NSString*)name;
 
 - (IBAction)playButtonPushed:(UIButton *)sender;
 
 - (IBAction)addNewSound;
 
-- (NSString*)audioRecordingPath;
+- (NSString*)audioFilePath;
+- (NSString*)audioFilePathWithName:(NSString*) name;
+
 - (NSDictionary*)audioRecordingSettings;
 - (void)startRecording:(NSString*)soundName;
+
+
+// Added by Andre.
+- (void)recordSoundForFile:(NSString*) newFileName;
+- (void)playMeasureForSound:(BeatBoxSoundRow*) sound;
+- (void)playPlaybackForPlayer:(AVAudioPlayer*) player;
+- (void)recordWithName:(NSString*) name;
+- (void) createNewSound;
 
 @end
