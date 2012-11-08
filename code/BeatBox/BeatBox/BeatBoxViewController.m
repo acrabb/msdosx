@@ -105,6 +105,7 @@
     // fileURL
     if(!self.isRecording)
     {
+        // SET THE RECORD SETTINGS
         NSDictionary *recordSettings =
         [[NSDictionary alloc] initWithObjectsAndKeys:
          [NSNumber numberWithFloat: 44100.0], AVSampleRateKey,
@@ -114,24 +115,32 @@
          AVEncoderAudioQualityKey,
          nil];
         
-        self.recorder = [[AVAudioRecorder alloc] initWithURL:self.fileURL settings:recordSettings error:nil];
+        // INIT THE RECORDER
+        self.recorder = [self.recorder initWithURL:self.fileURL settings:recordSettings error:nil];
+        
+        // (?) SETUP THE AUDIO SESSION
         [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryRecord error: nil];
         
-        self.recButton.titleLabel.text = @"STOP";
-        NSLog(@"ACACAC Recorder recording at file: %@", self.fileURL);
-        self.isRecording = YES;
+        // SET LABEL, PREP TO RECORD, AND RECORD.
+        [self.recButton setTitle:@"STOP" forState:UIControlStateNormal];
         [self.recorder prepareToRecord];
+        self.isRecording = YES;
         [self.recorder record];
-    } else
+        NSLog(@"ACACAC Recorder recording at file: %@", self.fileURL);
+    }
+    else
     {
+        // STOP RECORDING; RESET THE LABEL.
         [self.recorder stop];
         self.isRecording = NO;
         NSLog(@"ACACAC Recorder STOPPED recording");
-        self.recButton.titleLabel.text = @"REC";
+        [self.recButton setTitle:@"REC" forState:UIControlStateNormal];
         
+        // (?) SETDOWN THE AUDIO SESSION
         [[AVAudioSession sharedInstance] setActive: NO error: nil];
         
-        [self.player initWithContentsOfURL:self.fileURL error:nil];
+        // INIT THE PLAYER TO PLAY THIS FILE
+        self.player = [self.player initWithContentsOfURL:self.fileURL error:nil];
         if (self.player)
         {
             self.fileName.text = [NSString stringWithFormat: @"%@ (%d ch.)", [[self.player.url relativePath] lastPathComponent], self.player.numberOfChannels, nil];
@@ -140,12 +149,9 @@
 //            self.player.numberOfLoops = 1;
             self.player.delegate = self;
         }
-        
-        
     }
-    
-    
 }
+
 
 -(void)startPlaybackForPlayer:(AVAudioPlayer*)p
 {
@@ -160,6 +166,7 @@
     }
 }
 
+
 - (IBAction)playButtonPushed:(UIButton *)sender
 {
 	if (self.player.playing == YES)
@@ -168,14 +175,12 @@
 		[self startPlaybackForPlayer: self.player];
 }
 
+
 -(void)pausePlaybackForPlayer:(AVAudioPlayer*)p
 {
 	[p pause];
 //	[self updateViewForPlayerState:p];
 }
 
-
-//- (IBAction)playButtonPressed:(UIButton *)sender {
-//}
 @end
 
