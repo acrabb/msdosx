@@ -155,7 +155,9 @@
         NSLog(@"ACACAC Player playing file: %@", self.fileURL);
 	}
 	else
+    {
 		NSLog(@"Could not play %@\n", p.url);
+    }
 }
 
 - (IBAction)playButtonPushed:(UIButton *)sender
