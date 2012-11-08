@@ -10,169 +10,106 @@
 
 @interface BeatBoxViewController ()
 
+@property (nonatomic) IBOutlet UILabel *fileName;
+@property (nonatomic) IBOutlet UIButton *playButton;
+@property (nonatomic) IBOutlet UIButton *recButton;
+@property (nonatomic,strong) AVAudioPlayer *audioPlayer;
+@property (nonatomic,strong) AVAudioRecorder *audioRecorder;
+@property BOOL isRecording;
+
 @end
 
 @implementation BeatBoxViewController
 
-@synthesize fileURL     = _fileURL;
-@synthesize playButton  = _playButton;
-@synthesize recButton   = _recButton;
-@synthesize player      = _player;
-@synthesize isRecording = _isRecording;
+@synthesize playButton      = _playButton;
+@synthesize recButton       = _recButton;
+@synthesize audioPlayer     = _audioPlayer;
+@synthesize isRecording     = _isRecording;
+@synthesize audioRecorder   = _audioRecorder;
+
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    NSLog(@"ACACAC ViewDidLoad! :)");
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-    NSLog(@"ACACAC DidReceiveMemoryWarning! :(");
+- (void) viewDidUnload{ [super viewDidUnload];
+    if ([self.audioRecorder isRecording]) {
+        [self.audioRecorder stop];
+    }
+    
+    self.audioRecorder = nil;
+    
+    if ([self.audioPlayer isPlaying]) {
+        [self.audioPlayer stop];
+    }
+    
+    self.audioPlayer = nil;
 }
-
 
 - (void)awakeFromNib
 {
-//	playBtnBG = [[UIImage imageNamed:@"play.png"] retain];
-//  pauseBtnBG = [UIImage imageNamed:@"pause.png"];
-//	[playButton setImage:playBtnBG forState:UIControlStateNormal];
-//  [self registerForBackgroundNotifications];
-//	updateTimer = nil;
-//	rewTimer = nil;
-//	ffwTimer = nil;
-//	duration.adjustsFontSizeToFitWidth = YES;
-//	currentTime.adjustsFontSizeToFitWidth = YES;
-//	progressBar.minimumValue = 0.0;
-	
-    NSLog(@"ACACAC AwokeFromNib! :)");
     
-    self.isRecording = NO;
-    
-	// SET THE SAMPLE FILE URL, use mono or stero sample
-	self.fileURL = [[NSURL alloc] initFileURLWithPath: [[NSBundle mainBundle] pathForResource:@"sample" ofType:@"m4a"]];
-    
-    
-    //NSURL *fileURL = [[NSURL alloc] initFileURLWithPath: [[NSBundle mainBundle] pathForResource:@"sample2ch" ofType:@"m4a"]];
-    
-    /*/
-    // INITIALIZE THE PLAYER
-	self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:self.fileURL error:nil];
-  
-	if (self.player)
-	{
-		self.fileName.text = [NSString stringWithFormat: @"%@ (%d ch.)", [[self.player.url relativePath] lastPathComponent], self.player.numberOfChannels, nil];
-        
-//		[self updateViewForPlayerInfo:self.player];
-//		[self updateViewForPlayerState:self.player];
-//		self.player.numberOfLoops = 1;
-//		self.player.delegate = self;
-	}
-    /**/
-    
-    
-    // INITIALIZE THE RECORDER WITH THE FILE URL
-    self.recorder = [[AVAudioRecorder alloc] initWithURL:self.fileURL settings:nil error:nil];
-    
-
-	// INITIALIZE THE AUDIO SESSION
-	OSStatus result = AudioSessionInitialize(NULL, NULL, NULL, NULL);
-	if (result)
-		NSLog(@"Error initializing audio session! %ld", result);
-	
-	[[AVAudioSession sharedInstance] setDelegate: self];
-	NSError *setCategoryError = nil;
-	[[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayback error: &setCategoryError];
-	if (setCategoryError)
-		NSLog(@"Error setting category! %@", setCategoryError);
-    
-	
-//	result = AudioSessionAddPropertyListener (kAudioSessionProperty_AudioRouteChange, RouteChangeListener, self);
-//	if (result)
-//		NSLog(@"Could not add property listener! %ld", result);
-	
-//	[self.fileURL release];
 }
-
-
 
 -(IBAction)recordButtonPushed:(UIButton *)sender
 {
-    NSLog(@"ACACAC RecordButtenPushed");
-    // fileURL
-    if(!self.isRecording)
-    {
-        // SET THE RECORD SETTINGS
-        NSDictionary *recordSettings =
-        [[NSDictionary alloc] initWithObjectsAndKeys:
-         [NSNumber numberWithFloat: 44100.0], AVSampleRateKey,
-         [NSNumber numberWithInt: kAudioFormatAppleLossless], AVFormatIDKey,
-         [NSNumber numberWithInt: 1], AVNumberOfChannelsKey,
-         [NSNumber numberWithInt: AVAudioQualityMax],
-         AVEncoderAudioQualityKey,
-         nil];
+    
+    NSError *error = nil;
+    NSString *pathAsString = [self audioRecordingPath];
+    NSURL *audioRecordingURL = [NSURL fileURLWithPath:pathAsString];
+    
+    self.audioRecorder = [[AVAudioRecorder alloc] initWithURL:audioRecordingURL settings:[self audioRecordingSettings] error:&error];
+    
+    if (self.audioRecorder != nil){
         
-        // INIT THE RECORDER
-        self.recorder = [self.recorder initWithURL:self.fileURL settings:recordSettings error:nil];
+        self.audioRecorder.delegate = self;
         
-        // (?) SETUP THE AUDIO SESSION
-        [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryRecord error: nil];
-        
-        // SET LABEL, PREP TO RECORD, AND RECORD.
-        [self.recButton setTitle:@"STOP" forState:UIControlStateNormal];
-        [self.recorder prepareToRecord];
-        self.isRecording = YES;
-        [self.recorder record];
-        NSLog(@"ACACAC Recorder recording at file: %@", self.fileURL);
-    }
-    else
-    {
-        // STOP RECORDING; RESET THE LABEL.
-        [self.recorder stop];
-        self.isRecording = NO;
-        NSLog(@"ACACAC Recorder STOPPED recording");
-        [self.recButton setTitle:@"REC" forState:UIControlStateNormal];
-        
-        // (?) SETDOWN THE AUDIO SESSION
-        [[AVAudioSession sharedInstance] setActive: NO error: nil];
-        
-        // INIT THE PLAYER TO PLAY THIS FILE
-        self.player = [self.player initWithContentsOfURL:self.fileURL error:nil];
-        if (self.player)
-        {
-            self.fileName.text = [NSString stringWithFormat: @"%@ (%d ch.)", [[self.player.url relativePath] lastPathComponent], self.player.numberOfChannels, nil];
-//            [self updateViewForPlayerInfo:self.player];
-//            [self updateViewForPlayerState:self.player];
-//            self.player.numberOfLoops = 1;
-            self.player.delegate = self;
-        }
+        /* Prepare the recorder and then start the recording */
+        if ([self.audioRecorder prepareToRecord] && [self.audioRecorder record]){
+            NSLog(@"Successfully started to record.");
+            
+            [self.recButton setTitle:@"RECORDING" forState:UIControlStateNormal];
+            
+            /* After 5 seconds, let's stop the recording process */
+            [self performSelector:@selector(stopRecordingOnAudioRecorder:)
+                       withObject:self.audioRecorder afterDelay:5.0f];
+        } else {
+            NSLog(@"Failed to record.");
+            self.audioRecorder = nil; }
+    } else {
+        NSLog(@"Failed to create an instance of the audio recorder.");
     }
 }
-
-
--(void)startPlaybackForPlayer:(AVAudioPlayer*)p
-{
-	if ([p play])
-	{
-//		[self updateViewForPlayerState:p];
-        NSLog(@"ACACAC Player playing file: %@", self.fileURL);
-	}
-	else
-    {
-		NSLog(@"Could not play %@\n", p.url);
-    }
-}
-
 
 - (IBAction)playButtonPushed:(UIButton *)sender
 {
-	if (self.player.playing == YES)
-		[self pausePlaybackForPlayer: self.player];
-	else
-		[self startPlaybackForPlayer: self.player];
+    NSLog(@"Successfully stopped the audio recording process.");
+    
+    /* Let's try to retrieve the data for the recorded file */
+    NSError *playbackError = nil;
+    NSError *readingError = nil;
+    NSData *fileData = [NSData dataWithContentsOfFile:[self audioRecordingPath] options:NSDataReadingMapped error:&readingError];
+    
+    /* Form an audio player and make it play the recorded data */
+    self.audioPlayer =
+    [[AVAudioPlayer alloc] initWithData:fileData error:&playbackError];
+    
+    /* Could we instantiate the audio player? */
+    if (self.audioPlayer != nil){
+        
+        self.audioPlayer.delegate = self;
+        
+        /* Prepare to play and start playing */
+        if ([self.audioPlayer prepareToPlay] && [self.audioPlayer play]){
+            NSLog(@"Started playing the recorded audio.");
+        } else {
+            NSLog(@"Could not play the audio.");
+        }
+    } else {
+        NSLog(@"Failed to create an audio player.");
+    }
 }
 
 
@@ -180,6 +117,48 @@
 {
 	[p pause];
 //	[self updateViewForPlayerState:p];
+}
+
+- (NSString *) audioRecordingPath {
+
+    NSString *result = nil;
+    NSArray *folders = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
+                                                           NSUserDomainMask, YES);
+    NSString *documentsFolder = [folders objectAtIndex:0];
+    result = [documentsFolder stringByAppendingPathComponent:@"Recording.m4a"];
+    return result;
+}
+
+
+- (NSDictionary *) audioRecordingSettings {
+    
+    NSDictionary *result = nil;
+    
+    /* Let's prepare the audio recorder options in the dictionary. Later we will use this dictionary to instantiate an audio recorder of type AVAudioRecorder */
+    NSMutableDictionary *settings = [[NSMutableDictionary alloc] init];
+    
+    [settings
+     setValue:[NSNumber numberWithInteger:kAudioFormatAppleLossless] forKey:AVFormatIDKey];
+    
+    [settings
+     setValue:[NSNumber numberWithFloat:44100.0f] forKey:AVSampleRateKey];
+    
+    [settings
+     setValue:[NSNumber numberWithInteger:1] forKey:AVNumberOfChannelsKey];
+    
+    [settings
+     setValue:[NSNumber numberWithInteger:AVAudioQualityLow] forKey:AVEncoderAudioQualityKey];
+    
+    result = [NSDictionary dictionaryWithDictionary:settings];
+    
+    return result;
+}
+
+- (void) stopRecordingOnAudioRecorder :(AVAudioRecorder *)paramRecorder {
+    [paramRecorder stop];
+
+    // resetting Record button title
+    [self.recButton setTitle:@"REC" forState:UIControlStateNormal];
 }
 
 @end

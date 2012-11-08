@@ -10,26 +10,12 @@
 #import <AVFoundation/AVFoundation.h>
 
 @interface BeatBoxViewController : UIViewController
-
-@property (nonatomic)	IBOutlet UILabel        *fileName;
-@property (nonatomic)	IBOutlet UIButton       *playButton;
-@property (nonatomic)   IBOutlet UIButton       *recButton;
-@property (nonatomic)   NSURL                   *fileURL;
-@property (nonatomic)	AVAudioPlayer           *player;
-@property (nonatomic)   AVAudioRecorder         *recorder;
-@property               BOOL                    isRecording;
-
-//@property (nonatomic, retain)	UISlider		*volumeSlider;
-//@property (nonatomic, retain)	UISlider		*progressBar;
-//@property (nonatomic, retain)	UILabel			*currentTime;
-//@property (nonatomic, retain)	UILabel			*duration;
-//@property (retain)			CALevelMeter	*lvlMeter_in;
-//@property (nonatomic, retain)	NSTimer			*updateTimer;
-//@property (nonatomic, assign)	BOOL			inBackground;
-
-
+<AVAudioPlayerDelegate, AVAudioRecorderDelegate>
 
 - (IBAction)recordButtonPushed:(UIButton *)sender;
 - (IBAction)playButtonPushed:(UIButton *)sender;
+
+- (NSString*)audioRecordingPath;
+- (NSDictionary*)audioRecordingSettings;
 
 @end
