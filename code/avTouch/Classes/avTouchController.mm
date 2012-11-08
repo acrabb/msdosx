@@ -151,36 +151,9 @@ void RouteChangeListener(	void *                  inClientData,
 	[self updateCurrentTimeForPlayer:p];
 }
 
-NSURL *fileURL;
 
-
-- (void)awakeFromNib
-{
-	playBtnBG = [[UIImage imageNamed:@"play.png"] retain];
-	pauseBtnBG = [[UIImage imageNamed:@"pause.png"] retain];
-
-	[playButton setImage:playBtnBG forState:UIControlStateNormal];
-	
-	[self registerForBackgroundNotifications];
-			
-	updateTimer = nil;
-	rewTimer = nil;
-	ffwTimer = nil;
-	
-	duration.adjustsFontSizeToFitWidth = YES;
-	currentTime.adjustsFontSizeToFitWidth = YES;
-	progressBar.minimumValue = 0.0;	
-	
-	// Load the the sample file, use mono or stero sample
-	fileURL = [[NSURL alloc] initFileURLWithPath: [[NSBundle mainBundle] pathForResource:@"sample" ofType:@"m4a"]];
-    //NSURL *fileURL = [[NSURL alloc] initFileURLWithPath: [[NSBundle mainBundle] pathForResource:@"sample2ch" ofType:@"m4a"]];
-
-	self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:fileURL error:nil];	
-	if (self.player)
-	{
-		fileName.text = [NSString stringWithFormat: @"%@ (%d ch.)", [[player.url relativePath] lastPathComponent], player.numberOfChannels, nil];
-		[self updateViewForPlayerInfo:player];
-		[self updateViewForPlayerState:player];
+- (IBAc
+   self updateViewForPlayerState:player];
 		player.numberOfLoops = 1;
 		player.delegate = self;
 	}
@@ -219,8 +192,6 @@ BOOL isRecording = NO;
     // fileURL
     if(!isRecording)
     {
-        
-        
         NSDictionary *recordSettings =
         [[NSDictionary alloc] initWithObjectsAndKeys:
          [NSNumber numberWithFloat: 44100.0], AVSampleRateKey,
@@ -232,7 +203,6 @@ BOOL isRecording = NO;
         
         self.recorder = [[AVAudioRecorder alloc] initWithURL:fileURL settings:recordSettings error:nil];
         [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryRecord error: nil];
-        
         
         self.recButton.titleLabel.text = @"STOP";
         NSLog(@"ACACAC Recorder recording at file: %@", fileURL);
