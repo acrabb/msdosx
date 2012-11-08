@@ -10,12 +10,16 @@
 #import <AVFoundation/AVFoundation.h>
 
 @interface BeatBoxViewController : UIViewController
-<AVAudioPlayerDelegate, AVAudioRecorderDelegate>
+<AVAudioPlayerDelegate, AVAudioRecorderDelegate, UIAlertViewDelegate>
 
-- (IBAction)recordButtonPushed:(UIButton *)sender;
+- (void)recordSound;
+
 - (IBAction)playButtonPushed:(UIButton *)sender;
+
+- (IBAction)addNewSound;
 
 - (NSString*)audioRecordingPath;
 - (NSDictionary*)audioRecordingSettings;
+- (void)startRecording:(NSString*)soundName;
 
 @end

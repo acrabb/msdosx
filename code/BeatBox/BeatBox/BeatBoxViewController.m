@@ -10,11 +10,13 @@
 
 @interface BeatBoxViewController ()
 
-@property (nonatomic) IBOutlet UILabel *fileName;
-@property (nonatomic) IBOutlet UIButton *playButton;
-@property (nonatomic) IBOutlet UIButton *recButton;
+@property (strong,nonatomic) IBOutlet UIButton *playButton;
+@property (strong,nonatomic) IBOutlet UIButton *recButton;
 @property (nonatomic,strong) AVAudioPlayer *audioPlayer;
 @property (nonatomic,strong) AVAudioRecorder *audioRecorder;
+@property (strong, nonatomic) IBOutlet UILabel *recordProgressLabel;
+@property NSInteger counterSecond;
+
 @property BOOL isRecording;
 
 @end
@@ -26,12 +28,15 @@
 @synthesize audioPlayer     = _audioPlayer;
 @synthesize isRecording     = _isRecording;
 @synthesize audioRecorder   = _audioRecorder;
+@synthesize recordProgressLabel = _recordProgressLabel;
+@synthesize counterSecond = _counterSecond;
 
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    self.recordProgressLabel.text = @"";
 }
 
 - (void) viewDidUnload{ [super viewDidUnload];
@@ -48,13 +53,11 @@
     self.audioPlayer = nil;
 }
 
-- (void)awakeFromNib
-{
+- (void)awakeFromNib {
     
 }
 
--(IBAction)recordButtonPushed:(UIButton *)sender
-{
+-(void)recordSound {
     
     NSError *error = nil;
     NSString *pathAsString = [self audioRecordingPath];
@@ -70,14 +73,15 @@
         if ([self.audioRecorder prepareToRecord] && [self.audioRecorder record]){
             NSLog(@"Successfully started to record.");
             
-            [self.recButton setTitle:@"RECORDING" forState:UIControlStateNormal];
+            [self.recButton setTitle:@"Recording" forState:UIControlStateNormal];
             
             /* After 5 seconds, let's stop the recording process */
             [self performSelector:@selector(stopRecordingOnAudioRecorder:)
                        withObject:self.audioRecorder afterDelay:5.0f];
         } else {
             NSLog(@"Failed to record.");
-            self.audioRecorder = nil; }
+            self.audioRecorder = nil;
+        }
     } else {
         NSLog(@"Failed to create an instance of the audio recorder.");
     }
@@ -112,11 +116,33 @@
     }
 }
 
+- (void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
 
--(void)pausePlaybackForPlayer:(AVAudioPlayer*)p
-{
-	[p pause];
-//	[self updateViewForPlayerState:p];
+    NSString *buttonTitle = [alertView buttonTitleAtIndex:buttonIndex];
+    
+    if ([buttonTitle isEqualToString:@"OK"]) {
+
+        NSLog(@"User pressed the OK button, start recording the sound...");
+        
+        [self startRecording:[[alertView textFieldAtIndex:0] text]];
+        
+    } else if ([buttonTitle isEqualToString:@"Cancel"]) {
+        NSLog(@"User pressed the Cancel button.");
+    }
+}
+
+- (IBAction)addNewSound {
+
+    UIAlertView *alertView = [[UIAlertView alloc]
+                                initWithTitle:@"File Name"
+                                message:@"Please enter a name for this sound:"
+                                delegate:self
+                                cancelButtonTitle:@"Cancel"
+                                otherButtonTitles:@"OK", nil];
+    
+    [alertView setAlertViewStyle:UIAlertViewStylePlainTextInput];
+    
+    [alertView show];
 }
 
 - (NSString *) audioRecordingPath {
@@ -154,11 +180,35 @@
     return result;
 }
 
-- (void) stopRecordingOnAudioRecorder :(AVAudioRecorder *)paramRecorder {
+- (void)stopRecordingOnAudioRecorder:(AVAudioRecorder *)paramRecorder {
+    
     [paramRecorder stop];
 
     // resetting Record button title
     [self.recButton setTitle:@"REC" forState:UIControlStateNormal];
+}
+
+-(void)countLabel:(NSTimer*)timer {
+    
+    if (self.counterSecond > 0) {
+        self.recordProgressLabel.text = [NSString stringWithFormat:@"%d", self.counterSecond--];
+
+    } else {
+    
+        [timer invalidate];
+        self.recordProgressLabel.text = @"Go!";
+        [self recordSound];
+        
+    }
+}
+
+- (void)startRecording:(NSString*)soundName {
+    
+    self.counterSecond = 3;
+    
+    [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(countLabel:) userInfo:nil repeats:YES];
+    
+    //NSTimer *timer1 = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(countLabel:counterSecond) userInfo:nil repeats:YES];
 }
 
 @end
