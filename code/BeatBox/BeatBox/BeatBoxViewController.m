@@ -71,7 +71,7 @@
 //		self.player.numberOfLoops = 1;
 //		self.player.delegate = self;
 	}
-    */
+    /**/
     
     
     // INITIALIZE THE RECORDER WITH THE FILE URL
