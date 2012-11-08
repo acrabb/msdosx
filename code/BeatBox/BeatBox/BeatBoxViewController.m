@@ -9,8 +9,8 @@
 #import "BeatBoxViewController.h"
 
 @interface BeatBoxViewController ()
-@end
 
+@end
 
 @implementation BeatBoxViewController
 
@@ -71,7 +71,7 @@
 //		self.player.numberOfLoops = 1;
 //		self.player.delegate = self;
 	}
-    /**/
+    */
     
     
     // INITIALIZE THE RECORDER WITH THE FILE URL
