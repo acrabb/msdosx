@@ -63,6 +63,12 @@
     return _soundDirectoryPath;
 }
 
+- (NSMutableDictionary*)soundNameToRowDic {
+    if (!_soundNameToRowDic) {
+        _soundNameToRowDic = [[NSMutableDictionary alloc] initWithCapacity:5];
+    }
+    return _soundNameToRowDic;
+}
 
 /**
  * viewDidLoad:
@@ -80,13 +86,23 @@
     
     // get all the sound files 
     NSArray *soundFilePathsArray = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:self.soundDirectoryPath  error:nil];
-    
+
+    NSLog(@"getting all sound files from %@...", self.soundDirectoryPath);
+
     // initialize the dictionary with SoundRow objects
     for (NSString* soundFilePath in soundFilePathsArray) {
-
+        
         BeatBoxSoundRow *soundRow = [[BeatBoxSoundRow alloc] initWithPath:soundFilePath];
         
+        NSLog(@"Adding SoundRow object to dictionary\n\tname: %@\tsoundPath: %@", soundRow.soundName, soundRow.soundFilePath);
+        
+        if (!self.soundNameToRowDic)
+            NSLog(@"dic is nil!");
+        
         [self.soundNameToRowDic setObject:soundRow forKey: soundRow.soundName];
+        
+        
+        NSLog(@"added dictionary, new dic size: %d", self.soundNameToRowDic.count);
     }
     
     self.recordProgressLabel.text = @"";
@@ -242,7 +258,7 @@
 -(void)recordSoundWithName:(NSString*)name
 {    
     NSError *error = nil;
-    NSString *pathAsString = [self.soundDirectoryPath stringByAppendingString:name];
+    NSString *pathAsString = [self.soundDirectoryPath stringByAppendingString:[name stringByAppendingString:@".m4a"]];
     NSURL *audioRecordingURL = [NSURL fileURLWithPath:pathAsString];
     
     self.audioRecorder = [[AVAudioRecorder alloc] initWithURL:audioRecordingURL settings:[self audioRecordingSettings] error:&error];
@@ -407,10 +423,17 @@
     
     [paramRecorder stop];
     
-    // TODO: save the recorded file
-    BeatBoxSoundRow *recordedSond = [[BeatBoxSoundRow alloc] initWithUrl:paramRecorder.url];
+    NSLog(@"url: %@",paramRecorder.url.lastPathComponent);
     
-    [self.soundNameToRowDic setObject:recordedSond forKey:recordedSond.soundName];
+    // TODO: save the recorded file
+    BeatBoxSoundRow *recordedSound = [[BeatBoxSoundRow alloc] initWithPath:paramRecorder.url.lastPathComponent];
+    
+    NSLog(@"sound file stored: %@ \n\tin %@", recordedSound.soundName, recordedSound.soundFilePath);
+    
+    [self.soundNameToRowDic setObject:recordedSound forKey:recordedSound.soundName];
+    
+    for (NSString* key in [self.soundNameToRowDic allKeys])
+        NSLog(@"key: %@\tvalue: %@", key, [self.soundNameToRowDic objectForKey:key]);
     
     // resetting Record button title
     [self.recButton setTitle:@"REC" forState:UIControlStateNormal];
@@ -487,7 +510,7 @@
     if (![[NSFileManager defaultManager] fileExistsAtPath:dataPath])
         [[NSFileManager defaultManager] createDirectoryAtPath:dataPath withIntermediateDirectories:NO attributes:nil error:nil];
 
-    return dataPath;
+    return [dataPath stringByAppendingString:@"/"];
 }
 
 @end
