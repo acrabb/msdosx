@@ -20,6 +20,7 @@
 @property NSString*         soundName;
 @property NSMutableArray*   sixteenthNoteArray;
 @property float             volume;
+@property int               notesPerMeasure;
 
 
 - (id) init;

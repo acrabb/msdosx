@@ -13,6 +13,7 @@
 @interface BeatBoxViewController : UIViewController
 <AVAudioPlayerDelegate, AVAudioRecorderDelegate, UIAlertViewDelegate>
 
+@property BOOL isPlaying;
 - (void)recordSoundWithName:(NSString*)name;
 
 - (IBAction)playButtonPushed:(UIButton *)sender;

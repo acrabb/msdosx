@@ -26,6 +26,7 @@
  - getTempo
  - isPlaying
  */
+/*
 - (void)play:(NSMutableArray *)sounds : (int *)bpm {
     NSLog(@">> Beginning play loop!");
     
@@ -38,7 +39,6 @@
     // Call the timer fire method for the firt time.
     [timer performSelector:@selector(timerFireMethod:) withObject:timer afterDelay:0];
     
-    /*/
     // Create n AVAudioPlayers to play.
     self.players = [[NSMutableArray alloc] initWithCapacity:sounds.count];
     
@@ -65,10 +65,11 @@
         // ...and add it to self.players.
         [self.players addObject:player];
     }
-    /**/
+    
 }
+*/
 
-
+/*
 - (void)stop {
     // Set self.isPlaying to NO
     self.isPlaying = NO;
@@ -79,11 +80,13 @@
     // Reset count to 0;
     self.globalCount = 0;
 }
+ */
 
 /*
  Gets called every time the timer is fired.
  Typically called every 16th note.
  */
+/*
 - (void)timerFireMethod:(NSTimer *)timer {
     // Get the global count. (0-15)
     int count = self.globalCount % self.NOTES_PER_MEASURE;
@@ -112,16 +115,17 @@
                     afterDelay:[self bpmToSixteenth:bpm]]
     }
 }
-
+*/
 
 /*
  START PLAYBACK FOR THE SPECIFIED AUDIOPLAYER
  */
+/*
 - (void)playPlaybackForPlayer:(AVAudioPlayer*) player {
     if (player != nil){
         player.delegate = self;
-        
-        /* Prepare to play and start playing */
+ 
+        // Prepare to play and start playing
         if ([player prepareToPlay] && [player play]){
             NSLog(@"Started playing the recorded audio.");
         } else {
@@ -131,18 +135,20 @@
         NSLog(@"nil AVAudioPlayer received.");
     }
 }
+*/
 
-
+/*
 - (int)bpmToSixteenth:(int *) bpm {
     // Calc 16th milliseconds from what bpm points to.
     return ((60000 / *bpm) / 16);
 }
-
+*/
 
 
 /*
     INIT AN AUDIOPLAYER WITH THE FILEPATH FOR THE SPECIFIED SOUND
  */
+/*
 - (AVAudioPlayer*)createAudioPlayerWithSound:(BeatBoxSoundRow*) sound {
     NSData *fileData = [[NSData alloc] initWithContentsOfFile:sound.soundFilePath
                                               options:NSDataReadingMapped
@@ -151,7 +157,7 @@
                                                           error:nil];
     return player;
 }
-
+*/
 
 
 @end
