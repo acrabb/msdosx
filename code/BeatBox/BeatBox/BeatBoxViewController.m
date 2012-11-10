@@ -12,9 +12,10 @@
 @interface BeatBoxViewController ()
 
 // OUTLETS
-@property (strong,nonatomic) IBOutlet UIButton *playButton;
-@property (strong,nonatomic) IBOutlet UIButton *recButton;
+@property (strong, nonatomic) IBOutlet UIButton *playButton;
+@property (strong, nonatomic) IBOutlet UIButton *recButton;
 @property (strong, nonatomic) IBOutlet UILabel *recordProgressLabel;
+@property (strong, nonatomic) UIPickerView *soundFilePicker;
 
 // NON-VIEW
 @property (strong, nonatomic) AVAudioPlayer     *audioPlayer;
@@ -50,6 +51,7 @@
 @synthesize recordedFileName    = _recordedFileName;
 @synthesize soundNameToRowDic   = _soundNameToRowDic;
 @synthesize globalCount         = _globalCount;
+@synthesize soundFilePicker     = _soundFilePicker;
 
 
 // Getter
@@ -86,6 +88,13 @@
     
     // TODO: Initialize DrumMachine with the stored settings
     self.tempo = 100;
+    
+    // Set the soundFilePickr
+    self.soundFilePicker = [[UIPickerView alloc] init];
+    self.soundFilePicker.dataSource = self;
+    self.soundFilePicker.center = self.view.center;
+    self.soundFilePicker.delegate = self;
+    self
 
     // creates the "sound" folder if not yet created
     self.soundDirectoryPath = [BeatBoxViewController createSoundFolder];
@@ -537,6 +546,60 @@
     [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(countLabel:) userInfo:nil repeats:YES];
     
     //NSTimer *timer1 = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(countLabel:counterSecond) userInfo:nil repeats:YES];
+}
+
+- (IBAction)soundNameButtonPushed:(UIButton *)sender {
+    // Display sound file picker.
+    [self.view addSubview:self.soundFilePicker];
+    
+    // On sound selection
+    
+    // Either record new sound file.
+    
+    // Or set current view to selected sound.
+    
+    
+    
+}
+
+- (NSInteger) numberOfComponentsInPickerView:(UIPickerView *)pickerView {
+    NSInteger result = 0;
+    if ([pickerView isEqual:self.soundFilePicker]) {
+        result = 1;
+    }
+    return result;
+}
+- (NSInteger) pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
+    NSInteger result = 0;
+    if ([pickerView isEqual:self.soundFilePicker]) {
+        result = [self.soundNameToRowDic count] + 1;
+    }
+    return result;
+}
+- (NSString*) pickerView:(UIPickerView *) pickerView
+             titleForRow:(NSInteger)row
+            forComponent:(NSInteger)component {
+    NSString* result = nil;
+    if ([pickerView isEqual:self.soundFilePicker]) {
+        // Fill the rows
+        NSLog(@">>> Filling on row: %d", row);
+        // If row == 0, can add new file.
+        if (row == 0) {
+            // add new file
+            NSLog(@">>> Filling on New File row");
+            return @"New File...";
+        }
+        // else, be name of sound file in dict at row -1
+        else {
+            NSLog(@">>> Filling in else.");
+            NSSortDescriptor *sortOrder = [NSSortDescriptor sortDescriptorWithKey:@"self" ascending:YES];
+            NSArray* arr = [self.soundNameToRowDic allKeys];
+            NSMutableArray* mutArr = [arr mutableCopy];
+            [mutArr sortUsingDescriptors:[NSArray arrayWithObject:sortOrder]];
+            result = [mutArr objectAtIndex:(row - 1)];
+            return result;
+        }
+    }
 }
 
 - (IBAction)noteButtonPushed:(UIButton *)sender {

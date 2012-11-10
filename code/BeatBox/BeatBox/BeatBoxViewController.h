@@ -11,7 +11,9 @@
 #import "BeatBoxSoundRow.h"
 
 @interface BeatBoxViewController : UIViewController
-<AVAudioPlayerDelegate, AVAudioRecorderDelegate, UIAlertViewDelegate>
+<AVAudioPlayerDelegate, AVAudioRecorderDelegate, UIAlertViewDelegate,
+    UIPickerViewDataSource,
+    UIPickerViewDelegate>
 
 @property BOOL isPlaying;
 - (void)recordSoundWithName:(NSString*)name;
@@ -26,6 +28,14 @@
 - (NSDictionary*)audioRecordingSettings;
 - (void)startRecording:(NSString*)soundName;
 
+- (IBAction)soundNameButtonPushed:(UIButton *)sender;
+
+// soundFilePicker methods
+- (NSInteger) numberOfComponentsInPickerView:(UIPickerView *)pickerView;
+- (NSInteger) pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component;
+- (NSString*) pickerView:(UIPickerView *) pickerView
+             titleForRow:(NSInteger)row
+            forComponent:(NSInteger)component;
 
 // Added by Andre.
 - (void)recordSoundForFile:(NSString*) newFileName;
