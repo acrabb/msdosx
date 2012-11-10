@@ -560,7 +560,7 @@
 								<reference key="IBUIFont" ref="391090830"/>
 							</object>
 						</array>
-						<string key="NSFrame">{{8, 10}, {465, 47}}</string>
+						<string key="NSFrame">{{8, 27}, {465, 47}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="560693586"/>
@@ -810,10 +810,10 @@
 						<reference key="object" ref="774585933"/>
 						<array class="NSMutableArray" key="children">
 							<reference ref="422117243"/>
-							<reference ref="971508726"/>
 							<reference ref="1043263595"/>
 							<reference ref="718017148"/>
 							<reference ref="182772824"/>
+							<reference ref="971508726"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
