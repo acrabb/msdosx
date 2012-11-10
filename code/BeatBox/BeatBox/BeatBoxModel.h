@@ -16,6 +16,16 @@
 - (void)playSoundArrays;
 - (void)playSoundArray:(NSMutableArray*) bitArray;
 
+// Mutable array of SoundRowView objects to play.
+/*
+    Object API:
+        [- getName]
+        - getFilePath
+        - isSelected
+        - getNoteArray
+    - getTempo
+ */
+- (void)play:(NSMutableArray*) sounds;
 
 
 @end

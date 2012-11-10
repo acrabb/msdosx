@@ -34,7 +34,10 @@
 @synthesize counterSecond = _counterSecond;
 @synthesize recordedFileName = _recordedFileName;
 
-
+/**
+ * viewDidLoad:
+ *  set the recordProgressLabel text to empty string.
+ */
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -42,6 +45,12 @@
     self.recordProgressLabel.text = @"";
 }
 
+/**
+ * viewDidUnload:
+ *  Stop recording if we are.
+ *  Set the audioRecorder to nil
+ *  Stop the player if we're playing.
+ */
 - (void) viewDidUnload{ [super viewDidUnload];
     if ([self.audioRecorder isRecording]) {
         [self.audioRecorder stop];
@@ -56,9 +65,13 @@
     self.audioPlayer = nil;
 }
 
+/**
+ * awakeFromNib:
+ */
 - (void)awakeFromNib {
     
 }
+
 
 - (void) createNewSound {
     //record new or choose existing file
@@ -286,5 +299,13 @@
     //NSTimer *timer1 = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(countLabel:counterSecond) userInfo:nil repeats:YES];
 }
 
+- (IBAction)noteButtonPushed:(UIButton *)sender {
+    // Get the sound associated with the button.
+    UIView* row = [sender superview];
+    // Get the index of the button.
+    int index = [[[sender titleLabel] text] intValue];
+    // Set the button to on.
+     
+}
 @end
 

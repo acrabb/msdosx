@@ -27,6 +27,7 @@
 		65CADD06164B5CEF00A720A2 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65CADD05164B5CEF00A720A2 /* AVFoundation.framework */; };
 		65CADD0E164B701600A720A2 /* BeatBoxModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CADD0D164B701600A720A2 /* BeatBoxModel.m */; };
 		65CADD11164B7B7F00A720A2 /* BeatBoxSoundRow.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CADD10164B7B7F00A720A2 /* BeatBoxSoundRow.m */; };
+		65DE94B3164E0753003E827E /* SoundRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 65DE94B2164E0753003E827E /* SoundRowView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +69,8 @@
 		65CADD0D164B701600A720A2 /* BeatBoxModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BeatBoxModel.m; sourceTree = "<group>"; };
 		65CADD0F164B7B7F00A720A2 /* BeatBoxSoundRow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BeatBoxSoundRow.h; sourceTree = "<group>"; };
 		65CADD10164B7B7F00A720A2 /* BeatBoxSoundRow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BeatBoxSoundRow.m; sourceTree = "<group>"; };
+		65DE94B1164E0753003E827E /* SoundRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundRowView.h; sourceTree = "<group>"; };
+		65DE94B2164E0753003E827E /* SoundRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoundRowView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +144,8 @@
 				65CADD0D164B701600A720A2 /* BeatBoxModel.m */,
 				65CADD0F164B7B7F00A720A2 /* BeatBoxSoundRow.h */,
 				65CADD10164B7B7F00A720A2 /* BeatBoxSoundRow.m */,
+				65DE94B1164E0753003E827E /* SoundRowView.h */,
+				65DE94B2164E0753003E827E /* SoundRowView.m */,
 			);
 			path = BeatBox;
 			sourceTree = "<group>";
@@ -294,6 +299,7 @@
 				65592AE41648C4CC001FA5E6 /* BeatBoxViewController.m in Sources */,
 				65CADD0E164B701600A720A2 /* BeatBoxModel.m in Sources */,
 				65CADD11164B7B7F00A720A2 /* BeatBoxSoundRow.m in Sources */,
+				65DE94B3164E0753003E827E /* SoundRowView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -32,5 +32,6 @@
 - (void)playPlaybackForPlayer:(AVAudioPlayer*) player;
 - (void)recordWithName:(NSString*) name;
 - (void) createNewSound;
+- (IBAction)noteButtonPushed:(UIButton *)sender;
 
 @end
