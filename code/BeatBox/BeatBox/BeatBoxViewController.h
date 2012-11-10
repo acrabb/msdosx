@@ -33,5 +33,6 @@
 - (void)recordWithName:(NSString*) name;
 - (void) createNewSound;
 - (IBAction)noteButtonPushed:(UIButton *)sender;
++ (void)toggleNoteArray:(NSMutableArray*)noteArray atIndex:(NSUInteger)index;
 
 @end

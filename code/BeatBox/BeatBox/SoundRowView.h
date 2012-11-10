@@ -12,11 +12,10 @@
 @interface SoundRowView : UIView
 
 @property UILabel*          soundName;
-@property NSString*         soundFilePath;
-@property NSMutableArray*   noteArray;
-@property UISlider*         volumeSlider;
-@property BeatBoxSoundRow*  sound;
-@property BOOL              selected;
-
+//@property NSString*         soundFilePath;
+//@property NSMutableArray*   noteArray;
+//@property UISlider*         volumeSlider;
+//@property BeatBoxSoundRow*  sound;
+//@property BOOL              selected;
 
 @end

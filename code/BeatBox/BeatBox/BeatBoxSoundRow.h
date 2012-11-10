@@ -18,15 +18,17 @@
 
 @property NSString*         soundFilePath;
 @property NSString*         soundName;
-@property NSMutableArray*   sixteenthNoteArray;
+@property NSMutableArray*          sixteenthNoteArray;
 @property float             volume;
 
 
 - (id) init;
+
 - (id) initWithName:(NSString*)         name
               array:(NSMutableArray*)   array
              volume:(float)             volume
            filePath:(NSString*)         filePath;
+
 + (NSMutableArray*) defaultArray;
 
 @end

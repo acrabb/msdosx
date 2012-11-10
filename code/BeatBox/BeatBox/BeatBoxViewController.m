@@ -11,13 +11,25 @@
 
 @interface BeatBoxViewController ()
 
+// OUTLETS
 @property (strong,nonatomic) IBOutlet UIButton *playButton;
 @property (strong,nonatomic) IBOutlet UIButton *recButton;
-@property (nonatomic,strong) AVAudioPlayer *audioPlayer;
-@property (nonatomic,strong) AVAudioRecorder *audioRecorder;
 @property (strong, nonatomic) IBOutlet UILabel *recordProgressLabel;
+
+// NON-VIEW
+@property (strong, nonatomic) AVAudioPlayer *audioPlayer;
+@property (strong, nonatomic) AVAudioRecorder *audioRecorder;
+
+// TODO: dictionary of sound names to sound objects
+@property (strong, nonatomic) NSMutableDictionary *soundNameToRowDic;
+
+// TODO: global tempo (bits per min) and global volume
+@property NSInteger tempo;
+@property NSInteger volume;
+
 @property NSInteger counterSecond;
-@property (nonatomic,strong) NSString* recordedFileName;
+@property (strong, nonatomic) NSString* recordedFileName;
+@property (strong, nonatomic) NSString* soundDirectoryPath;
 
 @property BOOL isRecording;
 
@@ -33,6 +45,20 @@
 @synthesize recordProgressLabel = _recordProgressLabel;
 @synthesize counterSecond = _counterSecond;
 @synthesize recordedFileName = _recordedFileName;
+@synthesize soundNameToRowDic = _soundNameToRowDic;
+
+
+// Getter
+- (NSString*)soundDirectoryPath {
+    if (!_soundDirectoryPath) {
+
+        NSArray *folders = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
+                                                               NSUserDomainMask, YES);
+        _soundDirectoryPath = [folders objectAtIndex:0];
+    }
+    return _soundDirectoryPath;
+}
+
 
 /**
  * viewDidLoad:
@@ -42,6 +68,9 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    // TODO: Initialize DrumMachine with the stored settings
+    [BeatBoxViewController createSoundFolder];
+    
     self.recordProgressLabel.text = @"";
 }
 
@@ -106,10 +135,11 @@
     }
 }
 
+//
 -(void)recordSoundWithName:(NSString*)name
 {    
     NSError *error = nil;
-    NSString *pathAsString = [self audioFilePathWithName:name];
+    NSString *pathAsString = [self.soundDirectoryPath stringByAppendingString:name];
     NSURL *audioRecordingURL = [NSURL fileURLWithPath:pathAsString];
     
     self.audioRecorder = [[AVAudioRecorder alloc] initWithURL:audioRecordingURL settings:[self audioRecordingSettings] error:&error];
@@ -119,11 +149,11 @@
         
         /* Prepare the recorder and then start the recording */
         if ([self.audioRecorder prepareToRecord] && [self.audioRecorder record]){
-            NSLog(@"Successfully started to record.");
+            NSLog(@"Successfully started to record in %@", audioRecordingURL);
             
             [self.recButton setTitle:@"Recording" forState:UIControlStateNormal];
             
-            /* After 5 seconds, let's stop the recording process */
+            /* After 1 second, let's stop the recording process */
             [self performSelector:@selector(stopRecordingOnAudioRecorder:)
                        withObject:self.audioRecorder afterDelay:1.0f];
             
@@ -194,6 +224,7 @@
     }
 }
 
+// This gets called when a button on UIAlert view is clicked by user
 - (void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
 
     NSString *buttonTitle = [alertView buttonTitleAtIndex:buttonIndex];
@@ -269,7 +300,10 @@
 - (void)stopRecordingOnAudioRecorder:(AVAudioRecorder *)paramRecorder {
     
     [paramRecorder stop];
-
+    
+    // TODO: save the recorded file
+    	
+    
     // resetting Record button title
     [self.recButton setTitle:@"REC" forState:UIControlStateNormal];
 }
@@ -300,12 +334,51 @@
 }
 
 - (IBAction)noteButtonPushed:(UIButton *)sender {
+
     // Get the sound associated with the button.
-    UIView* row = [sender superview];
-    // Get the index of the button.
-    int index = [[[sender titleLabel] text] intValue];
-    // Set the button to on.
-     
+    UIView *row = [sender superview];
+    NSString *soundName;
+    
+    // find the UILabel in the parent view (sound's view)
+    for (id subview in row.subviews) {
+        if ([subview isKindOfClass:[UILabel class]]) {
+            soundName = [subview text];
+            break;
+        }
+    }
+    
+    NSLog(@"sound: %@", soundName);
+
+    /* 
+     * Initialize soundNameToRowDic with the sounds available
+     */
+    BeatBoxSoundRow* soundRow = [self.soundNameToRowDic valueForKey:soundName];
+
+    // toggle the 16th note associated with the noteButton
+    [BeatBoxViewController toggleNoteArray:soundRow.sixteenthNoteArray
+                                   atIndex:[sender.titleLabel.text intValue]];
 }
+
++ (void)toggleNoteArray:(NSMutableArray*)noteArray atIndex:(NSUInteger)index {
+    
+    bool updatedNoteValue = YES;
+    if ([[noteArray objectAtIndex:index] boolValue] == YES)
+        updatedNoteValue = NO;
+    
+    [noteArray setObject:[NSNumber numberWithBool:updatedNoteValue] atIndexedSubscript:index];
+}
+
+// create sound folder for this device
++ (void)createSoundFolder {
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+
+    NSString *documentsDirectory = [paths objectAtIndex:0]; // Get documents folder
+    NSString *dataPath = [documentsDirectory stringByAppendingPathComponent:@"sounds"];
+    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:dataPath])
+        [[NSFileManager defaultManager] createDirectoryAtPath:dataPath withIntermediateDirectories:NO attributes:nil error:nil];
+    // Create folder
+}
+
 @end
 

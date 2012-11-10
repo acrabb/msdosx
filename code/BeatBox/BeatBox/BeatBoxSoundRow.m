@@ -26,7 +26,11 @@
     self.soundName = @"defaultName";
     
     // SET THE DEFAULT ARRAY TO QUARTER NOTES.
-    self.sixteenthNoteArray = [BeatBoxSoundRow defaultArray];
+    self.sixteenthNoteArray = [[NSMutableArray alloc] initWithObjects:
+                               0,0,0,0,
+                               0,0,0,0,
+                               0,0,0,0,
+                               0,0,0,0,nil]; //[BeatBoxSoundRow defaultArray];
     
     // SET THE DEFAULT VOLUME
     self.volume = 1.0;

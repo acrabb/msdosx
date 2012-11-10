@@ -10,14 +10,11 @@
 
 @implementation SoundRowView
 
-
-@synthesize soundFilePath   = _soundFilePath;
+//@synthesize soundFilePath   = _soundFilePath;
 @synthesize soundName       = _soundName;
-@synthesize noteArray       = _noteArray;
-@synthesize volumeSlider    = _volumeSlider;
-@synthesize sound           = _sound;
-
-
+//@synthesize noteArray       = _noteArray;
+//@synthesize volumeSlider    = _volumeSlider;
+//@synthesize sound           = _sound;
 
 - (id)initWithFrame:(CGRect)frame
 {
