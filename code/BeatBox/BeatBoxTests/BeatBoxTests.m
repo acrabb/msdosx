@@ -15,6 +15,15 @@
     [super setUp];
     
     // Set-up code here.
+    
+    
+    /*** Amir's tests ***/
+    
+    
+    /*** Andre's tests ***/
+    
+    //Test the player
+    // Create a soundRow object with
 }
 
 - (void)tearDown
