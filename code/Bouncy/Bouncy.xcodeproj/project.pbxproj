@@ -102,8 +102,8 @@
 				29D3711F160AC771001576F9 /* BouncyViewController.xib */,
 				29D37122160AC994001576F9 /* BouncyView.h */,
 				29D37123160AC994001576F9 /* BouncyView.m */,
-				29D6A03C16113A5500A063DD /* BouncyModel.h */,
 				29D6A03D16113A5500A063DD /* BouncyModel.m */,
+				29D6A03C16113A5500A063DD /* BouncyModel.h */,
 			);
 			path = Bouncy;
 			sourceTree = "<group>";

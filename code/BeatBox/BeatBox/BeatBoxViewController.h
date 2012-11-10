@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 #import "BeatBoxSoundRow.h"
+#import "SoundRowView.h"
 
 @interface BeatBoxViewController : UIViewController
 <AVAudioPlayerDelegate, AVAudioRecorderDelegate, UIAlertViewDelegate,
@@ -18,6 +19,7 @@
 @property BOOL isPlaying;
 - (void)recordSoundWithName:(NSString*)name;
 @property (strong, nonatomic) IBOutlet UIView *pickerView;
+//@property (strong, nonatomic) IBOutlet SoundRowView *viewOne;
 - (IBAction)pickerButtonPushed;
 
 - (IBAction)playButtonPushed:(UIButton *)sender;

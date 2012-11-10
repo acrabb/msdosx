@@ -35,5 +35,6 @@
            filePath:(NSString*)         filePath;
 
 + (NSMutableArray*) defaultArray;
+- (BOOL) toggleElementAt:(NSInteger)index;
 
 @end

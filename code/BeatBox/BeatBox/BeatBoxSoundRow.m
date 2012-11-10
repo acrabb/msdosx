@@ -22,11 +22,12 @@
     self.soundName = @"defaultName";
     
     // SET THE DEFAULT ARRAY TO QUARTER NOTES.
-    self.sixteenthNoteArray = [[NSMutableArray alloc] initWithObjects:
-                               0,0,0,0,
-                               0,0,0,0,
-                               0,0,0,0,
-                               0,0,0,0,nil]; //[BeatBoxSoundRow defaultArray];
+    self.sixteenthNoteArray = [BeatBoxSoundRow defaultArray];
+//    self.sixteenthNoteArray = [[NSMutableArray alloc] initWithObjects:
+//                               0,0,0,0,
+//                               0,0,0,0,
+//                               0,0,0,0,
+//                               0,0,0,0,nil]; //[BeatBoxSoundRow defaultArray];
     
     // SET THE DEFAULT VOLUME
     self.volume = 1.0;
@@ -79,21 +80,29 @@
 
 + (NSMutableArray*) defaultArray {
     NSMutableArray* temp = [[NSMutableArray alloc] initWithObjects:
-                            [NSNumber numberWithBool:YES],[NSNumber numberWithBool:NO],
-                            [NSNumber numberWithBool:YES],[NSNumber numberWithBool:NO],
-                            [NSNumber numberWithBool:YES],[NSNumber numberWithBool:NO],
-                            [NSNumber numberWithBool:YES],[NSNumber numberWithBool:NO],
-                            [NSNumber numberWithBool:YES],[NSNumber numberWithBool:NO],
-                            [NSNumber numberWithBool:YES],[NSNumber numberWithBool:NO],
-                            [NSNumber numberWithBool:YES],[NSNumber numberWithBool:NO],
-                            [NSNumber numberWithBool:YES],[NSNumber numberWithBool:NO],
+                            [NSNumber numberWithInt:1],[NSNumber numberWithInt:0],
+                            [NSNumber numberWithInt:1],[NSNumber numberWithInt:0],
+                            [NSNumber numberWithInt:1],[NSNumber numberWithInt:0],
+                            [NSNumber numberWithInt:1],[NSNumber numberWithInt:0],
+                            [NSNumber numberWithInt:1],[NSNumber numberWithInt:0],
+                            [NSNumber numberWithInt:1],[NSNumber numberWithInt:0],
+                            [NSNumber numberWithInt:1],[NSNumber numberWithInt:0],
+                            [NSNumber numberWithInt:1],[NSNumber numberWithInt:0],
                             nil];
-//    [temp setObject:[NSNumber numberWithInt:1] atIndexedSubscript:0];
-//    [temp setObject:[NSNumber numberWithInt:1] atIndexedSubscript:4];
-//    [temp setObject:[NSNumber numberWithInt:1] atIndexedSubscript:8];
-//    [temp setObject:[NSNumber numberWithInt:1] atIndexedSubscript:12];
-    
     return temp;
+}
+
+
+- (BOOL)toggleElementAt:(NSInteger)index {
+    BOOL updatedNoteValue = YES;
+    BOOL current = [[self.sixteenthNoteArray objectAtIndex:index] boolValue];
+    NSLog(@"Current BOOL value: %@", [NSNumber numberWithBool:current]);
+    if (current == YES) {
+        updatedNoteValue = NO;
+    }
+    NSLog(@"New BOOL value: %@", [NSNumber numberWithBool:updatedNoteValue]);
+    [self.sixteenthNoteArray setObject:[NSNumber numberWithBool:updatedNoteValue] atIndexedSubscript:index];
+    return !updatedNoteValue;
 }
 
 

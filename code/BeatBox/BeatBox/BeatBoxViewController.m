@@ -8,74 +8,76 @@
 
 #import "BeatBoxViewController.h"
 #import "BeatBoxSoundRow.h"
+#import "SoundRowView.h"
 
-@interface BeatBoxViewController ()
-
-// OUTLETS
-@property (strong, nonatomic) IBOutlet UIButton *playButton;
-@property (strong, nonatomic) IBOutlet UIButton *recButton;
-@property (strong, nonatomic) IBOutlet UILabel *recordProgressLabel;
-@property (strong, nonatomic) IBOutlet UIPickerView *soundFilePicker;
-
-// NON-VIEW
-@property (strong, nonatomic) AVAudioPlayer     *audioPlayer;
-@property (strong, nonatomic) AVAudioRecorder   *audioRecorder;
-@property (strong, nonatomic) NSTimer           *playTimer;
-
-// TODO: dictionary of sound names to sound objects
-@property (strong, nonatomic) NSMutableDictionary *soundNameToRowDic;
-
-// TODO: global tempo (beats per min) and global volume
-@property NSInteger tempo;
-@property NSInteger volume;
-@property NSInteger globalCount;
-
-@property NSInteger counterSecond;
-@property (strong, nonatomic) NSString* recordedFileName;
-@property (strong, nonatomic) NSString* soundDirectoryPath;
-
-@property BOOL isRecording;
-
-@end
-
-@implementation BeatBoxViewController
-
-@synthesize playButton          = _playButton;
-@synthesize recButton           = _recButton;
-@synthesize audioPlayer         = _audioPlayer;
-@synthesize isRecording         = _isRecording;
-@synthesize isPlaying           = _isPlaying;
-@synthesize audioRecorder       = _audioRecorder;
-@synthesize recordProgressLabel = _recordProgressLabel;
-@synthesize counterSecond       = _counterSecond;
-@synthesize recordedFileName    = _recordedFileName;
-@synthesize soundNameToRowDic   = _soundNameToRowDic;
-@synthesize globalCount         = _globalCount;
-@synthesize soundFilePicker     = _soundFilePicker;
-@synthesize pickerView          = _pickerView;
-
-
-// Getter
-- (NSString*)soundDirectoryPath {
-    if (!_soundDirectoryPath) {
-
-        NSArray *folders = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
-                                                               NSUserDomainMask, YES);
-        _soundDirectoryPath = [folders objectAtIndex:0];
-    }
-    return _soundDirectoryPath;
-}
-
-- (NSMutableDictionary*)soundNameToRowDic {
-    if (!_soundNameToRowDic) {
-        _soundNameToRowDic = [[NSMutableDictionary alloc] initWithCapacity:5];
-    }
-    return _soundNameToRowDic;
-}
 
 
 /***************************************************************************
- ***** METHODS FOR UN/LOADING THE VIEW
+ ***** BEGIN INTERNAL INTERFACE
+ ***************************************************************************/
+@interface BeatBoxViewController ()
+
+// UI OUTLETS
+@property (strong, nonatomic) IBOutlet UIButton     *playButton;
+@property (strong, nonatomic) IBOutlet UIButton     *recButton;
+@property (strong, nonatomic) IBOutlet UILabel      *recordProgressLabel;
+@property (strong, nonatomic) IBOutlet UIPickerView *soundFilePicker;
+
+// NON-VIEW OBJECTS
+@property (strong, nonatomic) AVAudioPlayer         *audioPlayer;
+@property (strong, nonatomic) AVAudioRecorder       *audioRecorder;
+@property (strong, nonatomic) NSTimer               *playTimer;
+@property (strong, nonatomic) NSMutableDictionary   *soundNameToRowDic; // TODO
+@property (strong, nonatomic) SoundRowView          *currentSoundView;
+@property (strong, nonatomic) NSMutableArray        *alphabetizedFiles;
+
+// OTHER VARS
+@property NSInteger                                 tempo; // TODO
+@property NSInteger                                 volume;
+@property NSInteger                                 globalCount;
+@property NSInteger                                 counterSecond;
+@property (strong, nonatomic) NSString*             recordedFileName;
+@property (strong, nonatomic) NSString*             soundDirectoryPath;
+@property BOOL                                      isRecording;
+
+@end
+
+
+
+
+
+/***************************************************************************
+ ***** BEGIN IMPLEMENATION
+ ***************************************************************************/
+@implementation BeatBoxViewController
+
+// UI OBJECTS
+@synthesize playButton          = _playButton;
+@synthesize recButton           = _recButton;
+@synthesize recordProgressLabel = _recordProgressLabel;
+@synthesize soundFilePicker     = _soundFilePicker;
+@synthesize pickerView          = _pickerView;
+
+// NON-UI OBJECTS
+@synthesize audioPlayer         = _audioPlayer;
+@synthesize audioRecorder       = _audioRecorder;
+@synthesize soundNameToRowDic   = _soundNameToRowDic;
+@synthesize alphabetizedFiles   = _alphabetizedFiles;
+
+// OTHER VARS
+@synthesize isRecording         = _isRecording;
+@synthesize isPlaying           = _isPlaying;
+@synthesize counterSecond       = _counterSecond;
+@synthesize recordedFileName    = _recordedFileName;
+@synthesize globalCount         = _globalCount;
+
+
+
+
+
+
+/***************************************************************************
+ ***** METHODS FOR THE VIEW
  ***************************************************************************/
 
 /**
@@ -87,17 +89,39 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
+    // Allocate space for the recorder and player.
+    self.audioRecorder  = [AVAudioRecorder alloc];
+    self.audioPlayer    = [AVAudioPlayer alloc];
+    
     // TODO: Initialize DrumMachine with the stored settings
+    /*
+     Tempo
+     Array of sounds
+     isPlaying = NO
+     isRecording = NO
+     noteArray for each sound
+     */
+    
+    // TODO: Set the tempo and tempo setter
     self.tempo = 100;
     
-    // Set the soundFilePickr
+    /*** Fill dictionary with sounds from folder ***/
+    [self fillDictionaryWithSounds];
     
-//    self.soundFilePicker = [[UIPickerView alloc] init];
-    self.soundFilePicker.dataSource = self;
-//    self.soundFilePicker.center = self.view.center;
-    self.soundFilePicker.delegate = self;
-    self.soundFilePicker.showsSelectionIndicator = YES;
+    // Set the label to a default value.
+    self.recordProgressLabel.text = @"Add new sound.";
+    
+    
+    // Create and set the first soundRow
+    SoundRowView *rowOne = [[SoundRowView alloc] initWithFrame:CGRectMake(0, 50, 480, 34)];
+    [self.view addSubview:rowOne];
+    
+}
 
+/*
+    INITIALIZE DICTIONARY AND FILL IT WITH SOUNDS FROM 'SOUND' FOLDER
+ */
+- (void)fillDictionaryWithSounds {
     // creates the "sound" folder if not yet created
     self.soundDirectoryPath = [BeatBoxViewController createSoundFolder];
     
@@ -108,23 +132,18 @@
 
     // initialize the dictionary with SoundRow objects
     for (NSString* soundFilePath in soundFilePathsArray) {
-        
         BeatBoxSoundRow *soundRow = [[BeatBoxSoundRow alloc] initWithPath:soundFilePath];
-        
         NSLog(@"Adding SoundRow object to dictionary\n\tname: %@\tsoundPath: %@", soundRow.soundName, soundRow.soundFilePath);
-        
-        if (!self.soundNameToRowDic)
+        if (!self.soundNameToRowDic) {
             NSLog(@"dic is nil!");
-        
+        }
         [self.soundNameToRowDic setObject:soundRow forKey: soundRow.soundName];
-        
         
         NSLog(@"added dictionary, new dic size: %d", self.soundNameToRowDic.count);
         NSLog(@"full path: %@", [self getFullPathForSoundRow:soundRow]);
     }
-    
-    self.recordProgressLabel.text = @"";
 }
+
 
 /**
  * viewDidUnload:
@@ -132,17 +151,18 @@
  *  Set the audioRecorder to nil
  *  Stop the player if we're playing.
  */
-- (void) viewDidUnload{ [super viewDidUnload];
+- (void) viewDidUnload {
+    [super viewDidUnload];
+    // Stop recording if we are
     if ([self.audioRecorder isRecording]) {
         [self.audioRecorder stop];
     }
-    
     self.audioRecorder = nil;
     
+    // Stop playback if we are.
     if ([self.audioPlayer isPlaying]) {
         [self.audioPlayer stop];
     }
-    
     self.audioPlayer = nil;
 }
 
@@ -150,43 +170,170 @@
  * awakeFromNib:
  */
 - (void)awakeFromNib {
+}
+
+/*
+    This gets called when a button on UIAlert view is clicked by user
+ */
+- (void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSString *buttonTitle = [alertView buttonTitleAtIndex:buttonIndex];
+    if ([buttonTitle isEqualToString:@"OK"]) {
+        NSLog(@"User pressed the OK button, start recording the sound...");
+        // TODO: CHECK FOR EMPTY STRING
+        [self startRecording:[[alertView textFieldAtIndex:0] text]];
+    } else if ([buttonTitle isEqualToString:@"Cancel"]) {
+        NSLog(@"User pressed the Cancel button.");
+    }
+}
+
+
+/*** CODE FOR THE FILE PICKER ***/
+
+// Puts the subview IN view.
+- (IBAction)soundNameButtonPushed:(UIButton *)sender {
+    NSLog(@"soundNameButtonPushed!");
+    // Display sound file picker.self.soundFilePicker.dataSource = self;
+    self.soundFilePicker.delegate = self;
+    self.soundFilePicker.showsSelectionIndicator = YES;
+    [UIView beginAnimations:nil context:NULL];
+    [self.pickerView setFrame:CGRectMake(0.0f, 0.0f, 480.0f, 300.0f)];
+    [UIView commitAnimations];
+    
+    // Get the superview, and set it as the current sound row
+    self.currentSoundView = (SoundRowView*)[sender superview];
+    [self.currentSoundView setBackgroundColor:[UIColor redColor]];
+    NSLog(@"At end of SNBP method!");
+}
+
+/*
+    Set the number of columns to one.
+ */
+- (NSInteger) numberOfComponentsInPickerView:(UIPickerView *)pickerView {
+    NSInteger result = 0;
+    if ([pickerView isEqual:self.soundFilePicker]) {
+        result = 1;
+    }
+    return result;
+}
+/*
+    Set the number of rows to the number of saved files + 1.
+        (One extra for the "New file" row.)
+ */
+- (NSInteger) pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
+    NSInteger result = 0;
+    if ([pickerView isEqual:self.soundFilePicker]) {
+        result = [self.soundNameToRowDic count] + 1;
+    }
+    return result;
+}
+- (NSString*) pickerView:(UIPickerView *) pickerView
+             titleForRow:(NSInteger)row
+            forComponent:(NSInteger)component {
+    NSString* result = nil;
+    if ([pickerView isEqual:self.soundFilePicker]) {
+        // Fill the rows
+        NSLog(@">>> Filling on row: %d", row);
+        // If row == 0, can add new file.
+        if (row == 0) {
+            // add new file
+            return @"New File...";
+        }
+        // else, be name of sound file in dict at row -1
+        [self alphabetizeFiles];
+        return [self.alphabetizedFiles objectAtIndex:(row - 1)];
+    }
+    return nil;
+}
+
+/*
+    Alphabetizes an array of currently saved files.
+ */
+- (void)alphabetizeFiles {
+    NSSortDescriptor *sortOrder = [NSSortDescriptor sortDescriptorWithKey:@"self"
+                                                                ascending:YES];
+    NSArray* arr = [self.soundNameToRowDic allKeys];
+    self.alphabetizedFiles = [arr mutableCopy];
+    [self.alphabetizedFiles sortUsingDescriptors:[NSArray arrayWithObject:sortOrder]];
+}
+
+// Puts the subview OUT of view.
+- (IBAction)pickerButtonPushed {
+    [UIView beginAnimations:nil context:NULL];
+    [self.pickerView setFrame:CGRectMake(0.0f, 300.0f, 480.0f, 300.0f)];
+    [UIView commitAnimations];
+    int index = [self.soundFilePicker selectedRowInComponent:0];
+    // On sound selection
+    // Either record new sound file.
+    if (index == 0) {
+        [self addNewSound];
+    } else {
+        // Or set current view to selected sound and add sound to sounds array.
+        NSString* selection = [self.alphabetizedFiles objectAtIndex:(index-1)];
+        self.currentSoundView.sound = [self.soundNameToRowDic valueForKey:selection];
+        // TODO Add to current sounds.
+        [self.currentSoundView updateButtons];
+    }
     
 }
 
 
-- (void) createNewSound {
-    //record new or choose existing file
-    
-    // if record new...
-    // show askUserForNewSoundName popup and get new name.
-    NSString* soundName = @"sound1";
-    // save the file in some directory with newSoundName
-    
-    // create a new SoundRow object with the newSoundName and path, and an empty bit array.
-    BeatBoxSoundRow* row = [[BeatBoxSoundRow alloc] initWithName:soundName array:[[NSMutableArray alloc] initWithCapacity:16] volume:1.0 filePath:self.audioFilePath];
-    
-    // populate the view to show this new row
-    // [move the "create new sound" soundRow below the newly created row]
-    
-}
+
+
+
 
 
 
 /***************************************************************************
  ***** METHODS FOR PLAYING MUSIC
  ***************************************************************************/
-- (void)play{
+/*
+    User pushed the play button.
+ */
+- (IBAction)playButtonPushed:(UIButton *)sender
+{
+    NSLog(@"Play button pushed!");
+    
+    // If not playing:
+    //  Set PLAY button to STOP button
+    if (!self.isPlaying) {
+        //  Start playback
+        self.isPlaying = YES;
+        [self play];
+        [self.playButton.titleLabel setText:@"Stop"];
+    } else {
+        self.isPlaying = NO;
+        [self.playButton.titleLabel setText:@"Play"];
+        [self stop];
+    }
+    
+}
+/*
+    START PLAYBACK FOR THE SPECIFIED AUDIOPLAYER
+ */
+- (void)playPlaybackForPlayer:(AVAudioPlayer*) player {
+    if (player != nil){
+        player.delegate = self;
+        NSLog(@">>> About to play player: %@", player);
+        if ([player prepareToPlay] && [player play]){
+            NSLog(@"Started playing the recorded audio.");
+        } else {
+            NSLog(@"Could not play the audio :(");
+        }
+    } else {
+        NSLog(@"nil AVAudioPlayer received :(");
+    }
+}
+
+/*
+    START THE PLAYBACK LOOP
+ */
+- (void)play {
     NSLog(@">> Beginning play (recursive) loop!");
         
     // Set the global counter to 0
     self.globalCount = 0;
     
-    // set playing to YES
-    self.isPlaying = YES;
-    
-    
     ////////////////// Temp hack to play
-    
     int countForSound;
     for (int i=0; i<16; i++) {
         // If we are playing
@@ -217,22 +364,16 @@
                     NSLog(@"Note is OFF for sound at: %@", sound);
                 }
             }
-//            [NSThread sleepForTimeInterval:[self bpmToSixteenth]];
-            
             [NSThread sleepUntilDate:[[NSDate alloc] initWithTimeIntervalSinceNow:(.001 *[self bpmToSixteenth])]];
         }
     }
-    
-    
     //\\\\\\\\\\\\\\\\ End temp hack to play
-    
     
     
     // Call the timer fire method for the firt time.
 //    [self performSelector:@selector(timerFireMethod)
 //                         withObject:nil
 //                         afterDelay:0];
-    
 
     // Create and initialize the timer.
 //    self.playTimer = [NSTimer timerWithTimeInterval:1
@@ -241,13 +382,12 @@
 //                                           userInfo:nil
 //                                            repeats:NO];
     NSLog(@">> >> Timer created: %@", self.playTimer.description);
-    
     NSLog(@">> Loop should be playing.");
 }
    
  /*
- Gets called every time the timer is fired.
- Typically called every 16th note.
+    Gets called every time the timer is fired.
+    Typically called every 16th note.
  */
 - (void)timerFireMethod {
     NSLog(@">>> TimerFireMethod called on count: %d for beat: %d", self.globalCount, self.globalCount % 16);
@@ -291,12 +431,20 @@
     }
 }
 
+
 - (int)bpmToSixteenth{
     // Calc 16th milliseconds from what bpm points to.
     return ((60000 / self.tempo) / 16);
 }
 
 
+
+
+
+
+/***************************************************************************
+ ***** METHODS FOR STOPPING PLAYBACK
+ ***************************************************************************/
 - (void)stop {
     NSLog(@"Stopping playback");
     // Set self.isPlaying to NO
@@ -309,34 +457,44 @@
     self.globalCount = 0;
 }
 
-// PLAY ALL 16TH NOTES THAT ARE ON FOR THIS SOUND ROW
+
+
+
+
+/***************************************************************************
+ ***** METHODS FOR RECORDING SOUNDS
+ ***************************************************************************/
 /*
-- (void)playMeasureForSound:(BeatBoxSoundRow *)sound {
-    NSLog(@"ACACAC Beginning playing measure for sound %@", sound.soundName);
-    
-    for (int i=0; i<16; i++) {
-        NSLog(@"ACACAC At note %d for sound %@", i, sound.soundName);
-        if ([sound.sixteenthNoteArray objectAtIndex:i] != 0) {
-            self.audioPlayer = [self createAudioPlayerWithSound:sound];
-            [self playPlaybackForPlayer:self.audioPlayer];
-            
-            // TEMPORARILY WAIT FOR 1 SECOND BETWEEN 16TH NOTES
-            NSLog(@"ACACAC Waiting for 1000 ms");
-            [NSThread sleepUntilDate:[[NSDate alloc] initWithTimeIntervalSinceNow:1]];
-        }
+    Start the timer to count down.
+ */
+- (void)startRecording:(NSString*)soundName {
+    self.recordedFileName = soundName;
+    self.counterSecond = 3;
+    [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(countLabel:) userInfo:nil repeats:YES];
+}
+/*
+    Called by the timer to countdown to recording.
+ */
+-(void)countLabel:(NSTimer*)timer {
+    if (self.counterSecond > 0) {
+        self.recordProgressLabel.text = [NSString stringWithFormat:@"%d", self.counterSecond--];
+    } else {
+        [timer invalidate];
+        self.recordProgressLabel.text = @"Go!";
+        [self recordSoundWithName:self.recordedFileName];
+        
     }
 }
- */
 
-
-//
 -(void)recordSoundWithName:(NSString*)name
-{    
+{
+    // Recordig settings.
     NSError *error = nil;
     NSString *pathAsString = [self.soundDirectoryPath stringByAppendingString:[name stringByAppendingString:@".m4a"]];
     NSURL *audioRecordingURL = [NSURL fileURLWithPath:pathAsString];
     
-    self.audioRecorder = [[AVAudioRecorder alloc] initWithURL:audioRecordingURL settings:[self audioRecordingSettings] error:&error];
+    // Initialize the recorder.
+    self.audioRecorder = [self.audioRecorder initWithURL:audioRecordingURL settings:[self audioRecordingSettings] error:&error];
     
     if (self.audioRecorder != nil) {
         self.audioRecorder.delegate = self;
@@ -361,41 +519,18 @@
     }
 }
 
-- (NSString*)getFullPathForSoundRow:(BeatBoxSoundRow *)soundRow {
-    return [self.soundDirectoryPath stringByAppendingString:soundRow.soundFilePath];
-}
+- (IBAction)addNewSound {
 
-- (IBAction)playButtonPushed:(UIButton *)sender
-{
-    NSLog(@"Play button pushed!");
+    UIAlertView *alertView = [[UIAlertView alloc]
+                                initWithTitle:@"File Name"
+                                message:@"Please enter a name for this sound:"
+                                delegate:self
+                                cancelButtonTitle:@"Cancel"
+                                otherButtonTitles:@"OK", nil];
     
-    [self play];
+    [alertView setAlertViewStyle:UIAlertViewStylePlainTextInput];
     
-    /*/
-    // Let's try to retrieve the data for the recorded file
-    NSError *playbackError = nil;
-    NSError *readingError = nil;
-    NSData *fileData = [NSData dataWithContentsOfFile:[self audioFilePath] options:NSDataReadingMapped error:&readingError];
-    
-    // Form an audio player and make it play the recorded data
-    self.audioPlayer =
-    [[AVAudioPlayer alloc] initWithData:fileData error:&playbackError];
-    
-    // Could we instantiate the audio player?
-    [self playPlaybackForPlayer:self.audioPlayer];
-    
-    /**/
-    
-    // TEMPORARY TEST BY ANDRE TO PLAY A MEASURE OF THE RECORDED FILE
-    /*/
-    NSString* testName = self.recordedFileName; //@"testSound.m4a";
-    NSLog(@"ACACAC Creating testArray.");
-    NSMutableArray* testArray = [BeatBoxSoundRow defaultArray];
-    NSLog(@"ACACAC Creating sound object.");
-    BeatBoxSoundRow* oneSound = [[BeatBoxSoundRow alloc] initWithName:testName array:testArray volume:1.0 filePath: [self audioFilePathWithName:testName]];
-    
-    [self playMeasureForSound:oneSound];
-    /**/
+    [alertView show];
 }
 
 
@@ -412,57 +547,8 @@
     return player;
 }
 
-
-// START PLAYBACK FOR THE SPECIFIED AUDIOPLAYER
-- (void)playPlaybackForPlayer:(AVAudioPlayer*) player {
-    if (player != nil){
-        player.delegate = self;
-        NSLog(@">>> About to play player: %@", player);
-        /* Prepare to play and start playing */
-        if ([player prepareToPlay] && [player play]){
-//            NSLog(@">>> Player playing from data: %@", [player data]);
-            NSLog(@"Started playing the recorded audio.");
-        } else {
-            NSLog(@"Could not play the audio.");
-        }
-    } else {
-        NSLog(@"nil AVAudioPlayer received.");
-    }
-}
-
-// This gets called when a button on UIAlert view is clicked by user
-- (void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-
-    NSString *buttonTitle = [alertView buttonTitleAtIndex:buttonIndex];
-    
-    if ([buttonTitle isEqualToString:@"OK"]) {
-
-        NSLog(@"User pressed the OK button, start recording the sound...");
-        
-        // CHECK FOR EMPTY STRING
-        [self startRecording:[[alertView textFieldAtIndex:0] text]];
-        
-    } else if ([buttonTitle isEqualToString:@"Cancel"]) {
-        NSLog(@"User pressed the Cancel button.");
-    }
-}
-
-- (IBAction)addNewSound {
-
-    UIAlertView *alertView = [[UIAlertView alloc]
-                                initWithTitle:@"File Name"
-                                message:@"Please enter a name for this sound:"
-                                delegate:self
-                                cancelButtonTitle:@"Cancel"
-                                otherButtonTitles:@"OK", nil];
-    
-    [alertView setAlertViewStyle:UIAlertViewStylePlainTextInput];
-    
-    [alertView show];
-}
-
-
-// CREATE A RECORDING PATH WITH THE GIVEN SOUND NAME
+/*
+// CREATE A FILE PATH WITH THE GIVEN SOUND NAME
 - (NSString *) audioFilePathWithName:(NSString *)name {
 
     NSString *result = nil;
@@ -479,31 +565,30 @@
 - (NSString*) audioFilePath {
     return [self audioFilePathWithName:@"recording.m4a"];
 }
+*/
 
 
 - (NSDictionary *) audioRecordingSettings {
-    
     NSDictionary *result = nil;
     
-    /* Let's prepare the audio recorder options in the dictionary. Later we will use this dictionary to instantiate an audio recorder of type AVAudioRecorder */
+    /* Let's prepare the audio recorder options in the dictionary.
+        Later we will use this dictionary to instantiate an audio
+        recorder of type AVAudioRecorder
+     */
     NSMutableDictionary *settings = [[NSMutableDictionary alloc] init];
     
-    [settings
-     setValue:[NSNumber numberWithInteger:kAudioFormatAppleLossless] forKey:AVFormatIDKey];
-    
-    [settings
-     setValue:[NSNumber numberWithFloat:44100.0f] forKey:AVSampleRateKey];
-    
-    [settings
-     setValue:[NSNumber numberWithInteger:1] forKey:AVNumberOfChannelsKey];
-    
-    [settings
-     setValue:[NSNumber numberWithInteger:AVAudioQualityLow] forKey:AVEncoderAudioQualityKey];
-    
+    [settings setValue:[NSNumber numberWithInteger:kAudioFormatAppleLossless]
+                forKey:AVFormatIDKey];
+    [settings setValue:[NSNumber numberWithFloat:44100.0f]
+                forKey:AVSampleRateKey];
+    [settings setValue:[NSNumber numberWithInteger:1]
+                forKey:AVNumberOfChannelsKey];
+    [settings setValue:[NSNumber numberWithInteger:AVAudioQualityLow]
+                forKey:AVEncoderAudioQualityKey];
     result = [NSDictionary dictionaryWithDictionary:settings];
-    
     return result;
 }
+
 
 - (void)stopRecordingOnAudioRecorder:(AVAudioRecorder *)paramRecorder {
     
@@ -525,92 +610,29 @@
     [self.recButton setTitle:@"REC" forState:UIControlStateNormal];
 }
 
--(void)countLabel:(NSTimer*)timer {
-    
-    if (self.counterSecond > 0) {
-        self.recordProgressLabel.text = [NSString stringWithFormat:@"%d", self.counterSecond--];
 
-    } else {
-    
-        [timer invalidate];
-        self.recordProgressLabel.text = @"Go!";
-        [self recordSoundWithName:self.recordedFileName];
-        
+
+
+
+/***************************************************************************
+ ***** MISC METHODS
+ ***************************************************************************/
+// Getter
+- (NSString*)soundDirectoryPath {
+    if (!_soundDirectoryPath) {
+
+        NSArray *folders = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
+                                                               NSUserDomainMask, YES);
+        _soundDirectoryPath = [folders objectAtIndex:0];
     }
+    return _soundDirectoryPath;
 }
 
-- (void)startRecording:(NSString*)soundName {
-    
-    self.recordedFileName = soundName;
-
-    self.counterSecond = 3;
-    
-    [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(countLabel:) userInfo:nil repeats:YES];
-    
-    //NSTimer *timer1 = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(countLabel:counterSecond) userInfo:nil repeats:YES];
-}
-
-// Puts the subview IN view.
-- (IBAction)soundNameButtonPushed:(UIButton *)sender {
-    // Display sound file picker.
-    [UIView beginAnimations:nil context:NULL];
-    [self.pickerView setFrame:CGRectMake(0.0f, 0.0f, 480.0f, 300.0f)];
-    [UIView commitAnimations];
-    
-//    [self.pickerView addSubview:self.soundFilePicker];
-    
-    // On sound selection
-    
-    // Either record new sound file.
-    
-    // Or set current view to selected sound.
-}
-
-- (NSInteger) numberOfComponentsInPickerView:(UIPickerView *)pickerView {
-    NSInteger result = 0;
-    if ([pickerView isEqual:self.soundFilePicker]) {
-        result = 1;
+- (NSMutableDictionary*)soundNameToRowDic {
+    if (!_soundNameToRowDic) {
+        _soundNameToRowDic = [[NSMutableDictionary alloc] initWithCapacity:5];
     }
-    return result;
-}
-- (NSInteger) pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
-    NSInteger result = 0;
-    if ([pickerView isEqual:self.soundFilePicker]) {
-        result = [self.soundNameToRowDic count] + 1;
-    }
-    return result;
-}
-- (NSString*) pickerView:(UIPickerView *) pickerView
-             titleForRow:(NSInteger)row
-            forComponent:(NSInteger)component {
-    NSString* result = nil;
-    if ([pickerView isEqual:self.soundFilePicker]) {
-        // Fill the rows
-        NSLog(@">>> Filling on row: %d", row);
-        // If row == 0, can add new file.
-        if (row == 0) {
-            // add new file
-            NSLog(@">>> Filling on New File row");
-            return @"New File...";
-        }
-        // else, be name of sound file in dict at row -1
-        else {
-            NSLog(@">>> Filling in else.");
-            NSSortDescriptor *sortOrder = [NSSortDescriptor sortDescriptorWithKey:@"self" ascending:YES];
-            NSArray* arr = [self.soundNameToRowDic allKeys];
-            NSMutableArray* mutArr = [arr mutableCopy];
-            [mutArr sortUsingDescriptors:[NSArray arrayWithObject:sortOrder]];
-            result = [mutArr objectAtIndex:(row - 1)];
-            return result;
-        }
-    }
-}
-
-// Puts the subview OUT of view.
-- (IBAction)pickerButtonPushed {
-    [UIView beginAnimations:nil context:NULL];
-    [self.pickerView setFrame:CGRectMake(0.0f, 300.0f, 480.0f, 300.0f)];
-    [UIView commitAnimations];
+    return _soundNameToRowDic;
 }
 
 - (IBAction)noteButtonPushed:(UIButton *)sender {
@@ -641,6 +663,7 @@
                                    atIndex:[sender.titleLabel.text intValue]];
 }
 
+
 + (void)toggleNoteArray:(NSMutableArray*)noteArray atIndex:(NSUInteger)index {
     
     bool updatedNoteValue = YES;
@@ -650,6 +673,12 @@
     [noteArray setObject:[NSNumber numberWithBool:updatedNoteValue] atIndexedSubscript:index];
     
 }
+
+
+- (NSString*)getFullPathForSoundRow:(BeatBoxSoundRow *)soundRow {
+    return [self.soundDirectoryPath stringByAppendingString:soundRow.soundFilePath];
+}
+
 
 // create sound folder for this device
 + (NSString*)createSoundFolder {
