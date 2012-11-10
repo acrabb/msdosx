@@ -75,14 +75,14 @@
 
 + (NSMutableArray*) defaultArray {
     NSMutableArray* temp = [[NSMutableArray alloc] initWithObjects:
-                            [NSNumber numberWithBool:NO],[NSNumber numberWithBool:NO],
-                            [NSNumber numberWithBool:NO],[NSNumber numberWithBool:NO],
-                            [NSNumber numberWithBool:NO],[NSNumber numberWithBool:NO],
-                            [NSNumber numberWithBool:NO],[NSNumber numberWithBool:NO],
-                            [NSNumber numberWithBool:NO],[NSNumber numberWithBool:NO],
-                            [NSNumber numberWithBool:NO],[NSNumber numberWithBool:NO],
-                            [NSNumber numberWithBool:NO],[NSNumber numberWithBool:NO],
-                            [NSNumber numberWithBool:NO],[NSNumber numberWithBool:NO],
+                            [NSNumber numberWithBool:YES],[NSNumber numberWithBool:NO],
+                            [NSNumber numberWithBool:YES],[NSNumber numberWithBool:NO],
+                            [NSNumber numberWithBool:YES],[NSNumber numberWithBool:NO],
+                            [NSNumber numberWithBool:YES],[NSNumber numberWithBool:NO],
+                            [NSNumber numberWithBool:YES],[NSNumber numberWithBool:NO],
+                            [NSNumber numberWithBool:YES],[NSNumber numberWithBool:NO],
+                            [NSNumber numberWithBool:YES],[NSNumber numberWithBool:NO],
+                            [NSNumber numberWithBool:YES],[NSNumber numberWithBool:NO],
                             nil];
 //    [temp setObject:[NSNumber numberWithInt:1] atIndexedSubscript:0];
 //    [temp setObject:[NSNumber numberWithInt:1] atIndexedSubscript:4];
