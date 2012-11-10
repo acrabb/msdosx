@@ -304,6 +304,10 @@
     }
 }
 
+- (NSString*)getFullPathForSoundRow:(BeatBoxSoundRow *)soundRow {
+    return [self.soundDirectoryPath stringByAppendingString:soundRow.soundFilePath];
+}
+
 - (IBAction)playButtonPushed:(UIButton *)sender
 {
     NSLog(@"Play button pushed!");
