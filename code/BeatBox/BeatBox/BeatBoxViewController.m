@@ -70,6 +70,11 @@
     return _soundNameToRowDic;
 }
 
+
+/***************************************************************************
+ ***** METHODS FOR UN/LOADING THE VIEW
+ ***************************************************************************/
+
 /**
  * viewDidLoad:
  * set the recordProgressLabel text to empty string.
@@ -80,6 +85,7 @@
 	// Do any additional setup after loading the view, typically from a nib.
     
     // TODO: Initialize DrumMachine with the stored settings
+    self.tempo = 100;
 
     // creates the "sound" folder if not yet created
     self.soundDirectoryPath = [BeatBoxViewController createSoundFolder];
@@ -159,10 +165,7 @@
  ***************************************************************************/
 - (void)play{
     NSLog(@">> Beginning play (recursive) loop!");
-    
-    // Create and initialize the timer.
-    self.playTimer = [[NSTimer alloc] init];
-    
+        
     // Set the global counter to 0
     self.globalCount = 0;
     
@@ -170,26 +173,41 @@
     self.isPlaying = YES;
     
     // Call the timer fire method for the firt time.
-    [self.playTimer performSelector:@selector(timerFireMethod:)
-                         withObject:self.playTimer
+    [self performSelector:@selector(timerFireMethod:)
+                         withObject:nil
                          afterDelay:0];
+    
+
+    // Create and initialize the timer.
+//    self.playTimer = [NSTimer timerWithTimeInterval:1
+//                                             target:self
+//                                           selector:@selector(timerFireMethod:)
+//                                           userInfo:nil
+//                                            repeats:NO];
+    NSLog(@">> >> Timer created: %@", self.playTimer.description);
+    
+    NSLog(@">> Loop should be playing.");
 }
    
  /*
  Gets called every time the timer is fired.
  Typically called every 16th note.
  */
-- (void)timerFireMethod:(NSTimer *)timer {
+- (void)timerFireMethod:(id *)timer {
     NSLog(@">>> TimerFireMethod called on count: %d for beat: %d", self.globalCount, self.globalCount % 16);
+    NSLog(@">>> >>> Received object: %@", nil);
     
     // Get the global count. (0-15)
     int countForSound;
     
     // If we are playing
     if (self.isPlaying) {
+        NSLog(@">>> >>> We are playing...");
+        NSLog(@">>> >>> Sounds in dictionary: %d", self.soundNameToRowDic.count);
         // ...for each sound
         for (BeatBoxSoundRow* sound in [self.soundNameToRowDic allValues]) {
             countForSound = self.globalCount % sound.notesPerMeasure;
+            NSLog(@">>> >>> Sound: %@", sound);
             // ...if the bit is on.
             // [NOTE: can multiply by a multiplier if playing 8th or quarter notes instead]
             if ([sound.sixteenthNoteArray objectAtIndex:countForSound] != 0) {
@@ -210,8 +228,8 @@
         // Then do it again!!
         NSLog(@">>> Enqueuing timerFireMethod again!");
         self.globalCount++;
-        [timer performSelector:@selector(timerFireMethod:)
-                    withObject:timer
+        [self performSelector:@selector(timerFireMethod:)
+                    withObject:nil
                     afterDelay:[self bpmToSixteenth]];
     }
 }
