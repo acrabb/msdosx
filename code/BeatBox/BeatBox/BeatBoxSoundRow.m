@@ -31,6 +31,8 @@
     // SET THE DEFAULT VOLUME
     self.volume = 1.0;
     
+    self.notesPerMeasure = 16;
+    
     return self;
 }
 
@@ -42,6 +44,7 @@
     self.soundName = [self.soundName stringByDeletingPathExtension];
     self.sixteenthNoteArray = [BeatBoxSoundRow defaultArray];
     self.volume = 1.0;
+    self.notesPerMeasure = 16;
     
     return self;
 }
@@ -56,6 +59,7 @@
     self.soundName = [path substringWithRange:range];
     self.sixteenthNoteArray = [BeatBoxSoundRow defaultArray];
     self.volume = 1.0;
+    self.notesPerMeasure = 16;
     
     return self;
 }

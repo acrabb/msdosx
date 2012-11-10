@@ -401,6 +401,7 @@
     NSString *result = nil;
     NSArray *folders = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
                                                            NSUserDomainMask, YES);
+    
     NSString *documentsFolder = [folders objectAtIndex:0];
     result = [documentsFolder stringByAppendingPathComponent:name];
 
