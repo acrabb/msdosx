@@ -62,14 +62,28 @@
 
 /**
  * viewDidLoad:
- *  set the recordProgressLabel text to empty string.
+ * set the recordProgressLabel text to empty string.
  */
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    
     // TODO: Initialize DrumMachine with the stored settings
-    [BeatBoxViewController createSoundFolder];
+
+    // creates the "sound" folder if not yet created
+    self.soundDirectoryPath = [BeatBoxViewController createSoundFolder];
+    
+    // get all the sound files 
+    NSArray *soundFilePathsArray = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:self.soundDirectoryPath  error:nil];
+    
+    // initialize the dictionary with SoundRow objects
+    for (NSString* soundFilePath in soundFilePathsArray) {
+
+        BeatBoxSoundRow *soundRow = [[BeatBoxSoundRow alloc] initWithPath:soundFilePath];
+        
+        [self.soundNameToRowDic setObject:soundRow forKey: soundRow.soundName];
+    }
     
     self.recordProgressLabel.text = @"";
 }
@@ -144,7 +158,7 @@
     
     self.audioRecorder = [[AVAudioRecorder alloc] initWithURL:audioRecordingURL settings:[self audioRecordingSettings] error:&error];
     
-    if (self.audioRecorder != nil){
+    if (self.audioRecorder != nil) {
         self.audioRecorder.delegate = self;
         
         /* Prepare the recorder and then start the recording */
@@ -302,7 +316,9 @@
     [paramRecorder stop];
     
     // TODO: save the recorded file
-    	
+    BeatBoxSoundRow *recordedSond = [[BeatBoxSoundRow alloc] initWithUrl:paramRecorder.url];
+    
+    [self.soundNameToRowDic setObject:recordedSond forKey:recordedSond.soundName];
     
     // resetting Record button title
     [self.recButton setTitle:@"REC" forState:UIControlStateNormal];
@@ -369,7 +385,8 @@
 }
 
 // create sound folder for this device
-+ (void)createSoundFolder {
++ (NSString*)createSoundFolder {
+    
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 
     NSString *documentsDirectory = [paths objectAtIndex:0]; // Get documents folder
@@ -377,7 +394,8 @@
     
     if (![[NSFileManager defaultManager] fileExistsAtPath:dataPath])
         [[NSFileManager defaultManager] createDirectoryAtPath:dataPath withIntermediateDirectories:NO attributes:nil error:nil];
-    // Create folder
+
+    return dataPath;
 }
 
 @end

@@ -38,6 +38,32 @@
     return self;
 }
 
+- (id)initWithUrl:(NSURL*)url {
+//    NSRange range = [url.description rangeOfString:[url.description stringByDeletingLastPathComponent]];
+    
+    self.soundFilePath = [url.description stringByReplacingOccurrencesOfString:[url.description stringByDeletingLastPathComponent] withString:@""];
+
+    self.soundName = [self.soundName stringByDeletingPathExtension];
+    self.sixteenthNoteArray = [BeatBoxSoundRow defaultArray];
+    self.volume = 1.0;
+    
+    return self;
+}
+
+- (id)initWithPath:(NSString *)path {
+    
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"\\w+" options:0 error:nil];
+    
+    NSRange range = [regex rangeOfFirstMatchInString:path options:0 range:NSMakeRange(0, [path length])];
+
+    self.soundFilePath = path;
+    self.soundName = [path substringWithRange:range];
+    self.sixteenthNoteArray = [BeatBoxSoundRow defaultArray];
+    self.volume = 1.0;
+    
+    return self;
+}
+
 - (id) initWithName:(NSString*)         name
               array:(NSMutableArray*)   array
              volume:(float)             volume
@@ -53,14 +79,14 @@
 
 + (NSMutableArray*) defaultArray {
     NSMutableArray* temp = [[NSMutableArray alloc] initWithObjects:
-                            [NSNumber numberWithInt:1],[NSNumber numberWithInt:0],
-                            [NSNumber numberWithInt:1],[NSNumber numberWithInt:0],
-                            [NSNumber numberWithInt:1],[NSNumber numberWithInt:0],
-                            [NSNumber numberWithInt:1],[NSNumber numberWithInt:0],
-                            [NSNumber numberWithInt:1],[NSNumber numberWithInt:0],
-                            [NSNumber numberWithInt:1],[NSNumber numberWithInt:0],
-                            [NSNumber numberWithInt:1],[NSNumber numberWithInt:0],
-                            [NSNumber numberWithInt:1],[NSNumber numberWithInt:0],
+                            [NSNumber numberWithBool:NO],[NSNumber numberWithBool:NO],
+                            [NSNumber numberWithBool:NO],[NSNumber numberWithBool:NO],
+                            [NSNumber numberWithBool:NO],[NSNumber numberWithBool:NO],
+                            [NSNumber numberWithBool:NO],[NSNumber numberWithBool:NO],
+                            [NSNumber numberWithBool:NO],[NSNumber numberWithBool:NO],
+                            [NSNumber numberWithBool:NO],[NSNumber numberWithBool:NO],
+                            [NSNumber numberWithBool:NO],[NSNumber numberWithBool:NO],
+                            [NSNumber numberWithBool:NO],[NSNumber numberWithBool:NO],
                             nil];
 //    [temp setObject:[NSNumber numberWithInt:1] atIndexedSubscript:0];
 //    [temp setObject:[NSNumber numberWithInt:1] atIndexedSubscript:4];
