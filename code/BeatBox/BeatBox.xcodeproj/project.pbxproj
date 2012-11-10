@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		29662F50164E6C6A002D446E /* note_button_not_pushed.png in Resources */ = {isa = PBXBuildFile; fileRef = 29662F4E164E6C6A002D446E /* note_button_not_pushed.png */; };
+		29662F51164E6C6A002D446E /* note_button_pushed.png in Resources */ = {isa = PBXBuildFile; fileRef = 29662F4F164E6C6A002D446E /* note_button_pushed.png */; };
 		65592ACB1648C4CC001FA5E6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65592ACA1648C4CC001FA5E6 /* UIKit.framework */; };
 		65592ACD1648C4CC001FA5E6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65592ACC1648C4CC001FA5E6 /* Foundation.framework */; };
 		65592ACF1648C4CC001FA5E6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65592ACE1648C4CC001FA5E6 /* CoreGraphics.framework */; };
@@ -41,6 +43,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		29662F4E164E6C6A002D446E /* note_button_not_pushed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = note_button_not_pushed.png; sourceTree = "<group>"; };
+		29662F4F164E6C6A002D446E /* note_button_pushed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = note_button_pushed.png; sourceTree = "<group>"; };
 		65592AC61648C4CC001FA5E6 /* BeatBox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BeatBox.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		65592ACA1648C4CC001FA5E6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		65592ACC1648C4CC001FA5E6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -134,6 +138,8 @@
 		65592AD01648C4CC001FA5E6 /* BeatBox */ = {
 			isa = PBXGroup;
 			children = (
+				29662F4E164E6C6A002D446E /* note_button_not_pushed.png */,
+				29662F4F164E6C6A002D446E /* note_button_pushed.png */,
 				65592AD91648C4CC001FA5E6 /* BeatBoxAppDelegate.h */,
 				65592ADA1648C4CC001FA5E6 /* BeatBoxAppDelegate.m */,
 				65592AE21648C4CC001FA5E6 /* BeatBoxViewController.h */,
@@ -260,6 +266,8 @@
 				65592ADF1648C4CC001FA5E6 /* Default@2x.png in Resources */,
 				65592AE11648C4CC001FA5E6 /* Default-568h@2x.png in Resources */,
 				65592AE71648C4CC001FA5E6 /* BeatBoxViewController.xib in Resources */,
+				29662F50164E6C6A002D446E /* note_button_not_pushed.png in Resources */,
+				29662F51164E6C6A002D446E /* note_button_pushed.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

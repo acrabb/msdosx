@@ -109,6 +109,7 @@
         
         
         NSLog(@"added dictionary, new dic size: %d", self.soundNameToRowDic.count);
+        NSLog(@"full path: %@", [self getFullPathForSoundRow:soundRow]);
     }
     
     self.recordProgressLabel.text = @"";
@@ -499,6 +500,8 @@
             break;
         }
     }
+
+    [sender setImage:[UIImage imageNamed:@"note_button_pushed.png"] forState:UIControlStateHighlighted];
     
     NSLog(@"sound: %@", soundName);
 
@@ -519,6 +522,7 @@
         updatedNoteValue = NO;
     
     [noteArray setObject:[NSNumber numberWithBool:updatedNoteValue] atIndexedSubscript:index];
+    
 }
 
 // create sound folder for this device
