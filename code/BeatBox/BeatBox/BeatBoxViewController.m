@@ -173,10 +173,54 @@
     // set playing to YES
     self.isPlaying = YES;
     
+    
+    ////////////////// Temp hack to play
+    
+    int countForSound;
+    for (int i=0; i<16; i++) {
+        // If we are playing
+        if (self.isPlaying) {
+            NSLog(@">>> >>> We are playing...");
+            NSLog(@">>> >>> Sounds in dictionary: %d", self.soundNameToRowDic.count);
+            // ...for each sound
+            for (BeatBoxSoundRow* sound in [self.soundNameToRowDic allValues]) {
+                countForSound = i;
+                NSLog(@">>> >>> Sound: %@", sound);
+                NSLog(@">>> >>> Sound array: %@", sound.sixteenthNoteArray);
+                // ...if the bit is on.
+                // [NOTE: can multiply by a multiplier if playing 8th or quarter notes instead]
+                BOOL isOn = [[sound.sixteenthNoteArray objectAtIndex:countForSound] boolValue];
+                if (isOn) {
+                    NSLog(@"Note is ON for sound at: %d", i);
+                    NSLog(@"Element at i: %@", [sound.sixteenthNoteArray objectAtIndex:countForSound]);
+                    // ...play the sound
+                    
+                    // Create an AVAudioPlayer with that sound
+                    AVAudioPlayer* player = [self createAudioPlayerWithSound:sound];
+                    
+                    NSLog(@">>> >>> About to play file: %@", [self getFullPathForSoundRow:sound]);
+                    // Prepare to play and play the sound
+                    [self playPlaybackForPlayer:player];
+                } else
+                {
+                    NSLog(@"Note is OFF for sound at: %@", sound);
+                }
+            }
+//            [NSThread sleepForTimeInterval:[self bpmToSixteenth]];
+            
+            [NSThread sleepUntilDate:[[NSDate alloc] initWithTimeIntervalSinceNow:(.001 *[self bpmToSixteenth])]];
+        }
+    }
+    
+    
+    //\\\\\\\\\\\\\\\\ End temp hack to play
+    
+    
+    
     // Call the timer fire method for the firt time.
-    [self performSelector:@selector(timerFireMethod:)
-                         withObject:nil
-                         afterDelay:0];
+//    [self performSelector:@selector(timerFireMethod)
+//                         withObject:nil
+//                         afterDelay:0];
     
 
     // Create and initialize the timer.
@@ -194,7 +238,7 @@
  Gets called every time the timer is fired.
  Typically called every 16th note.
  */
-- (void)timerFireMethod:(id *)timer {
+- (void)timerFireMethod {
     NSLog(@">>> TimerFireMethod called on count: %d for beat: %d", self.globalCount, self.globalCount % 16);
     NSLog(@">>> >>> Received object: %@", nil);
     
@@ -218,6 +262,7 @@
                 // Create an AVAudioPlayer with that sound
                 AVAudioPlayer* player = [self createAudioPlayerWithSound:sound];
                 
+                NSLog(@">>> >>> About to play file: %@", [self getFullPathForSoundRow:sound]);
                 // Prepare to play and play the sound
                 [self playPlaybackForPlayer:player];
             } else
@@ -229,7 +274,7 @@
         // Then do it again!!
         NSLog(@">>> Enqueuing timerFireMethod again!");
         self.globalCount++;
-        [self performSelector:@selector(timerFireMethod:)
+        [self performSelector:@selector(timerFireMethod)
                     withObject:nil
                     afterDelay:[self bpmToSixteenth]];
     }
@@ -345,7 +390,12 @@
 
 // INIT THE AUDIOPLAYER WITH THE FILEPATH FOR THE SPECIFIED SOUND
 - (AVAudioPlayer*)createAudioPlayerWithSound:(BeatBoxSoundRow*) sound {
-    NSData *fileData = [NSData dataWithContentsOfFile:[self audioFilePathWithName:sound.soundName] options:NSDataReadingMapped error:nil];
+    if (sound == nil) {
+        NSLog(@"!!! Nil sound received for player! :(");
+    }
+    NSData *fileData = [NSData dataWithContentsOfFile:[self getFullPathForSoundRow:sound]
+                                              options:NSDataReadingMapped
+                                                error:nil];
     AVAudioPlayer* player = [[AVAudioPlayer alloc] initWithData:fileData error:nil];
     
     return player;
@@ -356,9 +406,10 @@
 - (void)playPlaybackForPlayer:(AVAudioPlayer*) player {
     if (player != nil){
         player.delegate = self;
-        
+        NSLog(@">>> About to play player: %@", player);
         /* Prepare to play and start playing */
         if ([player prepareToPlay] && [player play]){
+//            NSLog(@">>> Player playing from data: %@", [player data]);
             NSLog(@"Started playing the recorded audio.");
         } else {
             NSLog(@"Could not play the audio.");
@@ -406,6 +457,7 @@
     NSString *result = nil;
     NSArray *folders = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
                                                            NSUserDomainMask, YES);
+    
     NSString *documentsFolder = [folders objectAtIndex:0];
     result = [documentsFolder stringByAppendingPathComponent:name];
 
