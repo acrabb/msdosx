@@ -17,6 +17,8 @@
 
 @property BOOL isPlaying;
 - (void)recordSoundWithName:(NSString*)name;
+@property (strong, nonatomic) IBOutlet UIView *pickerView;
+- (IBAction)pickerButtonPushed;
 
 - (IBAction)playButtonPushed:(UIButton *)sender;
 

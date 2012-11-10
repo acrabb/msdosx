@@ -15,7 +15,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *playButton;
 @property (strong, nonatomic) IBOutlet UIButton *recButton;
 @property (strong, nonatomic) IBOutlet UILabel *recordProgressLabel;
-@property (strong, nonatomic) UIPickerView *soundFilePicker;
+@property (strong, nonatomic) IBOutlet UIPickerView *soundFilePicker;
 
 // NON-VIEW
 @property (strong, nonatomic) AVAudioPlayer     *audioPlayer;
@@ -52,6 +52,7 @@
 @synthesize soundNameToRowDic   = _soundNameToRowDic;
 @synthesize globalCount         = _globalCount;
 @synthesize soundFilePicker     = _soundFilePicker;
+@synthesize pickerView          = _pickerView;
 
 
 // Getter
@@ -90,11 +91,12 @@
     self.tempo = 100;
     
     // Set the soundFilePickr
-    self.soundFilePicker = [[UIPickerView alloc] init];
+    
+//    self.soundFilePicker = [[UIPickerView alloc] init];
     self.soundFilePicker.dataSource = self;
-    self.soundFilePicker.center = self.view.center;
+//    self.soundFilePicker.center = self.view.center;
     self.soundFilePicker.delegate = self;
-    self
+    self.soundFilePicker.showsSelectionIndicator = YES;
 
     // creates the "sound" folder if not yet created
     self.soundDirectoryPath = [BeatBoxViewController createSoundFolder];
@@ -548,18 +550,20 @@
     //NSTimer *timer1 = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(countLabel:counterSecond) userInfo:nil repeats:YES];
 }
 
+// Puts the subview IN view.
 - (IBAction)soundNameButtonPushed:(UIButton *)sender {
     // Display sound file picker.
-    [self.view addSubview:self.soundFilePicker];
+    [UIView beginAnimations:nil context:NULL];
+    [self.pickerView setFrame:CGRectMake(0.0f, 0.0f, 480.0f, 300.0f)];
+    [UIView commitAnimations];
+    
+//    [self.pickerView addSubview:self.soundFilePicker];
     
     // On sound selection
     
     // Either record new sound file.
     
     // Or set current view to selected sound.
-    
-    
-    
 }
 
 - (NSInteger) numberOfComponentsInPickerView:(UIPickerView *)pickerView {
@@ -600,6 +604,13 @@
             return result;
         }
     }
+}
+
+// Puts the subview OUT of view.
+- (IBAction)pickerButtonPushed {
+    [UIView beginAnimations:nil context:NULL];
+    [self.pickerView setFrame:CGRectMake(0.0f, 300.0f, 480.0f, 300.0f)];
+    [UIView commitAnimations];
 }
 
 - (IBAction)noteButtonPushed:(UIButton *)sender {
