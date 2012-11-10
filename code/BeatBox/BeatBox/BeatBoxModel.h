@@ -7,14 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <AVFoundation/AVFoundation.h>
+#import "BeatBoxSoundRow.h"
 
 @interface BeatBoxModel : NSObject
 
-@property int bpm;
-@property NSMutableArray* testArray;
+@property NSMutableArray* players;
+@property NSMutableArray* timers;
 
-- (void)playSoundArrays;
-- (void)playSoundArray:(NSMutableArray*) bitArray;
 
 // Mutable array of SoundRowView objects to play.
 /*
@@ -25,7 +25,11 @@
         - getNoteArray
     - getTempo
  */
-- (void)play:(NSMutableArray*) sounds;
+- (void)    play:(NSMutableArray*) sounds;
+- (int)     bpmToSixteenth:(int *) bpm;
+- (void)    timerFireMethod:(NSTimer *) timer;
+- (AVAudioPlayer*) createAudioPlayerWithSound:(BeatBoxSoundRow*) sound;
+- (void)    playPlaybackForPlayer:(AVAudioPlayer*) player;
 
 
 @end
