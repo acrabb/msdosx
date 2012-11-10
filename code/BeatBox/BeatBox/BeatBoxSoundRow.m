@@ -14,11 +14,7 @@
 @synthesize soundName       = _soundName;
 @synthesize sixteenthNoteArray  = _sixteenthNoteArray;
 @synthesize volume          = _volume;
-
-
-- (void)testingThings {
-    NSString* tester = [[NSString alloc] init];
-}
+@synthesize notesPerMeasure = _notesPerMeasure;
 
 
 - (id) init {

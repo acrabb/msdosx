@@ -17,15 +17,17 @@
 @property (strong, nonatomic) IBOutlet UILabel *recordProgressLabel;
 
 // NON-VIEW
-@property (strong, nonatomic) AVAudioPlayer *audioPlayer;
-@property (strong, nonatomic) AVAudioRecorder *audioRecorder;
+@property (strong, nonatomic) AVAudioPlayer     *audioPlayer;
+@property (strong, nonatomic) AVAudioRecorder   *audioRecorder;
+@property (strong, nonatomic) NSTimer           *playTimer;
 
 // TODO: dictionary of sound names to sound objects
 @property (strong, nonatomic) NSMutableDictionary *soundNameToRowDic;
 
-// TODO: global tempo (bits per min) and global volume
+// TODO: global tempo (beats per min) and global volume
 @property NSInteger tempo;
 @property NSInteger volume;
+@property NSInteger globalCount;
 
 @property NSInteger counterSecond;
 @property (strong, nonatomic) NSString* recordedFileName;
@@ -37,15 +39,17 @@
 
 @implementation BeatBoxViewController
 
-@synthesize playButton      = _playButton;
-@synthesize recButton       = _recButton;
-@synthesize audioPlayer     = _audioPlayer;
-@synthesize isRecording     = _isRecording;
-@synthesize audioRecorder   = _audioRecorder;
+@synthesize playButton          = _playButton;
+@synthesize recButton           = _recButton;
+@synthesize audioPlayer         = _audioPlayer;
+@synthesize isRecording         = _isRecording;
+@synthesize isPlaying           = _isPlaying;
+@synthesize audioRecorder       = _audioRecorder;
 @synthesize recordProgressLabel = _recordProgressLabel;
-@synthesize counterSecond = _counterSecond;
-@synthesize recordedFileName = _recordedFileName;
-@synthesize soundNameToRowDic = _soundNameToRowDic;
+@synthesize counterSecond       = _counterSecond;
+@synthesize recordedFileName    = _recordedFileName;
+@synthesize soundNameToRowDic   = _soundNameToRowDic;
+@synthesize globalCount         = _globalCount;
 
 
 // Getter
@@ -118,7 +122,90 @@
     
 }
 
+
+
+/***************************************************************************
+ ***** METHODS FOR PLAYING MUSIC
+ ***************************************************************************/
+- (void)play{
+    NSLog(@">> Beginning play (recursive) loop!");
+    
+    // Create and initialize the timer.
+    self.playTimer = [[NSTimer alloc] init];
+    
+    // Set the global counter to 0
+    self.globalCount = 0;
+    
+    // set playing to YES
+    self.isPlaying = YES;
+    
+    // Call the timer fire method for the firt time.
+    [self.playTimer performSelector:@selector(timerFireMethod:)
+                         withObject:self.playTimer
+                         afterDelay:0];
+}
+   
+ /*
+ Gets called every time the timer is fired.
+ Typically called every 16th note.
+ */
+- (void)timerFireMethod:(NSTimer *)timer {
+    NSLog(@">>> TimerFireMethod called on count: %d for beat: %d", self.globalCount, self.globalCount % 16);
+    
+    // Get the global count. (0-15)
+    int countForSound;
+    
+    // If we are playing
+    if (self.isPlaying) {
+        // ...for each sound
+        for (BeatBoxSoundRow* sound in [self.soundNameToRowDic allValues]) {
+            countForSound = self.globalCount % sound.notesPerMeasure;
+            // ...if the bit is on.
+            // [NOTE: can multiply by a multiplier if playing 8th or quarter notes instead]
+            if ([sound.sixteenthNoteArray objectAtIndex:countForSound] != 0) {
+                NSLog(@"Note is ON for sound at: %@", sound);
+                // ...play the sound
+                
+                // Create an AVAudioPlayer with that sound
+                AVAudioPlayer* player = [self createAudioPlayerWithSound:sound];
+                
+                // Prepare to play and play the sound
+                [self playPlaybackForPlayer:player];
+            } else
+            {
+                NSLog(@"Note is OFF for sound at: %@", sound);
+            }
+        }
+        
+        // Then do it again!!
+        NSLog(@">>> Enqueuing timerFireMethod again!");
+        self.globalCount++;
+        [timer performSelector:@selector(timerFireMethod:)
+                    withObject:timer
+                    afterDelay:[self bpmToSixteenth]];
+    }
+}
+
+- (int)bpmToSixteenth{
+    // Calc 16th milliseconds from what bpm points to.
+    return ((60000 / self.tempo) / 16);
+}
+
+
+- (void)stop {
+    NSLog(@"Stopping playback");
+    // Set self.isPlaying to NO
+    self.isPlaying = NO;
+    
+    // Invalidate the timer
+    [self.playTimer invalidate];
+    
+    // Reset count to 0;
+    self.globalCount = 0;
+}
+
 // PLAY ALL 16TH NOTES THAT ARE ON FOR THIS SOUND ROW
+/*
 - (void)playMeasureForSound:(BeatBoxSoundRow *)sound {
     NSLog(@"ACACAC Beginning playing measure for sound %@", sound.soundName);
     
@@ -134,6 +221,8 @@
         }
     }
 }
+ */
+
 
 //
 -(void)recordSoundWithName:(NSString*)name
@@ -171,6 +260,8 @@
 {
     NSLog(@"Play button pushed!");
     
+    [self play];
+    
     /*/
     // Let's try to retrieve the data for the recorded file
     NSError *playbackError = nil;
@@ -187,7 +278,7 @@
     /**/
     
     // TEMPORARY TEST BY ANDRE TO PLAY A MEASURE OF THE RECORDED FILE
-    /**/
+    /*/
     NSString* testName = self.recordedFileName; //@"testSound.m4a";
     NSLog(@"ACACAC Creating testArray.");
     NSMutableArray* testArray = [BeatBoxSoundRow defaultArray];
@@ -233,6 +324,7 @@
 
         NSLog(@"User pressed the OK button, start recording the sound...");
         
+        // CHECK FOR EMPTY STRING
         [self startRecording:[[alertView textFieldAtIndex:0] text]];
         
     } else if ([buttonTitle isEqualToString:@"Cancel"]) {
