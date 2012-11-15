@@ -14,6 +14,7 @@
 
 @synthesize soundButton     = _soundButton;
 @synthesize viewController  = _viewController;
+@synthesize isActivated     = _isActivated;
 
 @synthesize noteButtonArray       = _noteButtonArray;
 
@@ -24,11 +25,9 @@
         // Initialization code
         NSLog(@"INIT THE SoundRowView");
         self.viewController =  [[BeatBoxViewController alloc] init];
-//        self.sound = [[BeatBoxSoundRow alloc] init];
         [self setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:0.5]];
         [self makeAndAddSoundButton];
         [self makeAndAddNoteButtons];
-        
         
 //        [self.pickerView setFrame:CGRectMake(0.0f, 300.0f, 480.0f, 300.0f)];
         // Set Label name
@@ -42,7 +41,6 @@
     [self.soundButton setFrame:CGRectMake(16.0f, 2.0f, 71.0f, 28.0f)];
     [self.soundButton setTitle:@"Sound" forState:UIControlStateNormal];
 
-    //        [self.soundButton.titleLabel toggleBoldface:self.soundButton.titleLabel];
     NSLog(@"view Controller %@", self.viewController);
     [self.soundButton addTarget:self.viewController
                          action:@selector(soundNameButtonPushed:)
@@ -80,13 +78,14 @@
         xVal += WIDTH + space;
     }
 }
+
 /*
-- (void)soundButtonPushed:(UIButton*)sender {
-    NSLog(@">>> Sound button pushed!");
-    NSLog(@">>> My viewController %@", self.viewController.description);
-    [self.viewController soundNameButtonPushed:sender];
+ * Update the soundButton label with the sound name
+ * Apply the (saved!) noteArray of the new sound to the note button in the view
+ */
+- (void) setSoundButtonLabel:(NSString*)soundName {
+    [self.soundButton setTitle:soundName forState:UIControlStateNormal];
 }
-*/
 
 /*
 - (void)noteButtonPushed:(UIButton*)sender {
@@ -112,40 +111,6 @@
     }
 }
 */
-
-/*
- * Update the soundButton label with the sound name
- * Apply the (saved!) noteArray of the new sound to the note button in the view
- */
-- (void) updateButtonsForSound:(BeatBoxSoundRow*)sound {
-    
-}
-
-- (void)updateButtons {
-    //[self.soundButton.titleLabel setText:soundName];
-    
-    for(id subview in [self subviews]) {
-        if ([subview isKindOfClass:[UIButton class]]) {
-            // Do stuff!
-            NSLog(@"Updating buttons!!");
-//            if (subview) {
-//                statements
-//            }
-        }
-    }
-    
-//    NSString *soundName;
-//    
-//    // find the UILabel in the parent view (sound's view)
-//    for (id subview in row.subviews) {
-//        if ([subview isKindOfClass:[UILabel class]]) {
-//            soundName = [subview text];
-//            break;
-//        }
-//    }
-    
-    
-}
 
 /*
 // Only override drawRect: if you perform custom drawing.

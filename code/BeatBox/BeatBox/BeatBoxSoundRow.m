@@ -81,13 +81,13 @@
 + (NSMutableArray*) defaultArray {
     NSMutableArray* temp = [[NSMutableArray alloc] initWithObjects:
                             [NSNumber numberWithInt:1],[NSNumber numberWithInt:0],
+                            [NSNumber numberWithInt:0],[NSNumber numberWithInt:1],
                             [NSNumber numberWithInt:1],[NSNumber numberWithInt:0],
                             [NSNumber numberWithInt:1],[NSNumber numberWithInt:0],
+                            [NSNumber numberWithInt:0],[NSNumber numberWithInt:0],
                             [NSNumber numberWithInt:1],[NSNumber numberWithInt:0],
-                            [NSNumber numberWithInt:1],[NSNumber numberWithInt:0],
-                            [NSNumber numberWithInt:1],[NSNumber numberWithInt:0],
-                            [NSNumber numberWithInt:1],[NSNumber numberWithInt:0],
-                            [NSNumber numberWithInt:1],[NSNumber numberWithInt:0],
+                            [NSNumber numberWithInt:1],[NSNumber numberWithInt:1],
+                            [NSNumber numberWithInt:0],[NSNumber numberWithInt:0],
                             nil];
     return temp;
 }

@@ -22,13 +22,15 @@
 @property (strong, nonatomic) IBOutlet UILabel      *recordProgressLabel;
 @property (strong, nonatomic) IBOutlet UIPickerView *soundFilePicker;
 
+@property (strong, nonatomic) SoundRowView          *currentSoundView;
+@property (strong, nonatomic) NSMutableArray        *soundRowViews;
+
 // NON-VIEW OBJECTS
 @property (strong, nonatomic) AVAudioPlayer         *audioPlayer;
 @property (strong, nonatomic) AVAudioRecorder       *audioRecorder;
 @property (strong, nonatomic) NSTimer               *playTimer;
 @property (strong, nonatomic) NSMutableDictionary   *soundNameToRowDic; // TODO
-@property (strong, nonatomic) SoundRowView          *currentSoundView;
-@property (strong, nonatomic) NSMutableArray        *soundRowViewArray;
+
 @property (strong, nonatomic) NSMutableArray        *alphabetizedFiles;
 
 // OTHER VARS
@@ -57,6 +59,7 @@
 @synthesize recordProgressLabel = _recordProgressLabel;
 @synthesize soundFilePicker     = _soundFilePicker;
 @synthesize pickerView          = _pickerView;
+@synthesize soundRowViews       = _soundRowViews;
 
 // NON-UI OBJECTS
 @synthesize audioPlayer         = _audioPlayer;
@@ -111,9 +114,16 @@
     // Set the label to a default value.
     self.recordProgressLabel.text = @"Add new sound.";
     
-    // Create and set the first soundRow
+
+    // Create some test soundRowViews
     SoundRowView *rowOne = [[SoundRowView alloc] initWithFrame:CGRectMake(0, 50, 480, 34)];
+    SoundRowView *rowTwo = [[SoundRowView alloc] initWithFrame:CGRectMake(0, 86, 480, 34)];
+    [rowOne setViewController:self];
+    [rowTwo setViewController:self];
+    [self.soundRowViews addObject:rowOne];
+    [self.soundRowViews addObject:rowTwo];
     [self.view addSubview:rowOne];
+    [self.view addSubview:rowTwo];
     
 }
 
@@ -263,15 +273,17 @@
     [UIView commitAnimations];
     int index = [self.soundFilePicker selectedRowInComponent:0];
     // On sound selection
-    // Either record new sound file.
     if (index == 0) {
+        
+        // record new sound file.
         [self addNewSound];
+    
     } else {
-        // Or set current view to selected sound and add sound to sounds array.
-//        NSString* selection = [self.alphabetizedFiles objectAtIndex:(index-1)];
-//        self.currentSoundView.sound = [self.soundNameToRowDic valueForKey:selection];
-        // TODO Add to current sounds.
-        [self.currentSoundView updateButtons];
+        
+        // update current view's soundButton to selected sound's name
+        NSString* selectedSoundName = [self.alphabetizedFiles objectAtIndex:(index-1)];
+
+        [self.currentSoundView setSoundButtonLabel:selectedSoundName];
     }
     
 }
@@ -298,12 +310,12 @@
     if (!self.isPlaying) {
         //  Start playback
         self.isPlaying = YES;
+        [self.playButton setTitle:@"Stop" forState:UIControlStateNormal];
         [self play];
-        [self.playButton.titleLabel setText:@"Stop"];
     } else {
         self.isPlaying = NO;
-        [self.playButton.titleLabel setText:@"Play"];
         [self stop];
+        [self.playButton setTitle:@"Play" forState:UIControlStateNormal];
     }
     
 }
@@ -328,74 +340,43 @@
     START THE PLAYBACK LOOP
  */
 - (void)play {
-    NSLog(@">> Beginning play (recursive) loop!");
-        
+    NSLog(@">> Beginning play loop!");
     // Set the global counter to 0
     self.globalCount = 0;
-    
-    ////////////////// Temp hack to play
-    int countForSound;
-    for (int i=0; i<16; i++) {
-        // If we are playing
-        if (self.isPlaying) {
-            NSLog(@">>> >>> We are playing...");
-            NSLog(@">>> >>> Sounds in dictionary: %d", self.soundNameToRowDic.count);
-            // ...for each sound
-            for (BeatBoxSoundRow* sound in [self.soundNameToRowDic allValues]) {
-                countForSound = i;
-                NSLog(@">>> >>> Sound: %@", sound);
-                NSLog(@">>> >>> Sound array: %@", sound.sixteenthNoteArray);
-                // ...if the bit is on.
-                // [NOTE: can multiply by a multiplier if playing 8th or quarter notes instead]
-                BOOL isOn = [[sound.sixteenthNoteArray objectAtIndex:countForSound] boolValue];
-                if (isOn) {
-                    NSLog(@"Note is ON for sound at: %d", i);
-                    NSLog(@"Element at i: %@", [sound.sixteenthNoteArray objectAtIndex:countForSound]);
-                    // ...play the sound
-                    
-                    // Create an AVAudioPlayer with that sound
-                    AVAudioPlayer* player = [self createAudioPlayerWithSound:sound];
-                    
-                    NSLog(@">>> >>> About to play file: %@", [self getFullPathForSoundRow:sound]);
-                    // Prepare to play and play the sound
-                    [self playPlaybackForPlayer:player];
-                } else
-                {
-                    NSLog(@"Note is OFF for sound at: %@", sound);
-                }
-            }
-            [NSThread sleepUntilDate:[[NSDate alloc] initWithTimeIntervalSinceNow:(.001 *[self bpmToSixteenth])]];
-        }
-    }
-    //\\\\\\\\\\\\\\\\ End temp hack to play
-    
-    
-    // Call the timer fire method for the firt time.
-//    [self performSelector:@selector(timerFireMethod)
-//                         withObject:nil
-//                         afterDelay:0];
 
     // Create and initialize the timer.
-//    self.playTimer = [NSTimer timerWithTimeInterval:1
-//                                             target:self
-//                                           selector:@selector(timerFireMethod:)
-//                                           userInfo:nil
-//                                            repeats:NO];
-    NSLog(@">> >> Timer created: %@", self.playTimer.description);
+    self.playTimer = [NSTimer scheduledTimerWithTimeInterval:1
+                                             target:self
+                                           selector:@selector(timerFireMethod:)
+                                           userInfo:nil
+                                            repeats:YES];
     NSLog(@">> Loop should be playing.");
 }
-   
+
  /*
     Gets called every time the timer is fired.
     Typically called every 16th note.
  */
-- (void)timerFireMethod {
-    NSLog(@">>> TimerFireMethod called on count: %d for beat: %d", self.globalCount, self.globalCount % 16);
-    NSLog(@">>> >>> Received object: %@", nil);
-    
+- (void)timerFireMethod:(NSTimer *) timer {
     // Get the global count. (0-15)
-    int countForSound;
+    int noteNum = 0;
+    AVAudioPlayer *player;
+    NSLog(@">>> TimerFireMethod called on count: %d for beat: %d", self.globalCount, noteNum);
     
+    // For every sound in the view
+    /*/
+    for (BeatBoxSoundRow* sound in self.getActivatedSounds) {
+        noteNum = self.globalCount % sound.notesPerMeasure;
+        // If the note is activated
+        if ([[sound.sixteenthNoteArray] objectAtIndex:noteNum] != 0) {
+            // Play the sound! (For now, create an audio player and play it once.)
+            player = [self createAudioPlayerWithSound:sound];
+            [self playPlaybackForPlayer:player];
+        }
+    }
+    /**/
+    self.globalCount++;
+    /*/
     // If we are playing
     if (self.isPlaying) {
         NSLog(@">>> >>> We are playing...");
@@ -423,18 +404,19 @@
         }
         
         // Then do it again!!
-        NSLog(@">>> Enqueuing timerFireMethod again!");
+//        NSLog(@">>> Enqueuing timerFireMethod again!");
         self.globalCount++;
-        [self performSelector:@selector(timerFireMethod)
-                    withObject:nil
-                    afterDelay:[self bpmToSixteenth]];
+//        [self performSelector:@selector(timerFireMethod)
+//                    withObject:nil
+//                    afterDelay:[self bpmToSixteenth]];
     }
+    /**/
 }
 
 
 - (int)bpmToSixteenth{
     // Calc 16th milliseconds from what bpm points to.
-    return ((60000 / self.tempo) / 16);
+    return ((60000 / self.tempo) / 4);
 }
 
 
@@ -447,9 +429,6 @@
  ***************************************************************************/
 - (void)stop {
     NSLog(@"Stopping playback");
-    // Set self.isPlaying to NO
-    self.isPlaying = NO;
-    
     // Invalidate the timer
     [self.playTimer invalidate];
     
