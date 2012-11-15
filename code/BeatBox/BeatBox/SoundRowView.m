@@ -15,6 +15,7 @@
 @synthesize sound           = _sound;
 @synthesize soundButton     = _soundButton;
 @synthesize viewController  = _viewController;
+@synthesize isActivated     = _isActivated;
 
 @synthesize noteButtonArray       = _noteButtonArray;
 //@synthesize volumeSlider    = _volumeSlider;
@@ -26,12 +27,10 @@
     if (self) {
         // Initialization code
         NSLog(@"INIT THE SoundRowView");
-        self.viewController =  [[BeatBoxViewController alloc] init];
         self.sound = [[BeatBoxSoundRow alloc] init];
         [self setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:0.5]];
         [self makeAndAddSoundButton];
         [self makeAndAddNoteButtons];
-        
         
 //        [self.pickerView setFrame:CGRectMake(0.0f, 300.0f, 480.0f, 300.0f)];
         // Set Label name
@@ -39,6 +38,10 @@
     }
     return self;
 }
+
+//- (void) setViewController:(BeatBoxViewController *)viewController {
+//    self.viewController = viewController;
+//}
 
 - (void) makeAndAddSoundButton {
     self.soundButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];

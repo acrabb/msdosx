@@ -17,7 +17,7 @@
 @property NSMutableArray                    *noteButtonArray;
 @property BeatBoxSoundRow                   *sound;
 @property IBOutlet BeatBoxViewController    *viewController;
-//@property BOOL              selected;
+@property BOOL                              isActivated;
 - (void) updateButtons;
 - (void) setNoteButtonColor:(NSInteger)index;
 //- (IBAction)soundButtonPushed:(UIButton*)sender;
