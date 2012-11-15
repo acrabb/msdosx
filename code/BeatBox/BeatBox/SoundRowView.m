@@ -11,14 +11,11 @@
 
 @implementation SoundRowView
 
-//@synthesize soundFilePath   = _soundFilePath;
-@synthesize sound           = _sound;
+
 @synthesize soundButton     = _soundButton;
 @synthesize viewController  = _viewController;
 
 @synthesize noteButtonArray       = _noteButtonArray;
-//@synthesize volumeSlider    = _volumeSlider;
-//@synthesize sound           = _sound;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -27,7 +24,7 @@
         // Initialization code
         NSLog(@"INIT THE SoundRowView");
         self.viewController =  [[BeatBoxViewController alloc] init];
-        self.sound = [[BeatBoxSoundRow alloc] init];
+//        self.sound = [[BeatBoxSoundRow alloc] init];
         [self setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:0.5]];
         [self makeAndAddSoundButton];
         [self makeAndAddNoteButtons];
@@ -44,11 +41,13 @@
     self.soundButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [self.soundButton setFrame:CGRectMake(16.0f, 2.0f, 71.0f, 28.0f)];
     [self.soundButton setTitle:@"Sound" forState:UIControlStateNormal];
+
     //        [self.soundButton.titleLabel toggleBoldface:self.soundButton.titleLabel];
     NSLog(@"view Controller %@", self.viewController);
-    [self.soundButton addTarget:self
-                         action:@selector(soundButtonPushed:)
+    [self.soundButton addTarget:self.viewController
+                         action:@selector(soundNameButtonPushed:)
                forControlEvents:UIControlEventTouchUpInside];
+    
     [self addSubview:self.soundButton];
 }
 
@@ -59,41 +58,52 @@
     int space = 1;
     for(int i=0; i<16; i++) {
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+
         space = ((i%4) == 3) ? 5 : 1;
         
-        [self setNoteButtonColorFor:button atIndex:i];
+//        [self setNoteButtonColorFor:button atIndex:i];
 //        [button setBackgroundColor:[UIColor blueColor]];
+        
         [button setFrame:CGRectMake(xVal, yVal, WIDTH, WIDTH)];
         [button.titleLabel setText:[NSString stringWithFormat:@"%d", i]];
-        [button addTarget:self
+        
+        [button addTarget:self.viewController
                    action:@selector(noteButtonPushed:)
          forControlEvents:UIControlEventTouchUpInside];
+
+        [button setImage:[UIImage imageNamed:@"note_button_pushed.png"] forState:UIControlStateHighlighted];
+        [button setImage:[UIImage imageNamed:@"note_button_not_pushed.png"] forState:UIControlStateNormal];
+         
         [self.noteButtonArray addObject:button];
         [self addSubview:button];
         
         xVal += WIDTH + space;
     }
 }
-
-
+/*
 - (void)soundButtonPushed:(UIButton*)sender {
     NSLog(@">>> Sound button pushed!");
     NSLog(@">>> My viewController %@", self.viewController.description);
     [self.viewController soundNameButtonPushed:sender];
 }
+*/
 
+/*
 - (void)noteButtonPushed:(UIButton*)sender {
     NSLog(@">>> Note button pushed!");
     int i = [sender.titleLabel.text intValue];
     [self setNoteButtonColorFor:sender atIndex:i];
     
 }
+ */
 
+/*
 - (void)setNoteButtonColorFor:(UIButton*)button atIndex:(NSInteger)index {
     NSLog(@">>> Changing button %d", index);
-    BOOL temp = [self.sound toggleElementAt:index];
-    NSLog(@">>> OLD value %@", [NSNumber numberWithBool:temp]);
-    if(temp) {
+//    BOOL temp = [self.sound toggleElementAt:index];
+//    NSLog(@">>> OLD value %@", [NSNumber numberWithBool:temp]);
+    // if(temp) {
+    if (button.selected)
         NSLog(@">>> >>> Old value YES");
         [button setBackgroundColor:[UIColor blueColor]];
     } else {
@@ -101,9 +111,18 @@
         [button setBackgroundColor:[UIColor yellowColor]];
     }
 }
+*/
+
+/*
+ * Update the soundButton label with the sound name
+ * Apply the (saved!) noteArray of the new sound to the note button in the view
+ */
+- (void) updateButtonsForSound:(BeatBoxSoundRow*)sound {
+    
+}
 
 - (void)updateButtons {
-    [self.soundButton.titleLabel setText:self.sound.soundName];
+    //[self.soundButton.titleLabel setText:soundName];
     
     for(id subview in [self subviews]) {
         if ([subview isKindOfClass:[UIButton class]]) {

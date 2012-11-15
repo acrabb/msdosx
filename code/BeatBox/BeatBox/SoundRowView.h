@@ -10,15 +10,14 @@
 #import "BeatBoxSoundRow.h"
 @class BeatBoxViewController;
 
-
 @interface SoundRowView : UIView
 
 @property UIButton                          *soundButton;
 @property NSMutableArray                    *noteButtonArray;
-@property BeatBoxSoundRow                   *sound;
 @property IBOutlet BeatBoxViewController    *viewController;
 //@property BOOL              selected;
 - (void) updateButtons;
+- (void) updateButtonsForSound:(BeatBoxSoundRow*)sound;
 - (void) setNoteButtonColor:(NSInteger)index;
 //- (IBAction)soundButtonPushed:(UIButton*)sender;
 
