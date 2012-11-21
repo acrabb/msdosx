@@ -363,9 +363,9 @@
 - (void)playPlaybackForPlayer:(AVAudioPlayer*) player {
     if (player != nil){
         player.delegate = self;
-        NSLog(@">>> About to play player: %@", player);
+//        NSLog(@">>> About to play player: %@", player);
         if ([player prepareToPlay] && [player play]){
-            NSLog(@"Started playing the recorded audio.");
+//            NSLog(@"Started playing the recorded audio.");
         } else {
             NSLog(@"Could not play the audio :(");
         }
@@ -645,8 +645,10 @@
 
     // update the sound object's note array
     BeatBoxSoundRow* soundObject = [self.soundNameToRowDic valueForKey:soundName];
+    NSLog(@"OLD sound array: %@", soundObject.sixteenthNoteArray);
     [BeatBoxViewController toggleNoteArray:soundObject.sixteenthNoteArray
                                    atIndex:[sender.titleLabel.text intValue]];
+    NSLog(@"NEW sound array: %@", soundObject.sixteenthNoteArray);
 }
 
 /*
