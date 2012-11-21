@@ -14,7 +14,6 @@
 
 @synthesize soundButton     = _soundButton;
 @synthesize viewController  = _viewController;
-@synthesize isActivated     = _isActivated;
 
 @synthesize noteButtonArray       = _noteButtonArray;
 

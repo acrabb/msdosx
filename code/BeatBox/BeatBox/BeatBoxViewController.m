@@ -46,8 +46,6 @@
 
 
 
-
-
 /***************************************************************************
  ***** BEGIN IMPLEMENATION
  ***************************************************************************/
@@ -73,10 +71,6 @@
 @synthesize counterSecond       = _counterSecond;
 @synthesize recordedFileName    = _recordedFileName;
 @synthesize globalCount         = _globalCount;
-
-
-
-
 
 
 /***************************************************************************
@@ -112,25 +106,49 @@
     [self fillDictionaryWithSounds];
     
     // Set the label to a default value.
-    self.recordProgressLabel.text = @"Add new sound.";
+    self.recordProgressLabel.text = @"Add a new sound";
     
+    /* 
+     * Initialize the rows with as many sounds as we can fit in
+     * some of the sounds we
+     */
+    
+    NSArray *soundKeys = [self.soundNameToRowDic allKeys];
+    int heightIncrement = 36;
+    int height = 0;
+    int numSoundViews = 0;
 
-    // Create some test soundRowViews
-    SoundRowView *rowOne = [[SoundRowView alloc] initWithFrame:CGRectMake(0, 50, 480, 34)];
-    SoundRowView *rowTwo = [[SoundRowView alloc] initWithFrame:CGRectMake(0, 86, 480, 34)];
-    [rowOne setViewController:self];
-    [rowTwo setViewController:self];
-    [self.soundRowViews addObject:rowOne];
-    [self.soundRowViews addObject:rowTwo];
-    [self.view addSubview:rowOne];
-    [self.view addSubview:rowTwo];
-    
+    for (NSString* soundName in soundKeys) {
+
+        if (numSoundViews > 7)
+            break;
+        
+        // create a new soundRowView for each sound if we have enough space
+        SoundRowView *row = [[SoundRowView alloc] initWithFrame:CGRectMake(0, height, 480, 34)];
+        [row setViewController:self];
+        [self.soundRowViews addObject:row];
+        [self.view addSubview:row];
+        numSoundViews ++;
+        
+        /*
+         * TODO: Add the sound object to self.soundObjects
+         * TODO: Link the soundView and the soundObject
+         *          -sets the soundName button's title to the soundName
+         *          -sets the noteArray buttons in the view
+         *          -sets the not
+         */
+
+//        [self linkSoundWithView:]
+//        [self.soundObjectsInView addObject:[self.soundNameToRowDic ]]
+        height += heightIncrement;
+    }
 }
 
 /*
     INITIALIZE DICTIONARY AND FILL IT WITH SOUNDS FROM 'SOUND' FOLDER
  */
 - (void)fillDictionaryWithSounds {
+    
     // creates the "sound" folder if not yet created
     self.soundDirectoryPath = [BeatBoxViewController createSoundFolder];
     
@@ -141,6 +159,7 @@
 
     // initialize the dictionary with SoundRow objects
     for (NSString* soundFilePath in soundFilePathsArray) {
+        
         BeatBoxSoundRow *soundRow = [[BeatBoxSoundRow alloc] initWithPath:soundFilePath];
         NSLog(@"Adding SoundRow object to dictionary\n\tname: %@\tsoundPath: %@", soundRow.soundName, soundRow.soundFilePath);
         if (!self.soundNameToRowDic) {
@@ -287,12 +306,6 @@
     }
     
 }
-
-
-
-
-
-
 
 
 /***************************************************************************

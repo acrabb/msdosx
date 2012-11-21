@@ -21,6 +21,8 @@
 @property NSMutableArray*   sixteenthNoteArray;
 @property float             volume;
 @property int               notesPerMeasure;
+@property BOOL              isSelected;
+
 
 
 - (id) init;
