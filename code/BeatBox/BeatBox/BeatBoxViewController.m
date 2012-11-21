@@ -617,13 +617,16 @@
 - (IBAction)noteButtonPushed:(UIButton *)sender {
 
     NSLog(@"note button is pushed");
+    NSLog(@"selected: %s", sender.selected ? "true" : "false");
+    sender.selected = !sender.selected;
+    NSLog(@"selected: %s", sender.selected ? "true" : "false");
     
     // Get the sound associated with the button.
     SoundRowView *row = (SoundRowView*)[sender superview];
 
     NSString *soundName = row.soundButton.titleLabel.text;
     
-    [sender setImage:[UIImage imageNamed:@"note_button_pushed.png"] forState:UIControlStateNormal];
+//    [sender setImage:[UIImage imageNamed:@"note_button_pushed.png"] forState:UIControlStateNormal];
     
     NSLog(@"sound: %@", soundName);
 
