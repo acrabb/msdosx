@@ -34,6 +34,7 @@
     self.volume = 1.0;
     
     self.notesPerMeasure = 16;
+    self.isSelected = YES;
     
     return self;
 }
@@ -47,6 +48,7 @@
     self.sixteenthNoteArray = [BeatBoxSoundRow defaultArray];
     self.volume = 1.0;
     self.notesPerMeasure = 16;
+    self.isSelected = YES;
     
     return self;
 }
@@ -62,6 +64,7 @@
     self.sixteenthNoteArray = [BeatBoxSoundRow defaultArray];
     self.volume = 1.0;
     self.notesPerMeasure = 16;
+    self.isSelected = YES;
     
     return self;
 }
@@ -75,6 +78,7 @@
     self.sixteenthNoteArray = array;
     self.volume = volume;
     self.soundFilePath = filePath;
+    self.isSelected = YES;
     
     return self;
 }

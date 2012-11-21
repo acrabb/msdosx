@@ -16,20 +16,33 @@
 
 @synthesize noteButtonArray       = _noteButtonArray;
 
-- (id)initWithFrame:(CGRect)frame
-{
+
+- (id) initWithFrame:(CGRect)frame andController:(BeatBoxViewController*)vc {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
         NSLog(@"INIT THE SoundRowView");
-        self.viewController =  [[BeatBoxViewController alloc] init];
+        self.viewController = vc;
         [self setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:0.5]];
         [self makeAndAddSoundButton];
         [self makeAndAddNoteButtons];
-        
-//        [self.pickerView setFrame:CGRectMake(0.0f, 300.0f, 480.0f, 300.0f)];
-        // Set Label name
-        // Set button selection states
+    }
+    return self;
+}
+
+- (id) initWithFrame:(CGRect)frame
+       andController:(BeatBoxViewController*)vc
+            andSound:(BeatBoxSoundRow*)sound {
+    
+    self = [super initWithFrame:frame];
+    if (self) {
+        // Initialization code
+        NSLog(@"INIT THE SoundRowView");
+        self.viewController = vc;
+        [self setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:0.5]];
+        [self makeAndAddSoundButton];
+        [self makeAndAddNoteButtons];
+        [self.viewController linkSound:sound withView:self];
     }
     return self;
 }

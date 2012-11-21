@@ -50,5 +50,6 @@
 - (void)createNewSound;
 - (IBAction)noteButtonPushed:(UIButton *)sender;
 + (void)toggleNoteArray:(NSMutableArray*)noteArray atIndex:(NSUInteger)index;
-
+- (void) linkSound:(BeatBoxSoundRow *)sound withView:(SoundRowView *)soundView;
+    
 @end
