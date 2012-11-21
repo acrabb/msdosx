@@ -141,12 +141,13 @@
          *          -sets the noteArray buttons in the view
          *          -sets the not
          */
-
-//        [self linkSoundWithView:]
-//        [self.soundObjectsInView addObject:[self.soundNameToRowDic ]]
+        BeatBoxSoundRow* soundObject = [self.soundNameToRowDic objectForKey:soundName];
+        [self linkSound:soundObject withView:row];
+        [self.soundObjectsInView addObject:soundObject];
         height += heightIncrement;
     }
     [self.view addSubview:self.pickerView];
+    NSLog(@"soundObjectsInView size: %d", self.soundObjectsInView.count);
 }
 
 /*
@@ -610,6 +611,12 @@
     return _soundNameToRowDic;
 }
 
+- (NSMutableArray*)soundObjectsInView {
+    if (!_soundObjectsInView)
+        _soundObjectsInView = [[NSMutableArray alloc] init];
+    return _soundObjectsInView;
+}
+
 /*
  * This method is invoked when a note on the view is 
  * toggled by the user
@@ -618,16 +625,14 @@
 - (IBAction)noteButtonPushed:(UIButton *)sender {
 
     NSLog(@"note button is pushed");
-    NSLog(@"selected: %s", sender.selected ? "true" : "false");
     sender.selected = !sender.selected;
-    NSLog(@"selected: %s", sender.selected ? "true" : "false");
+
+    // NSLog(@"selected: %s", sender.selected ? "true" : "false");
     
     // Get the sound associated with the button.
     SoundRowView *row = (SoundRowView*)[sender superview];
 
     NSString *soundName = row.soundButton.titleLabel.text;
-    
-//    [sender setImage:[UIImage imageNamed:@"note_button_pushed.png"] forState:UIControlStateNormal];
     
     NSLog(@"sound: %@", soundName);
 
