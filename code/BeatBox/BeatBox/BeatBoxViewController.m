@@ -306,6 +306,7 @@
     if (!self.isPlaying) {
         //  Start playback
         self.isPlaying = YES;
+//        [self.playButton.titleLabel setText:@"STOP"];
         [self.playButton setTitle:@"Stop" forState:UIControlStateNormal];
         [self play];
     } else {
