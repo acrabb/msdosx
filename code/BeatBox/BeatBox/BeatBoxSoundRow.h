@@ -24,7 +24,6 @@
 @property BOOL              isSelected;
 
 
-
 - (id) init;
 
 - (id) initWithPath:(NSString*)path;

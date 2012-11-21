@@ -11,7 +11,6 @@
 
 @implementation SoundRowView
 
-
 @synthesize soundButton     = _soundButton;
 @synthesize viewController  = _viewController;
 
@@ -53,6 +52,7 @@
     int yVal = 6;
     int WIDTH = 22;
     int space = 1;
+
     for(int i=0; i<16; i++) {
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
 
