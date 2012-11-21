@@ -233,6 +233,7 @@
     [UIView commitAnimations];
     
     // Get the superview, and set it as the current sound row
+    [self.currentSoundView setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:0.5]];
     self.currentSoundView = (SoundRowView*)[sender superview];
     [self.currentSoundView setBackgroundColor:[UIColor redColor]];
     NSLog(@"At end of SNBP method!");
@@ -316,6 +317,7 @@
 
 
 - (void) linkSound:(BeatBoxSoundRow *) sound withView:(SoundRowView *) soundView {
+    NSLog(@"Linking sound: %@ with row: %@", sound.soundName, soundView.description);
     // Set the label of the button in the soundView to be the name of the sound.
     [soundView.soundButton setTitle:sound.soundName forState:UIControlStateNormal];
     // Set the 16th note array in the sound to match the soundView's array
@@ -323,6 +325,7 @@
         BOOL isOn = [[soundView.noteButtonArray objectAtIndex:i] isHighlighted];
         [sound.sixteenthNoteArray setObject:[NSNumber numberWithBool:isOn] atIndexedSubscript:i];
     }
+    NSLog(@"Sound array: %@", sound.sixteenthNoteArray);
     // TODO: Set sound.isSelected to match soundView.isSelected (isActivated)
 }
 
@@ -394,15 +397,19 @@
 - (void)timerFireMethod:(NSTimer *) timer {
     // Get the global count. (0-15)
     int noteNum = 0;
+    // For now...
+    noteNum = self.globalCount % 16;
     AVAudioPlayer *player;
     NSLog(@">>> TimerFireMethod called on count: %d for beat: %d", self.globalCount, noteNum);
     
     // For current sounds...
     for (BeatBoxSoundRow *sound in self.soundObjectsInView) {
+        NSLog(@"Sound: %@ in view.", sound.soundName);
         // ...if the sound is selected...
         if (sound.isSelected) {
+            NSLog(@"Sound: %@ is selected.", sound.soundName);
             // ...if the note is on for this count...
-            noteNum = self.globalCount % sound.notesPerMeasure;
+//            noteNum = self.globalCount % sound.notesPerMeasure;
             if ([sound.sixteenthNoteArray objectAtIndex:noteNum] != 0) {
                 // ...play the sound!
                 player = [self createAudioPlayerWithSound:sound];

@@ -78,6 +78,7 @@
     self.sixteenthNoteArray = array;
     self.volume = volume;
     self.soundFilePath = filePath;
+    self.notesPerMeasure = 16;
     self.isSelected = YES;
     
     return self;
