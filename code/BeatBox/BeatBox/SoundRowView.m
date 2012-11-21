@@ -23,7 +23,7 @@
         // Initialization code
         NSLog(@"INIT THE SoundRowView");
         self.viewController = vc;
-//        [self setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:0.5]];
+        [self setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:0.5]];
         [self makeAndAddSoundButton];
         [self makeAndAddNoteButtons];
     }
@@ -39,7 +39,7 @@
         // Initialization code
         NSLog(@"INIT THE SoundRowView");
         self.viewController = vc;
-//        [self setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:0.5]];
+        [self setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:0.5]];
         [self makeAndAddSoundButton];
         [self makeAndAddNoteButtons];
         [self.viewController linkSound:sound withView:self];
