@@ -128,8 +128,8 @@
             break;
         
         // create a new soundRowView for each sound if we have enough space
-        SoundRowView *row = [[SoundRowView alloc] initWithFrame:CGRectMake(0, height, 480, 34)];
-        [row setViewController:self];
+        SoundRowView *row = [[SoundRowView alloc] initWithFrame:CGRectMake(0, height, 480, 34) andController:self];
+//        [row setViewController:self];
         [self.soundRowViews addObject:row];
         [self.view addSubview:row];
         numSoundViews ++;
@@ -305,8 +305,9 @@
         
         // update current view's soundButton to selected sound's name
         NSString* selectedSoundName = [self.alphabetizedFiles objectAtIndex:(index-1)];
-
-        [self.currentSoundView setSoundButtonLabel:selectedSoundName];
+        [self linkSound:[self.soundNameToRowDic objectForKey:selectedSoundName] withView:self.currentSoundView];
+        
+//        [self.currentSoundView setSoundButtonLabel:selectedSoundName];
     }
     
 }
@@ -321,7 +322,7 @@
         BOOL isOn = [[soundView.noteButtonArray objectAtIndex:i] isHighlighted];
         [sound.sixteenthNoteArray setObject:[NSNumber numberWithBool:isOn] atIndexedSubscript:i];
     }
-    // Set sound.isSelected to match soundView.isSelected (isActivated)
+    // TODO: Set sound.isSelected to match soundView.isSelected (isActivated)
 }
 
 

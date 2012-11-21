@@ -16,6 +16,8 @@
 @property NSMutableArray                    *noteButtonArray;
 @property IBOutlet BeatBoxViewController    *viewController;
 
+- (id) initWithFrame:(CGRect)frame andController:(BeatBoxViewController*)vc;
+
 - (void) setSoundButtonLabel:(NSString*)soundName;
 - (void) setNoteButtonColor:(NSInteger)index;
 //- (IBAction)soundButtonPushed:(UIButton*)sender;
