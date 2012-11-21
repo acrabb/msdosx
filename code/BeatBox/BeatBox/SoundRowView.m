@@ -23,7 +23,7 @@
         // Initialization code
         NSLog(@"INIT THE SoundRowView");
         self.viewController = vc;
-        [self setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:0.5]];
+//        [self setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:0.5]];
         [self makeAndAddSoundButton];
         [self makeAndAddNoteButtons];
     }
@@ -39,7 +39,7 @@
         // Initialization code
         NSLog(@"INIT THE SoundRowView");
         self.viewController = vc;
-        [self setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:0.5]];
+//        [self setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:0.5]];
         [self makeAndAddSoundButton];
         [self makeAndAddNoteButtons];
         [self.viewController linkSound:sound withView:self];
@@ -49,10 +49,10 @@
 
 - (void) makeAndAddSoundButton {
     self.soundButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [self.soundButton setFrame:CGRectMake(16.0f, 2.0f, 71.0f, 28.0f)];
+    [self.soundButton setFrame:CGRectMake(16.0f, 2.0f, 65.0f, 28.0f)];
     [self.soundButton setTitle:@"Sound" forState:UIControlStateNormal];
 
-    NSLog(@"view Controller %@", self.viewController);
+//    NSLog(@"view Controller %@", self.viewController);
     [self.soundButton addTarget:self.viewController
                          action:@selector(soundNameButtonPushed:)
                forControlEvents:UIControlEventTouchUpInside];
@@ -61,6 +61,7 @@
 }
 
 - (void) makeAndAddNoteButtons {
+
     int xVal = 95;
     int yVal = 6;
     int WIDTH = 22;
@@ -71,18 +72,16 @@
 
         space = ((i%4) == 3) ? 5 : 1;
         
-//        [self setNoteButtonColorFor:button atIndex:i];
-//        [button setBackgroundColor:[UIColor blueColor]];
-        
         [button setFrame:CGRectMake(xVal, yVal, WIDTH, WIDTH)];
         [button.titleLabel setText:[NSString stringWithFormat:@"%d", i]];
         
         [button addTarget:self.viewController
                    action:@selector(noteButtonPushed:)
          forControlEvents:UIControlEventTouchUpInside];
-
-        [button setImage:[UIImage imageNamed:@"note_button_pushed.png"] forState:UIControlStateHighlighted];
+        
         [button setImage:[UIImage imageNamed:@"note_button_not_pushed.png"] forState:UIControlStateNormal];
+        
+        [button setImage:[UIImage imageNamed:@"note_button_pushed.png"] forState:UIControlStateSelected];
          
         [self.noteButtonArray addObject:button];
         [self addSubview:button];

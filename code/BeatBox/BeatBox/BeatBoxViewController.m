@@ -623,7 +623,7 @@
 
     NSString *soundName = row.soundButton.titleLabel.text;
     
-    [sender setImage:[UIImage imageNamed:@"note_button_pushed.png"] forState:UIControlStateHighlighted];
+    [sender setImage:[UIImage imageNamed:@"note_button_pushed.png"] forState:UIControlStateNormal];
     
     NSLog(@"sound: %@", soundName);
 
