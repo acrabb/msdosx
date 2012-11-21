@@ -317,13 +317,18 @@
 
 
 - (void) linkSound:(BeatBoxSoundRow *) sound withView:(SoundRowView *) soundView {
+    
     // Set the label of the button in the soundView to be the name of the sound.
     [soundView.soundButton setTitle:sound.soundName forState:UIControlStateNormal];
+    
     // Set the 16th note array in the sound to match the soundView's array
+    NSLog(@"notes per measure: %d", sound.notesPerMeasure);
+    
     for (int i=0; i < sound.notesPerMeasure; i++) {
-        BOOL isOn = [[soundView.noteButtonArray objectAtIndex:i] isHighlighted];
+        BOOL isOn = [[soundView.noteButtonArray objectAtIndex:i] isSelected];
         [sound.sixteenthNoteArray setObject:[NSNumber numberWithBool:isOn] atIndexedSubscript:i];
     }
+    
     // TODO: Set sound.isSelected to match soundView.isSelected (isActivated)
 }
 
