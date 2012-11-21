@@ -15,6 +15,7 @@
 @synthesize sixteenthNoteArray  = _sixteenthNoteArray;
 @synthesize volume          = _volume;
 @synthesize notesPerMeasure = _notesPerMeasure;
+@synthesize isSelected      = _isSelected;
 
 
 - (id) init {
