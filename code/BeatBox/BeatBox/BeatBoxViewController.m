@@ -19,7 +19,6 @@
 
 // UI OUTLETS
 @property (strong, nonatomic) IBOutlet UIButton     *playButton;
-@property (strong, nonatomic) IBOutlet UIButton     *recButton;
 @property (strong, nonatomic) IBOutlet UILabel      *recordProgressLabel;
 @property (strong, nonatomic) IBOutlet UIPickerView *soundFilePicker;
 
@@ -31,6 +30,7 @@
 @property (strong, nonatomic) AVAudioRecorder       *audioRecorder;
 @property (strong, nonatomic) NSTimer               *playTimer;
 @property (strong, nonatomic) NSMutableDictionary   *soundNameToRowDic; // TODO
+
 @property (strong, nonatomic) NSMutableArray        *alphabetizedFiles;
 
 // OTHER VARS
@@ -55,7 +55,7 @@
 
 // UI OBJECTS
 @synthesize playButton          = _playButton;
-@synthesize recButton           = _recButton;
+// @synthesize recButton           = _recButton;
 @synthesize recordProgressLabel = _recordProgressLabel;
 @synthesize soundFilePicker     = _soundFilePicker;
 @synthesize pickerView          = _pickerView;
@@ -99,7 +99,7 @@
     // TODO: Initialize DrumMachine with the stored settings
     /*
      Tempo
-     Array of sounds
+     Array of sounds (array of soundRowView subviews)
      isPlaying = NO
      isRecording = NO
      noteArray for each sound
@@ -114,7 +114,7 @@
     // Set the label to a default value.
     self.recordProgressLabel.text = @"Add new sound.";
     
-    
+
     // Create some test soundRowViews
     SoundRowView *rowOne = [[SoundRowView alloc] initWithFrame:CGRectMake(0, 50, 480, 34)];
     SoundRowView *rowTwo = [[SoundRowView alloc] initWithFrame:CGRectMake(0, 86, 480, 34)];
@@ -235,6 +235,7 @@
     }
     return result;
 }
+
 - (NSString*) pickerView:(UIPickerView *) pickerView
              titleForRow:(NSInteger)row
             forComponent:(NSInteger)component {
@@ -272,14 +273,17 @@
     [UIView commitAnimations];
     int index = [self.soundFilePicker selectedRowInComponent:0];
     // On sound selection
-    // Either record new sound file.
     if (index == 0) {
+        
+        // record new sound file.
         [self addNewSound];
+    
     } else {
-        // Or set current view to selected sound.
-        NSString* selection = [self.alphabetizedFiles objectAtIndex:(index-1)];
-        self.currentSoundView.sound = [self.soundNameToRowDic valueForKey:selection];
-        [self.currentSoundView updateButtons];
+        
+        // update current view's soundButton to selected sound's name
+        NSString* selectedSoundName = [self.alphabetizedFiles objectAtIndex:(index-1)];
+
+        [self.currentSoundView setSoundButtonLabel:selectedSoundName];
     }
     
 }
@@ -435,8 +439,6 @@
 
 
 
-
-
 /***************************************************************************
  ***** METHODS FOR RECORDING SOUNDS
  ***************************************************************************/
@@ -479,7 +481,7 @@
         if ([self.audioRecorder prepareToRecord] && [self.audioRecorder record]){
             NSLog(@"Successfully started to record in %@", audioRecordingURL);
             
-            [self.recButton setTitle:@"Recording" forState:UIControlStateNormal];
+//            [self.recButton setTitle:@"Recording" forState:UIControlStateNormal];
             
             /* After 1 second, let's stop the recording process */
             [self performSelector:@selector(stopRecordingOnAudioRecorder:)
@@ -583,7 +585,7 @@
         NSLog(@"key: %@\tvalue: %@", key, [self.soundNameToRowDic objectForKey:key]);
     
     // resetting Record button title
-    [self.recButton setTitle:@"REC" forState:UIControlStateNormal];
+//    [self.recButton setTitle:@"REC" forState:UIControlStateNormal];
 }
 
 
@@ -611,6 +613,11 @@
     return _soundNameToRowDic;
 }
 
+/*
+ * This method is invoked when a note on the view is 
+ * toggled by the user
+ * Calls toggleNoteArray to update the notes value
+ */
 - (IBAction)noteButtonPushed:(UIButton *)sender {
 
     // Get the sound associated with the button.
@@ -639,7 +646,9 @@
                                    atIndex:[sender.titleLabel.text intValue]];
 }
 
-
+/*
+ * Toggles the note at the given index
+ */
 + (void)toggleNoteArray:(NSMutableArray*)noteArray atIndex:(NSUInteger)index {
     
     bool updatedNoteValue = YES;
@@ -647,16 +656,19 @@
         updatedNoteValue = NO;
     
     [noteArray setObject:[NSNumber numberWithBool:updatedNoteValue] atIndexedSubscript:index];
-    
 }
 
-
+/*
+ * Returns the full path of the given sound object
+ */
 - (NSString*)getFullPathForSoundRow:(BeatBoxSoundRow *)soundRow {
     return [self.soundDirectoryPath stringByAppendingString:soundRow.soundFilePath];
 }
 
-
-// create sound folder for this device
+/*
+ * Creates a folder for the recorded sounds on the device
+ * Returns the path of the newly created folder
+ */
 + (NSString*)createSoundFolder {
     
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);

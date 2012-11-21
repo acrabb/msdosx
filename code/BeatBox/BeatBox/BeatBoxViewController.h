@@ -17,9 +17,10 @@
     UIPickerViewDelegate>
 
 @property BOOL isPlaying;
-- (void)recordSoundWithName:(NSString*)name;
 @property (strong, nonatomic) IBOutlet UIView *pickerView;
-//@property (strong, nonatomic) IBOutlet SoundRowView *viewOne;
+
+- (void)recordSoundWithName:(NSString*)name;
+
 - (IBAction)pickerButtonPushed;
 
 - (IBAction)playButtonPushed:(UIButton *)sender;
@@ -46,7 +47,7 @@
 - (void)playMeasureForSound:(BeatBoxSoundRow*) sound;
 - (void)playPlaybackForPlayer:(AVAudioPlayer*) player;
 - (void)recordWithName:(NSString*) name;
-- (void) createNewSound;
+- (void)createNewSound;
 - (IBAction)noteButtonPushed:(UIButton *)sender;
 + (void)toggleNoteArray:(NSMutableArray*)noteArray atIndex:(NSUInteger)index;
 
