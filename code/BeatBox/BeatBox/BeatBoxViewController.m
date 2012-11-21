@@ -146,6 +146,7 @@
 //        [self.soundObjectsInView addObject:[self.soundNameToRowDic ]]
         height += heightIncrement;
     }
+    [self.view addSubview:self.pickerView];
 }
 
 /*
