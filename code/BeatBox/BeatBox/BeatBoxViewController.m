@@ -388,7 +388,7 @@
     self.globalCount = 0;
 
     // Create and initialize the timer.
-    self.playTimer = [NSTimer scheduledTimerWithTimeInterval:1
+    self.playTimer = [NSTimer scheduledTimerWithTimeInterval:[self bpmToSixteenth]
                                              target:self
                                            selector:@selector(timerFireMethod:)
                                            userInfo:nil
@@ -426,9 +426,10 @@
 }
 
 
-- (int)bpmToSixteenth{
+- (float)bpmToSixteenth{
     // Calc 16th milliseconds from what bpm points to.
-    return ((60000 / self.tempo) / 4);
+//    60000/bpm/4 = 16th ms
+    return ((60.0 / self.tempo) / 4.0);
 }
 
 
