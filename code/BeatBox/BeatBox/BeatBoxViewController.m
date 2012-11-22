@@ -405,20 +405,19 @@
     int noteNum = 0;
     // For now...
     noteNum = self.globalCount % 16;
-    AVAudioPlayer *player;
+//    AVAudioPlayer *player;
     NSLog(@">>> TimerFireMethod called on count: %d for beat: %d", self.globalCount, noteNum);
     
     // For current sounds...
     for (BeatBoxSoundRow *sound in self.soundObjectsInView) {
-        NSLog(@"Sound: %@ in view.", sound.soundName);
         // ...if the sound is selected...
         if (sound.isSelected) {
-            NSLog(@"Sound: %@ is selected.", sound.soundName);
             // ...if the note is on for this count...
 //            noteNum = self.globalCount % sound.notesPerMeasure;
-            if ([sound.sixteenthNoteArray objectAtIndex:noteNum] != 0) {
+            if ([[sound.sixteenthNoteArray objectAtIndex:noteNum] boolValue] == YES) {
                 // ...play the sound!
-                player = [self createAudioPlayerWithSound:sound];
+                NSLog(@"Playing sound: %@.", sound.soundName);
+                AVAudioPlayer *player = [self createAudioPlayerWithSound:sound];
                 [self playPlaybackForPlayer:player];
             }
         }
