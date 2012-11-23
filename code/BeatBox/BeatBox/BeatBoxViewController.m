@@ -75,6 +75,7 @@
 @synthesize counterSecond       = _counterSecond;
 @synthesize recordedFileName    = _recordedFileName;
 @synthesize globalCount         = _globalCount;
+NSString*   M4AEXTENSION        = @".m4a";
 
 
 /***************************************************************************
@@ -122,14 +123,14 @@
     int height = 0;
     int numSoundViews = 0;
 
+    // LOAD SOME SOUND VIEWS
     for (NSString* soundName in soundKeys) {
-
         if (numSoundViews > 7)
             break;
-        
         // create a new soundRowView for each sound if we have enough space
         SoundRowView *row = [[SoundRowView alloc] initWithFrame:CGRectMake(0, height, 480, 34) andController:self];
 //        [row setViewController:self];
+        self.soundRowViews = [[NSMutableArray alloc] init];
         [self.soundRowViews addObject:row];
         [self.view addSubview:row];
         numSoundViews ++;
@@ -146,6 +147,11 @@
         [self.soundObjectsInView addObject:soundObject];
         height += heightIncrement;
     }
+    
+    // Create the pickerView
+//    self.pickerView = [[UIView alloc] initWithFrame:CGRectMake(-280.0, 0.0, 280.0, 30030)];
+    
+    
     [self.view addSubview:self.pickerView];
     NSLog(@"soundObjectsInView size: %d", self.soundObjectsInView.count);
 }
@@ -228,9 +234,14 @@
     NSLog(@"soundNameButtonPushed!");
     // Display sound file picker.self.soundFilePicker.dataSource = self;
     self.soundFilePicker.delegate = self;
-    self.soundFilePicker.showsSelectionIndicator = YES;
+//    self.soundFilePicker.showsSelectionIndicator = YES;
+    
+//    UIButton *fileListButton = [[UIButton alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 78.0f, 39.0f)];
+//    [fileListButton.titleLabel setText:@"BUTTON"];
+//    [self.pickerView addSubview: fileListButton];
+    
     [UIView beginAnimations:nil context:NULL];
-    [self.pickerView setFrame:CGRectMake(0.0f, 0.0f, 480.0f, 300.0f)];
+    [self.pickerView setFrame:CGRectMake(0.0f, 0.0f, 280.0f, 300.0f)];
     [UIView commitAnimations];
     
     // Get the superview, and set it as the current sound row
@@ -295,17 +306,16 @@
 // Puts the subview OUT of view.
 - (IBAction)pickerButtonPushed {
     [UIView beginAnimations:nil context:NULL];
-    [self.pickerView setFrame:CGRectMake(0.0f, 300.0f, 480.0f, 300.0f)];
+    [self.pickerView setFrame:CGRectMake(-280.0f, 0.0f, 280.0f, 300.0f)];
     [UIView commitAnimations];
     int index = [self.soundFilePicker selectedRowInComponent:0];
     // On sound selection
     if (index == 0) {
-        
         // record new sound file.
         [self addNewSound];
+        // TODO clean up this logic flow. So many methods are called...
     
     } else {
-        
         // update current view's soundButton to selected sound's name
         NSString* selectedSoundName = [self.alphabetizedFiles objectAtIndex:(index-1)];
         [self linkSound:[self.soundNameToRowDic objectForKey:selectedSoundName] withView:self.currentSoundView];
@@ -315,6 +325,59 @@
     
 }
 
+- (IBAction)pickerDeleteButtonPushed:(UIButton *)sender {
+    [UIView beginAnimations:nil context:NULL];
+    [self.pickerView setFrame:CGRectMake(-280.0f, 0.0f, 280.0f, 300.0f)];
+    [UIView commitAnimations];
+    int index = [self.soundFilePicker selectedRowInComponent:0];
+    if (index == 0) {
+        // Do nothing...but that's not good UX.
+    } else {
+        // Get the selected sound name
+        NSString* selectedSoundName = [self.alphabetizedFiles objectAtIndex:(index-1)];
+        NSLog(@">>> Deleting sound file %@.", selectedSoundName);
+        
+        // Delete the sound file.
+        BeatBoxSoundRow *soundObj = [self.soundNameToRowDic objectForKey:selectedSoundName];
+        [self deleteFileWithPath:[self getFullPathForSoundRow:soundObj]];
+        
+        // Delete the sound name k,v pair from the dictionary.
+        [self.soundNameToRowDic removeObjectForKey:selectedSoundName];
+        
+        // Delete any soundRow associated with this name.
+        if (self.soundRowViews.count == 0) {
+            NSLog(@"Empty soundRowViews!! :(");
+        }
+        for (SoundRowView *row in self.soundRowViews) {
+            NSLog(@"Checking sound row '%@'...", row.soundButton.titleLabel.text);
+            if ([row.soundButton.titleLabel.text isEqualToString:selectedSoundName]) {
+                NSLog(@">>> >>> Removing a soundRowView.");
+                [row removeFromSuperview];
+                [self.soundRowViews removeObject:row];
+            }
+        }
+    }
+}
+
+
+- (void)deleteFileWithPath:(NSString*)path {
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSError *error;
+    BOOL fileExists = [fileManager fileExistsAtPath:path];
+    NSLog(@"Path to file: %@", path);
+    NSLog(@"File exists: %d", fileExists);
+    NSLog(@"Is deletable file at path: %d", [fileManager isDeletableFileAtPath:path]);
+    if (fileExists)
+    {
+        BOOL success = [fileManager removeItemAtPath:path error:&error];
+        if (!success) NSLog(@"Error: %@", [error localizedDescription]);
+        else {
+            fileExists = [fileManager fileExistsAtPath:path];
+            if (fileExists) NSLog(@"File not deleted :(");
+            else NSLog(@"Success!!");
+        }
+    }
+}
 
 
 - (void) linkSound:(BeatBoxSoundRow *) sound withView:(SoundRowView *) soundView {
@@ -480,7 +543,7 @@
 {
     // Recordig settings.
     NSError *error = nil;
-    NSString *pathAsString = [self.soundDirectoryPath stringByAppendingString:[name stringByAppendingString:@".m4a"]];
+    NSString *pathAsString = [self.soundDirectoryPath stringByAppendingString:[name stringByAppendingString:M4AEXTENSION]];
     NSURL *audioRecordingURL = [NSURL fileURLWithPath:pathAsString];
     
     // Initialize the recorder.
@@ -584,12 +647,21 @@
     
     NSLog(@"url: %@",paramRecorder.url.lastPathComponent);
     
+    
+    //TODO FileManager???
+    //TODO FileManager???
+    //TODO FileManager???
+    //TODO FileManager???
+    //TODO FileManager???
+    
     // TODO: save the recorded file
     BeatBoxSoundRow *recordedSound = [[BeatBoxSoundRow alloc] initWithPath:paramRecorder.url.lastPathComponent];
     
     NSLog(@"sound file stored: %@ \n\tin %@", recordedSound.soundName, recordedSound.soundFilePath);
     
     [self.soundNameToRowDic setObject:recordedSound forKey:recordedSound.soundName];
+    
+    [self linkSound:recordedSound withView:self.currentSoundView];
     
     for (NSString* key in [self.soundNameToRowDic allKeys])
         NSLog(@"key: %@\tvalue: %@", key, [self.soundNameToRowDic objectForKey:key]);
@@ -686,6 +758,8 @@
     NSString *documentsDirectory = [paths objectAtIndex:0]; // Get documents folder
     NSString *dataPath = [documentsDirectory stringByAppendingPathComponent:@"sounds"];
     
+    // TODO FileManager?
+    // http://stackoverflow.com/questions/3404689/iphone-objective-c-cant-delete-a-file
     if (![[NSFileManager defaultManager] fileExistsAtPath:dataPath])
         [[NSFileManager defaultManager] createDirectoryAtPath:dataPath withIntermediateDirectories:NO attributes:nil error:nil];
 

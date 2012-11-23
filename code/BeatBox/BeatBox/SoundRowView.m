@@ -51,6 +51,7 @@
     self.soundButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [self.soundButton setFrame:CGRectMake(16.0f, 2.0f, 65.0f, 28.0f)];
     [self.soundButton setTitle:@"Sound" forState:UIControlStateNormal];
+    self.soundButton.titleLabel.font = [UIFont systemFontOfSize:10];
 
 //    NSLog(@"view Controller %@", self.viewController);
     [self.soundButton addTarget:self.viewController

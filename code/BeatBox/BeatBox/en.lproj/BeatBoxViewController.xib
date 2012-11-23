@@ -2,13 +2,13 @@
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1536</int>
-		<string key="IBDocument.SystemVersion">12C60</string>
-		<string key="IBDocument.InterfaceBuilderVersion">2844</string>
+		<string key="IBDocument.SystemVersion">12C54</string>
+		<string key="IBDocument.InterfaceBuilderVersion">2843</string>
 		<string key="IBDocument.AppKitVersion">1187.34</string>
 		<string key="IBDocument.HIToolboxVersion">625.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-			<string key="NS.object.0">1930</string>
+			<string key="NS.object.0">1929</string>
 		</object>
 		<array key="IBDocument.IntegratedClassDependencies">
 			<string>IBProxyObject</string>
@@ -133,16 +133,16 @@
 							<object class="IBUIButton" id="52929674">
 								<reference key="NSNextResponder" ref="788595700"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{386, 11}, {74, 39}}</string>
+								<string key="NSFrame">{{20, 17}, {74, 44}}</string>
 								<reference key="NSSuperview" ref="788595700"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="373385304"/>
+								<reference key="NSNextKeyView" ref="843838680"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<int key="IBUIContentHorizontalAlignment">0</int>
 								<int key="IBUIContentVerticalAlignment">0</int>
 								<int key="IBUIButtonType">1</int>
-								<string key="IBUINormalTitle">Button</string>
+								<string key="IBUINormalTitle">Select</string>
 								<reference key="IBUIHighlightedTitleColor" ref="250760502"/>
 								<object class="NSColor" key="IBUINormalTitleColor">
 									<int key="NSColorSpace">1</int>
@@ -155,15 +155,39 @@
 							<object class="IBUIPickerView" id="373385304">
 								<reference key="NSNextResponder" ref="788595700"/>
 								<int key="NSvFlags">290</int>
-								<string key="NSFrame">{{0, 84}, {480, 216}}</string>
+								<string key="NSFrame">{{0, 84}, {280, 216}}</string>
 								<reference key="NSSuperview" ref="788595700"/>
 								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView" ref="1043263595"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<bool key="IBUIShowsSelectionIndicator">YES</bool>
 							</object>
+							<object class="IBUIButton" id="843838680">
+								<reference key="NSNextResponder" ref="788595700"/>
+								<int key="NSvFlags">292</int>
+								<string key="NSFrame">{{190, 17}, {70, 44}}</string>
+								<reference key="NSSuperview" ref="788595700"/>
+								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView" ref="373385304"/>
+								<string key="NSReuseIdentifierKey">_NS:9</string>
+								<bool key="IBUIOpaque">NO</bool>
+								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+								<int key="IBUIContentHorizontalAlignment">0</int>
+								<int key="IBUIContentVerticalAlignment">0</int>
+								<int key="IBUIButtonType">1</int>
+								<string key="IBUINormalTitle">Delete</string>
+								<reference key="IBUIHighlightedTitleColor" ref="250760502"/>
+								<object class="NSColor" key="IBUINormalTitleColor">
+									<int key="NSColorSpace">1</int>
+									<bytes key="NSRGB">MSAwLjAzMjU0MTgxNzQ5IDAAA</bytes>
+								</object>
+								<reference key="IBUINormalTitleShadowColor" ref="581652684"/>
+								<reference key="IBUIFontDescription" ref="495371231"/>
+								<reference key="IBUIFont" ref="275651670"/>
+							</object>
 						</array>
-						<string key="NSFrame">{{0, 300}, {480, 300}}</string>
+						<string key="NSFrame">{{-280, 0}, {280, 300}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="52929674"/>
@@ -180,7 +204,7 @@
 				<string key="NSFrame">{{0, 20}, {480, 300}}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
-				<reference key="NSNextKeyView"/>
+				<reference key="NSNextKeyView" ref="788595700"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">1</int>
 					<bytes key="NSRGB">MCAwLjI2ODk2NTkwMjggMC4yODQzNzg5ODYAA</bytes>
@@ -263,6 +287,15 @@
 					</object>
 					<int key="connectionID">343</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">pickerDeleteButtonPushed:</string>
+						<reference key="source" ref="843838680"/>
+						<reference key="destination" ref="372490531"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">348</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -289,8 +322,8 @@
 						<array class="NSMutableArray" key="children">
 							<reference ref="1043263595"/>
 							<reference ref="718017148"/>
-							<reference ref="788595700"/>
 							<reference ref="182772824"/>
+							<reference ref="788595700"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -315,6 +348,7 @@
 						<array class="NSMutableArray" key="children">
 							<reference ref="373385304"/>
 							<reference ref="52929674"/>
+							<reference ref="843838680"/>
 						</array>
 						<reference key="parent" ref="774585933"/>
 					</object>
@@ -326,6 +360,11 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">338</int>
 						<reference key="object" ref="373385304"/>
+						<reference key="parent" ref="788595700"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">347</int>
+						<reference key="object" ref="843838680"/>
 						<reference key="parent" ref="788595700"/>
 					</object>
 				</array>
@@ -341,13 +380,14 @@
 				<string key="338.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="340.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="341.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="347.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="6.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">346</int>
+			<int key="maxID">348</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -358,6 +398,7 @@
 						<string key="addNewSound">id</string>
 						<string key="noteButtonPushed:">UIButton</string>
 						<string key="pickerButtonPushed">id</string>
+						<string key="pickerDeleteButtonPushed:">UIButton</string>
 						<string key="playButtonPushed:">UIButton</string>
 						<string key="soundNameButtonPushed:">UIButton</string>
 					</dictionary>
@@ -373,6 +414,10 @@
 						<object class="IBActionInfo" key="pickerButtonPushed">
 							<string key="name">pickerButtonPushed</string>
 							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="pickerDeleteButtonPushed:">
+							<string key="name">pickerDeleteButtonPushed:</string>
+							<string key="candidateClassName">UIButton</string>
 						</object>
 						<object class="IBActionInfo" key="playButtonPushed:">
 							<string key="name">playButtonPushed:</string>
@@ -418,6 +463,6 @@
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaTouchFramework</string>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
-		<string key="IBCocoaTouchPluginVersion">1930</string>
+		<string key="IBCocoaTouchPluginVersion">1929</string>
 	</data>
 </archive>

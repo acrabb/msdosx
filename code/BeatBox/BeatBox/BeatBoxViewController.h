@@ -22,6 +22,7 @@
 - (void)recordSoundWithName:(NSString*)name;
 
 - (IBAction)pickerButtonPushed;
+- (IBAction)pickerDeleteButtonPushed:(UIButton *)sender;
 
 - (IBAction)playButtonPushed:(UIButton *)sender;
 
