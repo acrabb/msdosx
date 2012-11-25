@@ -42,6 +42,7 @@
 - (NSString*) pickerView:(UIPickerView *) pickerView
              titleForRow:(NSInteger)row
             forComponent:(NSInteger)component;
+- (void)setBpmNumberLabelText:(NSInteger)tempo;
 
 // Added by Andre.
 - (void)recordSoundForFile:(NSString*) newFileName;
@@ -52,5 +53,7 @@
 - (IBAction)noteButtonPushed:(UIButton *)sender;
 + (void)toggleNoteArray:(NSMutableArray*)noteArray atIndex:(NSUInteger)index;
 - (void) linkSound:(BeatBoxSoundRow *)sound withView:(SoundRowView *)soundView;
+@property (strong, nonatomic) IBOutlet UILabel *bpmNumberLabel;
+- (IBAction)bpmSliderValueChanged:(UISlider *)sender;
     
 @end

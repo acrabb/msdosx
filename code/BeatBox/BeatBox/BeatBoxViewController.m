@@ -62,6 +62,7 @@
 @synthesize soundRowViews       = _soundRowViews;
 @synthesize activatedSounds     = _activatedSounds;
 @synthesize soundObjectsInView  = _soundObjectsInView;
+@synthesize bpmNumberLabel      = _bpmNumberLabel;
 
 // NON-UI OBJECTS
 @synthesize audioPlayer         = _audioPlayer;
@@ -106,6 +107,7 @@ NSString*   M4AEXTENSION        = @".m4a";
     
     // TODO: Set the tempo and tempo setter
     self.tempo = 100;
+    [self setBpmNumberLabelText:self.tempo];
     
     /*** Fill dictionary with sounds from folder ***/
     [self fillDictionaryWithSounds];
@@ -157,6 +159,21 @@ NSString*   M4AEXTENSION        = @".m4a";
 }
 
 /*
+ * Sets the label which holds the BPM value.
+ */
+- (void)setBpmNumberLabelText:(NSInteger)tempo {
+    self.bpmNumberLabel.text = [NSString stringWithFormat:@"%d", tempo];
+}
+
+- (IBAction)bpmSliderValueChanged:(UISlider *)sender {
+    NSLog(@"**Slider Changed: %f", sender.value);
+    NSInteger value = sender.value;
+    self.tempo = value;
+    [self setBpmNumberLabelText:value];
+}
+   
+/*
+ * ****** MODEL ******
     INITIALIZE DICTIONARY AND FILL IT WITH SOUNDS FROM 'SOUND' FOLDER
  */
 - (void)fillDictionaryWithSounds {
@@ -231,14 +248,10 @@ NSString*   M4AEXTENSION        = @".m4a";
 
 // Puts the subview IN view.
 - (IBAction)soundNameButtonPushed:(UIButton *)sender {
-    NSLog(@"soundNameButtonPushed!");
-    // Display sound file picker.self.soundFilePicker.dataSource = self;
+    // Display sound file
+//    picker.self.soundFilePicker.dataSource = self;
     self.soundFilePicker.delegate = self;
 //    self.soundFilePicker.showsSelectionIndicator = YES;
-    
-//    UIButton *fileListButton = [[UIButton alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 78.0f, 39.0f)];
-//    [fileListButton.titleLabel setText:@"BUTTON"];
-//    [self.pickerView addSubview: fileListButton];
     
     [UIView beginAnimations:nil context:NULL];
     [self.pickerView setFrame:CGRectMake(0.0f, 0.0f, 280.0f, 300.0f)];
@@ -248,7 +261,6 @@ NSString*   M4AEXTENSION        = @".m4a";
     [self.currentSoundView setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:0.5]];
     self.currentSoundView = (SoundRowView*)[sender superview];
     [self.currentSoundView setBackgroundColor:[UIColor redColor]];
-    NSLog(@"At end of SNBP method!");
 }
 
 /*
@@ -279,7 +291,7 @@ NSString*   M4AEXTENSION        = @".m4a";
 //    NSString* result = nil;
     if ([pickerView isEqual:self.soundFilePicker]) {
         // Fill the rows
-        NSLog(@">>> Filling on row: %d", row);
+//        NSLog(@">>> Filling on row: %d", row);
         // If row == 0, can add new file.
         if (row == 0) {
             // add new file
@@ -644,6 +656,7 @@ NSString*   M4AEXTENSION        = @".m4a";
 - (void)stopRecordingOnAudioRecorder:(AVAudioRecorder *)paramRecorder {
     
     [paramRecorder stop];
+    self.recordProgressLabel.text = @"Add a new sound";
     
     NSLog(@"url: %@",paramRecorder.url.lastPathComponent);
     
