@@ -18,6 +18,7 @@
 
 @property BOOL isPlaying;
 @property (strong, nonatomic) IBOutlet UIView *pickerView;
+@property (strong, nonatomic) IBOutlet UILabel *bpmNumberLabel;
 
 - (void)recordSoundWithName:(NSString*)name;
 
@@ -53,7 +54,7 @@
 - (IBAction)noteButtonPushed:(UIButton *)sender;
 + (void)toggleNoteArray:(NSMutableArray*)noteArray atIndex:(NSUInteger)index;
 - (void) linkSound:(BeatBoxSoundRow *)sound withView:(SoundRowView *)soundView;
-@property (strong, nonatomic) IBOutlet UILabel *bpmNumberLabel;
 - (IBAction)bpmSliderValueChanged:(UISlider *)sender;
+- (BOOL)addNextRowToView:(BeatBoxSoundRow*)soundObject;
     
 @end
