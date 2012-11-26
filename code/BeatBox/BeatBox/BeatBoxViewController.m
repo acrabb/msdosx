@@ -9,7 +9,7 @@
 #import "BeatBoxViewController.h"
 #import "BeatBoxSoundRow.h"
 #import "SoundRowView.h"
-
+#import "BeatBoxLightBulbView.h"
 
 
 /***************************************************************************
@@ -27,12 +27,13 @@
 @property (strong, nonatomic) NSMutableArray        *soundRowViews;
 @property (strong, nonatomic) NSMutableArray        *activatedSounds;
 
+@property (strong, nonatomic) BeatBoxLightBulbView  *lightBulbView;
+
 // NON-VIEW OBJECTS
-@property (strong, nonatomic) AVAudioPlayer         *audioPlayer;
 @property (strong, nonatomic) AVAudioRecorder       *audioRecorder;
 @property (strong, nonatomic) NSTimer               *playTimer;
 @property (strong, nonatomic) NSMutableDictionary   *soundNameToRowDic; // TODO
-
+@property (strong)            AVAudioPlayer         *player;
 @property (strong, nonatomic) NSMutableArray        *alphabetizedFiles;
 
 // OTHER VARS
@@ -43,6 +44,8 @@
 @property (strong, nonatomic) NSString*             recordedFileName;
 @property (strong, nonatomic) NSString*             soundDirectoryPath;
 @property BOOL                                      isRecording;
+@property (strong, nonatomic) NSTimer*              lightBulbTimer;
+@property (strong, nonatomic) NSNumber*             currentLightBulb;
 
 @end
 
@@ -55,19 +58,20 @@
 
 // UI OBJECTS
 @synthesize playButton          = _playButton;
-// @synthesize recButton           = _recButton;
 @synthesize recordProgressLabel = _recordProgressLabel;
 @synthesize soundFilePicker     = _soundFilePicker;
 @synthesize pickerView          = _pickerView;
 @synthesize soundRowViews       = _soundRowViews;
 @synthesize activatedSounds     = _activatedSounds;
 @synthesize soundObjectsInView  = _soundObjectsInView;
+@synthesize bpmNumberLabel      = _bpmNumberLabel;
+@synthesize lightBulbView       = _lightBulbView;
 
 // NON-UI OBJECTS
-@synthesize audioPlayer         = _audioPlayer;
 @synthesize audioRecorder       = _audioRecorder;
 @synthesize soundNameToRowDic   = _soundNameToRowDic;
 @synthesize alphabetizedFiles   = _alphabetizedFiles;
+@synthesize player              = _player;
 
 // OTHER VARS
 @synthesize isRecording         = _isRecording;
@@ -75,7 +79,15 @@
 @synthesize counterSecond       = _counterSecond;
 @synthesize recordedFileName    = _recordedFileName;
 @synthesize globalCount         = _globalCount;
+@synthesize lightBulbTimer      = _lightBulbTimer;
+@synthesize currentLightBulb    = _currentLightBulb;
+NSString*   M4AEXTENSION        = @".m4a";
 
+int nextRowXPos = 0; // Should never change.
+int nextRowYPos = 0;
+int ROW_HEIGHT  = 34;
+int ROW_LENGTH  = 480;
+int SPACE       = 2;
 
 /***************************************************************************
  ***** METHODS FOR THE VIEW
@@ -92,7 +104,6 @@
     
     // Allocate space for the recorder and player.
     self.audioRecorder  = [AVAudioRecorder alloc];
-    self.audioPlayer    = [AVAudioPlayer alloc];
     
     // TODO: Initialize DrumMachine with the stored settings
     /*
@@ -105,47 +116,131 @@
     
     // TODO: Set the tempo and tempo setter
     self.tempo = 100;
+    [self setBpmNumberLabelText:self.tempo];
     
     /*** Fill dictionary with sounds from folder ***/
     [self fillDictionaryWithSounds];
     
     // Set the label to a default value.
-    self.recordProgressLabel.text = @"Add a new sound";
+    self.recordProgressLabel.text = @"Add new sound";
     
-//    UIView* lightView =
-
-//    lightView addSubview:<#(UIView *)#>
+    // add light bulb view
+    BeatBoxLightBulbView *lightBulbView = [[BeatBoxLightBulbView alloc] initWithFrame:CGRectMake(0, 0, 480, 34) andController:self];
+    [self.view addSubview:lightBulbView];
+    self.lightBulbView = lightBulbView;
     
-    /* 
+    /*
      * Initialize the rows with as many sounds as we can fit in
      * some of the sounds we
      */
     NSArray *soundKeys = [self.soundNameToRowDic allKeys];
-    int heightIncrement = 36;
     int height = 36;
     int numSoundViews = 0;
-
+    
     for (NSString* soundName in soundKeys) {
 
         if (numSoundViews > 5)
             break;
         
         // create a new soundRowView for each sound if we have enough space
-        SoundRowView *row = [[SoundRowView alloc] initWithFrame:CGRectMake(0, height, 480, 34) andController:self];
+        SoundRowView *row = [[SoundRowView alloc] initWithFrame:CGRectMake(0, (numSoundViews + 1) * height, 480, 34) andController:self];
         [self.soundRowViews addObject:row];
+        NSLog(@"soundRowView size = %d", self.soundRowViews.count);
         [self.view addSubview:row];
-        numSoundViews ++;
         
         BeatBoxSoundRow* soundObject = [self.soundNameToRowDic objectForKey:soundName];
         [self linkSound:soundObject withView:row];
         [self.soundObjectsInView addObject:soundObject];
-        height += heightIncrement;
+        
+        numSoundViews ++;
     }
+    
+    // TODO: Need to set the pickerView's layer to always be on top, regardless of add order.
     [self.view addSubview:self.pickerView];
     NSLog(@"soundObjectsInView size: %d", self.soundObjectsInView.count);
 }
 
+- (void)setLightBulbToGreenAt:(NSInteger)lightBulbIndex {
+    UIImageView *lightBulb = (UIImageView*)[self.lightBulbView viewWithTag:lightBulbIndex + 1];
+    [lightBulb setImage:[UIImage imageNamed:@"led-circle-green-md.png"]];
+}
+
+- (void)setLightBulbToRedAt:(NSInteger)lightBulbIndex {
+    UIImageView *lightBulb = (UIImageView*)[self.lightBulbView viewWithTag:lightBulbIndex + 1];
+    [lightBulb setImage:[UIImage imageNamed:@"led-circle-red-md.png"]];
+}
+
+- (void)setLightBulbToGreyAt:(NSInteger)lightBulbIndex {
+    NSLog(@"turning %d to grey", lightBulbIndex + 1);
+    UIImageView *lightBulb = (UIImageView*)[self.lightBulbView viewWithTag:lightBulbIndex + 1];
+    [lightBulb setImage:[UIImage imageNamed:@"led-circle-grey-md.png"]];
+}
+
+- (void)startPlayingLightBulbsAtIndex:(int)index {
+    
+    self.currentLightBulb = [NSNumber numberWithInt:index];
+    self.lightBulbTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(playLightBulb) userInfo:nil repeats:YES];
+    
+}
+
+- (void)stopPlayingLightBulbs {
+    if (self.lightBulbTimer != nil) {
+        [self setLightBulbToGreyAt:[self getPrevLightBulbIndex]];
+        [self.lightBulbTimer invalidate];
+        self.currentLightBulb = nil;
+    }
+}
+
+- (NSInteger)getPrevLightBulbIndex {
+    int currentIndex = self.currentLightBulb.intValue;
+    return (currentIndex - 1) > 0 ? (currentIndex - 1) : ((currentIndex + 16 - 1) % 16);
+}
+
+- (void)playLightBulb {
+    
+    [self setLightBulbToGreyAt:[self getPrevLightBulbIndex]];
+    [self setLightBulbToGreenAt:self.currentLightBulb.intValue];
+    
+    self.currentLightBulb = [NSNumber numberWithInt:((self.currentLightBulb.intValue + 1) % 16)];
+}
+
+- (BOOL)addNextRowToView:(BeatBoxSoundRow *)soundObject {
+    // TODO: Return NO if there is not enough space for this row.
+    // Create a new soundRow
+    SoundRowView *row = [[SoundRowView alloc] initWithFrame:CGRectMake(nextRowXPos, nextRowYPos, ROW_LENGTH, ROW_HEIGHT)
+                                              andController:self];
+    // Update the nextRowYPos
+    nextRowYPos += ROW_HEIGHT + SPACE;
+    // Link the created row with the passed in soundObject.
+    [self linkSound:soundObject withView:row];
+    [self.soundRowViews addObject:row];
+    // Add the created row to the subview.
+    [self.view addSubview:row];
+    // Add the created row to the array of soundObjects in the view.
+    [self.soundObjectsInView addObject:soundObject];
+    // Return that the row was successfully created and added.
+    return YES;
+}
+
 /*
+ * Sets the label which holds the BPM value.
+ */
+- (void)setBpmNumberLabelText:(NSInteger)tempo {
+    self.bpmNumberLabel.text = [NSString stringWithFormat:@"%d", tempo];
+}
+
+
+/*
+ * Performs updates based on the slider's value.
+ */
+- (IBAction)bpmSliderValueChanged:(UISlider *)sender {
+    NSInteger value = sender.value;
+    self.tempo = value;
+    [self setBpmNumberLabelText:value];
+}
+   
+/*
+ * ****** MODEL ******
     INITIALIZE DICTIONARY AND FILL IT WITH SOUNDS FROM 'SOUND' FOLDER
  */
 - (void)fillDictionaryWithSounds {
@@ -178,7 +273,6 @@
  * viewDidUnload:
  *  Stop recording if we are.
  *  Set the audioRecorder to nil
- *  Stop the player if we're playing.
  */
 - (void) viewDidUnload {
     [super viewDidUnload];
@@ -187,12 +281,6 @@
         [self.audioRecorder stop];
     }
     self.audioRecorder = nil;
-    
-    // Stop playback if we are.
-    if ([self.audioPlayer isPlaying]) {
-        [self.audioPlayer stop];
-    }
-    self.audioPlayer = nil;
 }
 
 /**
@@ -201,38 +289,24 @@
 - (void)awakeFromNib {
 }
 
-/*
-    This gets called when a button on UIAlert view is clicked by user
- */
-- (void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    NSString *buttonTitle = [alertView buttonTitleAtIndex:buttonIndex];
-    if ([buttonTitle isEqualToString:@"OK"]) {
-        NSLog(@"User pressed the OK button, start recording the sound...");
-        // TODO: CHECK FOR EMPTY STRING
-        [self startRecording:[[alertView textFieldAtIndex:0] text]];
-    } else if ([buttonTitle isEqualToString:@"Cancel"]) {
-        NSLog(@"User pressed the Cancel button.");
-    }
-}
-
 
 /*** CODE FOR THE FILE PICKER ***/
 
 // Puts the subview IN view.
 - (IBAction)soundNameButtonPushed:(UIButton *)sender {
-    NSLog(@"soundNameButtonPushed!");
-    // Display sound file picker.self.soundFilePicker.dataSource = self;
+    // Display sound file
+//    picker.self.soundFilePicker.dataSource = self;
     self.soundFilePicker.delegate = self;
-    self.soundFilePicker.showsSelectionIndicator = YES;
+//    self.soundFilePicker.showsSelectionIndicator = YES;
+    
     [UIView beginAnimations:nil context:NULL];
-    [self.pickerView setFrame:CGRectMake(0.0f, 0.0f, 480.0f, 300.0f)];
+    [self.pickerView setFrame:CGRectMake(0.0f, 0.0f, 280.0f, 300.0f)];
     [UIView commitAnimations];
     
     // Get the superview, and set it as the current sound row
     [self.currentSoundView setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:0.5]];
     self.currentSoundView = (SoundRowView*)[sender superview];
     [self.currentSoundView setBackgroundColor:[UIColor redColor]];
-    NSLog(@"At end of SNBP method!");
 }
 
 /*
@@ -260,10 +334,9 @@
 - (NSString*) pickerView:(UIPickerView *) pickerView
              titleForRow:(NSInteger)row
             forComponent:(NSInteger)component {
-//    NSString* result = nil;
     if ([pickerView isEqual:self.soundFilePicker]) {
         // Fill the rows
-        NSLog(@">>> Filling on row: %d", row);
+//        NSLog(@">>> Filling on row: %d", row);
         // If row == 0, can add new file.
         if (row == 0) {
             // add new file
@@ -289,27 +362,85 @@
 
 // Puts the subview OUT of view.
 - (IBAction)pickerButtonPushed {
-    [UIView beginAnimations:nil context:NULL];
-    [self.pickerView setFrame:CGRectMake(0.0f, 300.0f, 480.0f, 300.0f)];
-    [UIView commitAnimations];
+    [self hidePickerView];
     int index = [self.soundFilePicker selectedRowInComponent:0];
     // On sound selection
     if (index == 0) {
-        
         // record new sound file.
         [self addNewSound];
+        // TODO clean up this logic flow. So many methods are called...
     
     } else {
-        
         // update current view's soundButton to selected sound's name
         NSString* selectedSoundName = [self.alphabetizedFiles objectAtIndex:(index-1)];
         [self linkSound:[self.soundNameToRowDic objectForKey:selectedSoundName] withView:self.currentSoundView];
-        
-//        [self.currentSoundView setSoundButtonLabel:selectedSoundName];
     }
+    // Set the currentSoundView back to nil.
+    [self.currentSoundView setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:0.5]];
+    self.currentSoundView = nil;
     
 }
 
+- (IBAction)pickerDeleteButtonPushed:(UIButton *)sender {
+    [self hidePickerView];
+    int index = [self.soundFilePicker selectedRowInComponent:0];
+    if (index == 0) {
+        // Do nothing...but that's not good UX.
+    } else {
+        // Get the selected sound name
+        NSString* selectedSoundName = [self.alphabetizedFiles objectAtIndex:(index-1)];
+        NSLog(@">>> Deleting sound file %@.", selectedSoundName);
+        
+        // Delete the sound file.
+        BeatBoxSoundRow *soundObj = [self.soundNameToRowDic objectForKey:selectedSoundName];
+        [self deleteFileWithPath:[self getFullPathForSoundRow:soundObj]];
+        
+        // Delete the sound name k,v pair from the dictionary.
+        [self.soundNameToRowDic removeObjectForKey:selectedSoundName];
+        
+        // Delete any soundRow associated with this name.
+        if (self.soundRowViews.count == 0) {
+            NSLog(@"Empty soundRowViews!! :(");
+        }
+        for (SoundRowView *row in self.soundRowViews) {
+            NSLog(@"Checking sound row '%@'...", row.soundButton.titleLabel.text);
+            if ([row.soundButton.titleLabel.text isEqualToString:selectedSoundName]) {
+                NSLog(@">>> >>> Removing a soundRowView.");
+                [row removeFromSuperview];
+                [self.soundRowViews removeObject:row];
+            }
+        }
+    }
+    // Set the currentSoundView back to nil.
+    [self.currentSoundView setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:0.5]];
+    self.currentSoundView = nil;
+}
+
+- (void)hidePickerView {
+    [UIView beginAnimations:nil context:NULL];
+    [self.pickerView setFrame:CGRectMake(-280.0f, 0.0f, 280.0f, 300.0f)];
+    [UIView commitAnimations];
+}
+
+
+- (void)deleteFileWithPath:(NSString*)path {
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSError *error;
+    BOOL fileExists = [fileManager fileExistsAtPath:path];
+    NSLog(@"Path to file: %@", path);
+    NSLog(@"File exists: %d", fileExists);
+    NSLog(@"Is deletable file at path: %d", [fileManager isDeletableFileAtPath:path]);
+    if (fileExists)
+    {
+        BOOL success = [fileManager removeItemAtPath:path error:&error];
+        if (!success) NSLog(@"Error: %@", [error localizedDescription]);
+        else {
+            fileExists = [fileManager fileExistsAtPath:path];
+            if (fileExists) NSLog(@"File not deleted :(");
+            else NSLog(@"Success!!");
+        }
+    }
+}
 
 
 - (void) linkSound:(BeatBoxSoundRow *) sound withView:(SoundRowView *) soundView {
@@ -350,22 +481,81 @@
 //        [self.playButton.titleLabel setText:@"STOP"];
         [self.playButton setTitle:@"Stop" forState:UIControlStateNormal];
         [self play];
+        [self startPlayingLightBulbsAtIndex:0];
     } else {
         self.isPlaying = NO;
-        [self stop];
+        [self stopPlayingLightBulbs];
         [self.playButton setTitle:@"Play" forState:UIControlStateNormal];
     }
     
 }
+
+/*
+    START THE PLAYBACK LOOP.
+    Set counter to 0 and start timer.
+ */
+- (void)play {
+    NSLog(@">> Beginning play loop!");
+    self.globalCount = 0;
+    [self performSelector:@selector(timerFireMethod:) withObject:nil afterDelay:[self bpmToSixteenth]];
+    NSLog(@">> Loop should be playing.");
+}
+
+ /*
+    Typically called every 16th note.
+ */
+- (void)timerFireMethod:(NSTimer *) timer {
+    // Get the global count. (0-15)
+    int noteNum = 0;
+    // For now...
+    noteNum = self.globalCount % 16;
+//    NSLog(@">>> TimerFireMethod called on count: %d for beat: %d", self.globalCount, noteNum);
+//    AVAudioPlayer *player;
+    // For current sounds...
+    for (BeatBoxSoundRow *sound in self.soundObjectsInView) {
+        // ...if the sound is selected...
+        if (sound.isSelected) {
+//            noteNum = self.globalCount % sound.notesPerMeasure;
+            // ...if the note is on for this count...
+            if ([[sound.sixteenthNoteArray objectAtIndex:noteNum] boolValue] == YES) {
+                // ...play the sound!
+//                NSLog(@"Playing sound: %@.", sound.soundName);
+                self.player = [self createAudioPlayerWithSound:sound];
+                [self playPlaybackForPlayer:self.player];
+            }
+        }
+    }
+    self.globalCount++;
+    if (self.isPlaying) {
+        [self performSelector:@selector(timerFireMethod:) withObject:nil afterDelay:[self bpmToSixteenth]];
+    }
+}
+
+
+// INIT THE AUDIOPLAYER WITH THE FILEPATH FOR THE SPECIFIED SOUND
+- (AVAudioPlayer*)createAudioPlayerWithSound:(BeatBoxSoundRow*) sound {
+    if (sound == nil) {
+        NSLog(@"!!! Nil sound received for player! :(");
+    }
+    NSData *fileData = [NSData dataWithContentsOfFile:[self getFullPathForSoundRow:sound]
+                                              options:NSDataReadingMapped
+                                                error:nil];
+//    AVAudioPlayer* player = [[AVAudioPlayer alloc] initWithData:fileData error:nil];
+    self.player = [[AVAudioPlayer alloc] initWithData:fileData error:nil];
+    
+    return self.player;
+}
+
 /*
     START PLAYBACK FOR THE SPECIFIED AUDIOPLAYER
  */
-- (void)playPlaybackForPlayer:(AVAudioPlayer*) player {
+- (void)playPlaybackForPlayer:(AVAudioPlayer*)player {
     if (player != nil){
         player.delegate = self;
-        NSLog(@">>> About to play player: %@", player);
+//        NSLog(@">>> About to play player: %@", player);
         if ([player prepareToPlay] && [player play]){
-            NSLog(@"Started playing the recorded audio.");
+//            NSLog(@"Started playing the recorded audio.");
+            
         } else {
             NSLog(@"Could not play the audio :(");
         }
@@ -375,73 +565,11 @@
 }
 
 /*
-    START THE PLAYBACK LOOP
+ * Calc 16th milliseconds from what bpm points to.
+ * Equation: 60000/bpm/4 = 16th ms
  */
-- (void)play {
-    NSLog(@">> Beginning play loop!");
-    // Set the global counter to 0
-    self.globalCount = 0;
-
-    // Create and initialize the timer.
-    self.playTimer = [NSTimer scheduledTimerWithTimeInterval:1
-                                             target:self
-                                           selector:@selector(timerFireMethod:)
-                                           userInfo:nil
-                                            repeats:YES];
-    NSLog(@">> Loop should be playing.");
-}
-
- /*
-    Gets called every time the timer is fired.
-    Typically called every 16th note.
- */
-- (void)timerFireMethod:(NSTimer *) timer {
-    // Get the global count. (0-15)
-    int noteNum = 0;
-    // For now...
-    noteNum = self.globalCount % 16;
-    AVAudioPlayer *player;
-    NSLog(@">>> TimerFireMethod called on count: %d for beat: %d", self.globalCount, noteNum);
-    
-    // For current sounds...
-    for (BeatBoxSoundRow *sound in self.soundObjectsInView) {
-        NSLog(@"Sound: %@ in view.", sound.soundName);
-        // ...if the sound is selected...
-        if (sound.isSelected) {
-            NSLog(@"Sound: %@ is selected.", sound.soundName);
-            // ...if the note is on for this count...
-//            noteNum = self.globalCount % sound.notesPerMeasure;
-            if ([[sound.sixteenthNoteArray objectAtIndex:noteNum] boolValue] == YES) {
-                // ...play the sound!
-                player = [self createAudioPlayerWithSound:sound];
-                [self playPlaybackForPlayer:player];
-            }
-        }
-    }
-    self.globalCount++;
-}
-
-
-- (int)bpmToSixteenth{
-    // Calc 16th milliseconds from what bpm points to.
-    return ((60000 / self.tempo) / 4);
-}
-
-
-
-
-
-
-/***************************************************************************
- ***** METHODS FOR STOPPING PLAYBACK
- ***************************************************************************/
-- (void)stop {
-    NSLog(@"Stopping playback");
-    // Invalidate the timer
-    [self.playTimer invalidate];
-    
-    // Reset count to 0;
-    self.globalCount = 0;
+- (float)bpmToSixteenth {
+    return ((60.0 / self.tempo) / 4.0);
 }
 
 
@@ -449,10 +577,41 @@
 /***************************************************************************
  ***** METHODS FOR RECORDING SOUNDS
  ***************************************************************************/
+- (IBAction)addNewSound {
+    UIAlertView *alertView = [[UIAlertView alloc]
+                                initWithTitle:@"File Name"
+                                message:@"Please enter a name for this sound:"
+                                delegate:self
+                                cancelButtonTitle:@"Cancel"
+                                otherButtonTitles:@"OK", nil];
+    [alertView setAlertViewStyle:UIAlertViewStylePlainTextInput];
+    [alertView show];
+}
+
+
+/*
+    This gets called when a button on UIAlert view is clicked by user
+ */
+- (void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSString *buttonTitle = [alertView buttonTitleAtIndex:buttonIndex];
+    if ([buttonTitle isEqualToString:@"OK"]) {
+        NSString *text = [[alertView textFieldAtIndex:0] text];
+        if (![text isEqualToString:@""]) {
+            NSLog(@"User pressed the OK button, start recording the sound...");
+            [self startRecordCountdown:[[alertView textFieldAtIndex:0] text]];
+        } else {
+            NSLog(@"User entered empty string.");
+        }
+    } else if ([buttonTitle isEqualToString:@"Cancel"]) {
+        NSLog(@"User pressed the Cancel button.");
+    }
+}
+
+
 /*
     Start the timer to count down.
  */
-- (void)startRecording:(NSString*)soundName {
+- (void)startRecordCountdown:(NSString*)soundName {
     self.recordedFileName = soundName;
     self.counterSecond = 3;
     [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(countLabel:) userInfo:nil repeats:YES];
@@ -475,7 +634,7 @@
 {
     // Recordig settings.
     NSError *error = nil;
-    NSString *pathAsString = [self.soundDirectoryPath stringByAppendingString:[name stringByAppendingString:@".m4a"]];
+    NSString *pathAsString = [self.soundDirectoryPath stringByAppendingString:[name stringByAppendingString:M4AEXTENSION]];
     NSURL *audioRecordingURL = [NSURL fileURLWithPath:pathAsString];
     
     // Initialize the recorder.
@@ -502,53 +661,8 @@
     }
 }
 
-- (IBAction)addNewSound {
-
-    UIAlertView *alertView = [[UIAlertView alloc]
-                                initWithTitle:@"File Name"
-                                message:@"Please enter a name for this sound:"
-                                delegate:self
-                                cancelButtonTitle:@"Cancel"
-                                otherButtonTitles:@"OK", nil];
-    
-    [alertView setAlertViewStyle:UIAlertViewStylePlainTextInput];
-    
-    [alertView show];
-}
 
 
-// INIT THE AUDIOPLAYER WITH THE FILEPATH FOR THE SPECIFIED SOUND
-- (AVAudioPlayer*)createAudioPlayerWithSound:(BeatBoxSoundRow*) sound {
-    if (sound == nil) {
-        NSLog(@"!!! Nil sound received for player! :(");
-    }
-    NSData *fileData = [NSData dataWithContentsOfFile:[self getFullPathForSoundRow:sound]
-                                              options:NSDataReadingMapped
-                                                error:nil];
-    AVAudioPlayer* player = [[AVAudioPlayer alloc] initWithData:fileData error:nil];
-    
-    return player;
-}
-
-/*
-// CREATE A FILE PATH WITH THE GIVEN SOUND NAME
-- (NSString *) audioFilePathWithName:(NSString *)name {
-
-    NSString *result = nil;
-    NSArray *folders = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
-                                                           NSUserDomainMask, YES);
-    
-    NSString *documentsFolder = [folders objectAtIndex:0];
-    result = [documentsFolder stringByAppendingPathComponent:name];
-
-    return result;
-}
-
-// CREATE A RECORDING PATH WITH A DEFAULT VALUE
-- (NSString*) audioFilePath {
-    return [self audioFilePathWithName:@"recording.m4a"];
-}
-*/
 
 
 - (NSDictionary *) audioRecordingSettings {
@@ -566,7 +680,7 @@
                 forKey:AVSampleRateKey];
     [settings setValue:[NSNumber numberWithInteger:1]
                 forKey:AVNumberOfChannelsKey];
-    [settings setValue:[NSNumber numberWithInteger:AVAudioQualityLow]
+    [settings setValue:[NSNumber numberWithInteger:AVAudioQualityMedium]
                 forKey:AVEncoderAudioQualityKey];
     result = [NSDictionary dictionaryWithDictionary:settings];
     return result;
@@ -576,8 +690,16 @@
 - (void)stopRecordingOnAudioRecorder:(AVAudioRecorder *)paramRecorder {
     
     [paramRecorder stop];
+    self.recordProgressLabel.text = @"Add a new sound";
     
     NSLog(@"url: %@",paramRecorder.url.lastPathComponent);
+    
+    
+    //TODO FileManager???
+    //TODO FileManager???
+    //TODO FileManager???
+    //TODO FileManager???
+    //TODO FileManager???
     
     // TODO: save the recorded file
     BeatBoxSoundRow *recordedSound = [[BeatBoxSoundRow alloc] initWithPath:paramRecorder.url.lastPathComponent];
@@ -585,6 +707,11 @@
     NSLog(@"sound file stored: %@ \n\tin %@", recordedSound.soundName, recordedSound.soundFilePath);
     
     [self.soundNameToRowDic setObject:recordedSound forKey:recordedSound.soundName];
+    if (self.currentSoundView == nil) {
+        [self addNextRowToView:recordedSound];
+    } else {
+        [self linkSound:recordedSound withView:self.currentSoundView];
+    }
     
     for (NSString* key in [self.soundNameToRowDic allKeys])
         NSLog(@"key: %@\tvalue: %@", key, [self.soundNameToRowDic objectForKey:key]);
@@ -624,6 +751,12 @@
     return _soundObjectsInView;
 }
 
+- (NSMutableArray*)soundRowViews {
+    if (!_soundRowViews)
+        _soundRowViews = [[NSMutableArray alloc] init];
+    return _soundRowViews;
+}
+
 /*
  * This method is invoked when a note on the view is 
  * toggled by the user
@@ -645,8 +778,10 @@
 
     // update the sound object's note array
     BeatBoxSoundRow* soundObject = [self.soundNameToRowDic valueForKey:soundName];
+    NSLog(@"OLD sound array: %@", soundObject.sixteenthNoteArray);
     [BeatBoxViewController toggleNoteArray:soundObject.sixteenthNoteArray
                                    atIndex:[sender.titleLabel.text intValue]];
+    NSLog(@"NEW sound array: %@", soundObject.sixteenthNoteArray);
 }
 
 /*
@@ -679,11 +814,15 @@
     NSString *documentsDirectory = [paths objectAtIndex:0]; // Get documents folder
     NSString *dataPath = [documentsDirectory stringByAppendingPathComponent:@"sounds"];
     
+    // TODO FileManager?
+    // http://stackoverflow.com/questions/3404689/iphone-objective-c-cant-delete-a-file
     if (![[NSFileManager defaultManager] fileExistsAtPath:dataPath])
         [[NSFileManager defaultManager] createDirectoryAtPath:dataPath withIntermediateDirectories:NO attributes:nil error:nil];
 
     return [dataPath stringByAppendingString:@"/"];
 }
+
+
 
 @end
 

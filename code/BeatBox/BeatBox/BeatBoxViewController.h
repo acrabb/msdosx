@@ -18,15 +18,18 @@
 
 @property BOOL isPlaying;
 @property (strong, nonatomic) IBOutlet UIView *pickerView;
+@property (strong, nonatomic) IBOutlet UILabel *bpmNumberLabel;
 
 - (void)recordSoundWithName:(NSString*)name;
 
 - (IBAction)pickerButtonPushed;
+- (IBAction)pickerDeleteButtonPushed:(UIButton *)sender;
 
 - (IBAction)playButtonPushed:(UIButton *)sender;
 
 - (IBAction)addNewSound;
 
+- (void)playLightBulb;
 - (NSString*)audioFilePath;
 - (NSString*)audioFilePathWithName:(NSString*) name;
 
@@ -41,6 +44,7 @@
 - (NSString*) pickerView:(UIPickerView *) pickerView
              titleForRow:(NSInteger)row
             forComponent:(NSInteger)component;
+- (void)setBpmNumberLabelText:(NSInteger)tempo;
 
 // Added by Andre.
 - (void)recordSoundForFile:(NSString*) newFileName;
@@ -51,5 +55,7 @@
 - (IBAction)noteButtonPushed:(UIButton *)sender;
 + (void)toggleNoteArray:(NSMutableArray*)noteArray atIndex:(NSUInteger)index;
 - (void) linkSound:(BeatBoxSoundRow *)sound withView:(SoundRowView *)soundView;
+- (IBAction)bpmSliderValueChanged:(UISlider *)sender;
+- (BOOL)addNextRowToView:(BeatBoxSoundRow*)soundObject;
     
 @end

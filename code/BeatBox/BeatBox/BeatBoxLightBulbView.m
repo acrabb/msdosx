@@ -10,23 +10,14 @@
 
 @implementation BeatBoxLightBulbView
 
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
-//        [self makeAndAddLightButtons]
-    }
-    return self;
-}
-
 - (id)initWithFrame:(CGRect)frame andController:(BeatBoxViewController *)vc {
     self = [super initWithFrame:frame];
     self.viewController = vc;
-    [self makeAndAddLightButtons];
+    [self addLightBulbs];
+    return self;
 }
 
-- (void) makeAndAddLightButtons {
+- (void) addLightBulbs {
     
     int xVal = 95;
     int yVal = 6;
@@ -35,29 +26,19 @@
     
     for(int i=0; i<16; i++) {
 
-        UIImage *bulbLabel = [[UIImage alloc] initWithFrame:CGRectMake(xVal, yVal, WIDTH, WIDTH)];
+        UIImageView *bulbImageView = [[UIImageView alloc] initWithFrame:CGRectMake(xVal, yVal, WIDTH, WIDTH)];
         
         space = ((i%4) == 3) ? 5 : 1;
         
-//        [bulbLabel setFrame:CGRectMake(xVal, yVal, WIDTH, WIDTH)];
-        [bulbLabel setText:[NSString stringWithFormat:@"%d", i]];
+        [bulbImageView setImage:[UIImage imageNamed:@"led-circle-grey-md.png"]];
+        [bulbImageView setTag:i+1];
         
-//        [button addTarget:self
-//                   action:@selector(self.viewController noteButtonPushed:)
-//         forControlEvents:UIControlEventTouchUpInside];
-        [bulbLabel ]
-        [bulbLabel setImage:[UIImage imageNamed:@"led-circle-grey-md.png"] forState:UIControlStateNormal];
-        
-//        [button setImage:[UIImage imageNamed:@"note_button_pushed.png"] forState:UIControlStateSelected];
-        
-        [self.lightBulbs addObject:button];
-        [self addSubview:button];
+        //[self.lightBulbs addObject:bulbImageView];
+        [self addSubview:bulbImageView];
         
         xVal += WIDTH + space;
     }
 }
-
-
 
 /*
 // Only override drawRect: if you perform custom drawing.

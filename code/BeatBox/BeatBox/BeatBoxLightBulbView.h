@@ -12,8 +12,8 @@
 
 @interface BeatBoxLightBulbView : UIView
 
-@property NSMutableArray                    *lightBulbs;
-@property IBOutlet BeatBoxViewController    *viewController;
+// @property NSMutableArray            *lightBulbs;
+@property BeatBoxViewController     *viewController;
 
 - (id) initWithFrame:(CGRect)frame andController:(BeatBoxViewController*)vc;
 
