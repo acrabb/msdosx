@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		293FC37D165DAD0600DC5A84 /* BeatBoxLightBulbView.m in Sources */ = {isa = PBXBuildFile; fileRef = 293FC37C165DAD0600DC5A84 /* BeatBoxLightBulbView.m */; };
+		293FC382165DAECF00DC5A84 /* led-circle-red-md.png in Resources */ = {isa = PBXBuildFile; fileRef = 293FC37F165DAECF00DC5A84 /* led-circle-red-md.png */; };
+		293FC383165DAECF00DC5A84 /* led-circle-grey-md.png in Resources */ = {isa = PBXBuildFile; fileRef = 293FC380165DAECF00DC5A84 /* led-circle-grey-md.png */; };
+		293FC384165DAECF00DC5A84 /* led-circle-green-md.png in Resources */ = {isa = PBXBuildFile; fileRef = 293FC381165DAECF00DC5A84 /* led-circle-green-md.png */; };
 		29662F50164E6C6A002D446E /* note_button_not_pushed.png in Resources */ = {isa = PBXBuildFile; fileRef = 29662F4E164E6C6A002D446E /* note_button_not_pushed.png */; };
 		29662F51164E6C6A002D446E /* note_button_pushed.png in Resources */ = {isa = PBXBuildFile; fileRef = 29662F4F164E6C6A002D446E /* note_button_pushed.png */; };
 		65592ACB1648C4CC001FA5E6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65592ACA1648C4CC001FA5E6 /* UIKit.framework */; };
@@ -43,6 +47,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		293FC37B165DAD0600DC5A84 /* BeatBoxLightBulbView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BeatBoxLightBulbView.h; sourceTree = "<group>"; };
+		293FC37C165DAD0600DC5A84 /* BeatBoxLightBulbView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BeatBoxLightBulbView.m; sourceTree = "<group>"; };
+		293FC37F165DAECF00DC5A84 /* led-circle-red-md.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "led-circle-red-md.png"; sourceTree = "<group>"; };
+		293FC380165DAECF00DC5A84 /* led-circle-grey-md.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "led-circle-grey-md.png"; sourceTree = "<group>"; };
+		293FC381165DAECF00DC5A84 /* led-circle-green-md.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "led-circle-green-md.png"; sourceTree = "<group>"; };
 		29662F4E164E6C6A002D446E /* note_button_not_pushed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = note_button_not_pushed.png; sourceTree = "<group>"; };
 		29662F4F164E6C6A002D446E /* note_button_pushed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = note_button_pushed.png; sourceTree = "<group>"; };
 		65592AC61648C4CC001FA5E6 /* BeatBox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BeatBox.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -138,6 +147,9 @@
 		65592AD01648C4CC001FA5E6 /* BeatBox */ = {
 			isa = PBXGroup;
 			children = (
+				293FC37F165DAECF00DC5A84 /* led-circle-red-md.png */,
+				293FC380165DAECF00DC5A84 /* led-circle-grey-md.png */,
+				293FC381165DAECF00DC5A84 /* led-circle-green-md.png */,
 				29662F4E164E6C6A002D446E /* note_button_not_pushed.png */,
 				29662F4F164E6C6A002D446E /* note_button_pushed.png */,
 				65592AD91648C4CC001FA5E6 /* BeatBoxAppDelegate.h */,
@@ -152,6 +164,8 @@
 				65CADD10164B7B7F00A720A2 /* BeatBoxSoundRow.m */,
 				65DE94B1164E0753003E827E /* SoundRowView.h */,
 				65DE94B2164E0753003E827E /* SoundRowView.m */,
+				293FC37B165DAD0600DC5A84 /* BeatBoxLightBulbView.h */,
+				293FC37C165DAD0600DC5A84 /* BeatBoxLightBulbView.m */,
 			);
 			path = BeatBox;
 			sourceTree = "<group>";
@@ -268,6 +282,9 @@
 				65592AE71648C4CC001FA5E6 /* BeatBoxViewController.xib in Resources */,
 				29662F50164E6C6A002D446E /* note_button_not_pushed.png in Resources */,
 				29662F51164E6C6A002D446E /* note_button_pushed.png in Resources */,
+				293FC382165DAECF00DC5A84 /* led-circle-red-md.png in Resources */,
+				293FC383165DAECF00DC5A84 /* led-circle-grey-md.png in Resources */,
+				293FC384165DAECF00DC5A84 /* led-circle-green-md.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -308,6 +325,7 @@
 				65CADD0E164B701600A720A2 /* BeatBoxModel.m in Sources */,
 				65CADD11164B7B7F00A720A2 /* BeatBoxSoundRow.m in Sources */,
 				65DE94B3164E0753003E827E /* SoundRowView.m in Sources */,
+				293FC37D165DAD0600DC5A84 /* BeatBoxLightBulbView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

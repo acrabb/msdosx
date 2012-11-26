@@ -112,35 +112,30 @@
     // Set the label to a default value.
     self.recordProgressLabel.text = @"Add a new sound";
     
+//    UIView* lightView =
+
+//    lightView addSubview:<#(UIView *)#>
+    
     /* 
      * Initialize the rows with as many sounds as we can fit in
      * some of the sounds we
      */
-    
     NSArray *soundKeys = [self.soundNameToRowDic allKeys];
     int heightIncrement = 36;
-    int height = 0;
+    int height = 36;
     int numSoundViews = 0;
 
     for (NSString* soundName in soundKeys) {
 
-        if (numSoundViews > 7)
+        if (numSoundViews > 5)
             break;
         
         // create a new soundRowView for each sound if we have enough space
         SoundRowView *row = [[SoundRowView alloc] initWithFrame:CGRectMake(0, height, 480, 34) andController:self];
-//        [row setViewController:self];
         [self.soundRowViews addObject:row];
         [self.view addSubview:row];
         numSoundViews ++;
         
-        /*
-         * TODO: Add the sound object to self.soundObjects
-         * TODO: Link the soundView and the soundObject
-         *          -sets the soundName button's title to the soundName
-         *          -sets the noteArray buttons in the view
-         *          -sets the not
-         */
         BeatBoxSoundRow* soundObject = [self.soundNameToRowDic objectForKey:soundName];
         [self linkSound:soundObject withView:row];
         [self.soundObjectsInView addObject:soundObject];
@@ -416,7 +411,7 @@
             NSLog(@"Sound: %@ is selected.", sound.soundName);
             // ...if the note is on for this count...
 //            noteNum = self.globalCount % sound.notesPerMeasure;
-            if ([sound.sixteenthNoteArray objectAtIndex:noteNum] != 0) {
+            if ([[sound.sixteenthNoteArray objectAtIndex:noteNum] boolValue] == YES) {
                 // ...play the sound!
                 player = [self createAudioPlayerWithSound:sound];
                 [self playPlaybackForPlayer:player];
