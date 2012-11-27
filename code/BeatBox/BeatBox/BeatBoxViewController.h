@@ -56,6 +56,6 @@
 + (void)toggleNoteArray:(NSMutableArray*)noteArray atIndex:(NSUInteger)index;
 - (void) linkSound:(BeatBoxSoundRow *)sound withView:(SoundRowView *)soundView;
 - (IBAction)bpmSliderValueChanged:(UISlider *)sender;
-- (BOOL)addNextRowToView:(BeatBoxSoundRow*)soundObject;
+- (void)addNextRowToView:(BeatBoxSoundRow*)soundObject;
     
 @end

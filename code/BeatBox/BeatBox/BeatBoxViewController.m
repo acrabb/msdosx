@@ -83,8 +83,8 @@
 @synthesize currentLightBulb    = _currentLightBulb;
 NSString*   M4AEXTENSION        = @".m4a";
 
-int nextRowXPos = 0; // Should never change.
-int nextRowYPos = 0;
+int MAX_SOUND_ROWS = 6;
+int SOUND_ROW_CONTAINER_HEIGHT = 36;
 int ROW_HEIGHT  = 34;
 int ROW_LENGTH  = 480;
 int SPACE       = 2;
@@ -125,7 +125,7 @@ int SPACE       = 2;
     self.recordProgressLabel.text = @"Add new sound";
     
     // add light bulb view
-    BeatBoxLightBulbView *lightBulbView = [[BeatBoxLightBulbView alloc] initWithFrame:CGRectMake(0, 0, 480, 34) andController:self];
+    BeatBoxLightBulbView *lightBulbView = [[BeatBoxLightBulbView alloc] initWithFrame:CGRectMake(0, 0, ROW_LENGTH, ROW_HEIGHT) andController:self];
     [self.view addSubview:lightBulbView];
     self.lightBulbView = lightBulbView;
     
@@ -133,31 +133,31 @@ int SPACE       = 2;
      * Initialize the rows with as many sounds as we can fit in
      * some of the sounds we
      */
-    NSArray *soundKeys = [self.soundNameToRowDic allKeys];
-    int height = 36;
-    int numSoundViews = 0;
+    NSArray *BBSoundRows = [self.soundNameToRowDic allValues];
+    for (BeatBoxSoundRow* BBSoundRow in BBSoundRows) {
     
-    for (NSString* soundName in soundKeys) {
-
-        if (numSoundViews > 5)
+        // Is there enough space for a new sound row?
+        if (self.soundRowViews.count >= MAX_SOUND_ROWS)
             break;
-        
-        // create a new soundRowView for each sound if we have enough space
-        SoundRowView *row = [[SoundRowView alloc] initWithFrame:CGRectMake(0, (numSoundViews + 1) * height, 480, 34) andController:self];
-        [self.soundRowViews addObject:row];
-        NSLog(@"soundRowView size = %d", self.soundRowViews.count);
-        [self.view addSubview:row];
-        
-        BeatBoxSoundRow* soundObject = [self.soundNameToRowDic objectForKey:soundName];
-        [self linkSound:soundObject withView:row];
-        [self.soundObjectsInView addObject:soundObject];
-        
-        numSoundViews ++;
+            
+        // create the soundRowView for this sound
+        SoundRowView *soundRowView = [[SoundRowView alloc] initWithFrame:[self getCGRectForNextSoundRowView]
+                                                           andController:self];
+        [self.soundRowViews addObject:soundRowView];
+        [self.view addSubview:soundRowView];
+            
+        NSLog(@"soundRowView array updated, new size: %d", self.soundRowViews.count);
+        [self linkSound:BBSoundRow withView:soundRowView];
+        [self.soundObjectsInView addObject:BBSoundRow];
     }
     
     // TODO: Need to set the pickerView's layer to always be on top, regardless of add order.
 //    [self.view addSubview:self.pickerView];
     NSLog(@"soundObjectsInView size: %d", self.soundObjectsInView.count);
+}
+
+- (CGRect)getCGRectForNextSoundRowView {
+    return CGRectMake(0, (self.soundRowViews.count + 1) * SOUND_ROW_CONTAINER_HEIGHT, ROW_LENGTH, ROW_HEIGHT);
 }
 
 - (void)setLightBulbToGreenAt:(NSInteger)lightBulbIndex {
@@ -203,23 +203,23 @@ int SPACE       = 2;
     
     self.currentLightBulb = [NSNumber numberWithInt:((self.currentLightBulb.intValue + 1) % 16)];
 }
+    
+    
+- (void)addNextRowToView:(BeatBoxSoundRow *)soundObject {
 
-- (BOOL)addNextRowToView:(BeatBoxSoundRow *)soundObject {
-    // TODO: Return NO if there is not enough space for this row.
-    // Create a new soundRow
-    SoundRowView *row = [[SoundRowView alloc] initWithFrame:CGRectMake(nextRowXPos, nextRowYPos, ROW_LENGTH, ROW_HEIGHT)
-                                              andController:self];
-    // Update the nextRowYPos
-    nextRowYPos += ROW_HEIGHT + SPACE;
-    // Link the created row with the passed in soundObject.
-    [self linkSound:soundObject withView:row];
-    [self.soundRowViews addObject:row];
-    // Add the created row to the subview.
-    [self.view addSubview:row];
-    // Add the created row to the array of soundObjects in the view.
-    [self.soundObjectsInView addObject:soundObject];
-    // Return that the row was successfully created and added.
-    return YES;
+    // add a new row only if there's enough space
+    if (self.soundRowViews.count < MAX_SOUND_ROWS) {
+    
+        // create the soundRowView for this sound
+        SoundRowView *soundRowView = [[SoundRowView alloc] initWithFrame:[self getCGRectForNextSoundRowView]
+                                                       andController:self];
+        [self.soundRowViews addObject:soundRowView];
+        [self.view addSubview:soundRowView];
+    
+        NSLog(@"soundRowView array updated, new size: %d", self.soundRowViews.count);
+        [self linkSound:soundObject withView:soundRowView];
+        [self.soundObjectsInView addObject:soundObject];
+    }
 }
 
 /*
@@ -267,7 +267,6 @@ int SPACE       = 2;
         NSLog(@"full path: %@", [self getFullPathForSoundRow:soundRow]);
     }
 }
-
 
 /**
  * viewDidUnload:
@@ -491,7 +490,6 @@ int SPACE       = 2;
         [self stopPlayingLightBulbs];
         [self.playButton setTitle:@"Play" forState:UIControlStateNormal];
     }
-    
 }
 
 /*
