@@ -16,5 +16,6 @@
 @property BeatBoxViewController     *viewController;
 
 - (id) initWithFrame:(CGRect)frame andController:(BeatBoxViewController*)vc;
+- (void) greyOut;
 
 @end

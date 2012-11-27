@@ -171,7 +171,6 @@ int SPACE       = 2;
 }
 
 - (void)setLightBulbToGreyAt:(NSInteger)lightBulbIndex {
-    NSLog(@"turning %d to grey", lightBulbIndex + 1);
     UIImageView *lightBulb = (UIImageView*)[self.lightBulbView viewWithTag:lightBulbIndex + 1];
     [lightBulb setImage:[UIImage imageNamed:@"led-circle-grey-md.png"]];
 }
@@ -203,7 +202,15 @@ int SPACE       = 2;
     
     self.currentLightBulb = [NSNumber numberWithInt:((self.currentLightBulb.intValue + 1) % 16)];
 }
+
+- (void)playLightBulbAtIndex:(NSInteger)index {
+    self.currentLightBulb = [NSNumber numberWithInt:index];
+    [self setLightBulbToGreenAt:index];
+    [self setLightBulbToGreyAt:[self getPrevLightBulbIndex]];
     
+//    self.currentLightBulb = [NSNumber numberWithInt:((self.currentLightBulb.intValue + 1) % 16)];
+}
+
     
 - (void)addNextRowToView:(BeatBoxSoundRow *)soundObject {
 
@@ -402,12 +409,18 @@ int SPACE       = 2;
             NSLog(@"Empty soundRowViews!! :(");
         }
         NSMutableArray *temp = [self.soundRowViews mutableCopy];
+        int deleted = 0; // Number of views deleted
+        // NOTE: Delete logic assumes that soundRowViews array is in order of the view.
         for (SoundRowView *row in self.soundRowViews) {
+            if (deleted > 0) {
+                [row moveUp:deleted];
+            }
             NSLog(@"Checking sound row '%@'...", row.soundButton.titleLabel.text);
             if ([row.soundButton.titleLabel.text isEqualToString:selectedSoundName]) {
                 NSLog(@">>> >>> Removing a soundRowView.");
                 [row removeFromSuperview];
                 [temp removeObject:row];
+                deleted++;
             }
         }
         self.soundRowViews = temp;
@@ -481,13 +494,12 @@ int SPACE       = 2;
     if (!self.isPlaying) {
         //  Start playback
         self.isPlaying = YES;
-//        [self.playButton.titleLabel setText:@"STOP"];
         [self.playButton setTitle:@"Stop" forState:UIControlStateNormal];
         [self play];
-        [self startPlayingLightBulbsAtIndex:0];
+//        [self startPlayingLightBulbsAtIndex:0];
     } else {
         self.isPlaying = NO;
-        [self stopPlayingLightBulbs];
+        [self.lightBulbView greyOut];
         [self.playButton setTitle:@"Play" forState:UIControlStateNormal];
     }
 }
@@ -511,6 +523,7 @@ int SPACE       = 2;
     int noteNum = 0;
     // For now...
     noteNum = self.globalCount % 16;
+    [self playLightBulbAtIndex:noteNum];
 //    NSLog(@">>> TimerFireMethod called on count: %d for beat: %d", self.globalCount, noteNum);
 //    AVAudioPlayer *player;
     // For current sounds...

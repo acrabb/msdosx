@@ -40,6 +40,12 @@
     }
 }
 
+- (void) greyOut {
+    for (UIImageView *bulb in [self subviews]) {
+        [bulb setImage:[UIImage imageNamed:@"led-circle-grey-md.png"]];
+    }
+}
+
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
