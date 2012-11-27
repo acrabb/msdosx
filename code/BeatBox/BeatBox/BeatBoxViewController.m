@@ -156,7 +156,7 @@ int SPACE       = 2;
     }
     
     // TODO: Need to set the pickerView's layer to always be on top, regardless of add order.
-    [self.view addSubview:self.pickerView];
+//    [self.view addSubview:self.pickerView];
     NSLog(@"soundObjectsInView size: %d", self.soundObjectsInView.count);
 }
 
@@ -298,7 +298,7 @@ int SPACE       = 2;
 //    picker.self.soundFilePicker.dataSource = self;
     self.soundFilePicker.delegate = self;
 //    self.soundFilePicker.showsSelectionIndicator = YES;
-    
+    [self.view addSubview:self.pickerView];
     [UIView beginAnimations:nil context:NULL];
     [self.pickerView setFrame:CGRectMake(0.0f, 0.0f, 280.0f, 300.0f)];
     [UIView commitAnimations];
@@ -402,14 +402,16 @@ int SPACE       = 2;
         if (self.soundRowViews.count == 0) {
             NSLog(@"Empty soundRowViews!! :(");
         }
+        NSMutableArray *temp = [self.soundRowViews mutableCopy];
         for (SoundRowView *row in self.soundRowViews) {
             NSLog(@"Checking sound row '%@'...", row.soundButton.titleLabel.text);
             if ([row.soundButton.titleLabel.text isEqualToString:selectedSoundName]) {
                 NSLog(@">>> >>> Removing a soundRowView.");
                 [row removeFromSuperview];
-                [self.soundRowViews removeObject:row];
+                [temp removeObject:row];
             }
         }
+        self.soundRowViews = temp;
     }
     // Set the currentSoundView back to nil.
     [self.currentSoundView setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:0.5]];
@@ -420,6 +422,8 @@ int SPACE       = 2;
     [UIView beginAnimations:nil context:NULL];
     [self.pickerView setFrame:CGRectMake(-280.0f, 0.0f, 280.0f, 300.0f)];
     [UIView commitAnimations];
+    [self.pickerView removeFromSuperview];
+
 }
 
 
