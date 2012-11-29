@@ -139,7 +139,7 @@ int SPACE       = 2;
         // Is there enough space for a new sound row?
         if (self.soundRowViews.count >= MAX_SOUND_ROWS)
             break;
-            
+        
         // create the soundRowView for this sound
         SoundRowView *soundRowView = [[SoundRowView alloc] initWithFrame:[self getCGRectForNextSoundRowView]
                                                            andController:self];
@@ -172,7 +172,18 @@ int SPACE       = 2;
 
 - (void)setLightBulbToGreyAt:(NSInteger)lightBulbIndex {
     UIImageView *lightBulb = (UIImageView*)[self.lightBulbView viewWithTag:lightBulbIndex + 1];
+    NSLog(@"current image: %@",lightBulb.image.description);
     [lightBulb setImage:[UIImage imageNamed:@"led-circle-grey-md.png"]];
+}
+
+- (void)setLightsOff {
+    for (id lightBulb in [self.lightBulbView subviews]) {
+        if ([lightBulb isKindOfClass:[UIImageView class]]) {
+            UIImageView *lightBulbImageView = (UIImageView*)lightBulb;
+            NSLog(@"current lightBulb to set off: %@", [lightBulbImageView description]);
+            [lightBulbImageView setImage:[UIImage imageNamed:@"led-circle-grey-md.png"]];
+        }
+    }
 }
 
 - (void)startPlayingLightBulbsAtIndex:(int)index {
@@ -205,10 +216,11 @@ int SPACE       = 2;
 
 - (void)playLightBulbAtIndex:(NSInteger)index {
     self.currentLightBulb = [NSNumber numberWithInt:index];
+    
     [self setLightBulbToGreenAt:index];
     [self setLightBulbToGreyAt:[self getPrevLightBulbIndex]];
     
-//    self.currentLightBulb = [NSNumber numberWithInt:((self.currentLightBulb.intValue + 1) % 16)];
+//    self.currentLightBulb = [NSNumber numberWithInt:(index + 1)];
 }
 
     
@@ -409,25 +421,56 @@ int SPACE       = 2;
             NSLog(@"Empty soundRowViews!! :(");
         }
         NSMutableArray *temp = [self.soundRowViews mutableCopy];
-        int deleted = 0; // Number of views deleted
-        // NOTE: Delete logic assumes that soundRowViews array is in order of the view.
+        
+        BOOL rowDeleted = NO;
+        BOOL middleRowDeleted = NO;
+        
         for (SoundRowView *row in self.soundRowViews) {
-            if (deleted > 0) {
-                [row moveUp:deleted];
-            }
+            
+            /* 
+             * Previous row is a middle row
+             * If prev is deleted, need to rearrange the sound views at the end
+             */
+            if (rowDeleted)
+                middleRowDeleted = YES;
+            
             NSLog(@"Checking sound row '%@'...", row.soundButton.titleLabel.text);
+            
             if ([row.soundButton.titleLabel.text isEqualToString:selectedSoundName]) {
                 NSLog(@">>> >>> Removing a soundRowView.");
                 [row removeFromSuperview];
                 [temp removeObject:row];
-                deleted++;
+                rowDeleted = YES;
             }
         }
+
+        /*
+         * We have to cleanUp the sound views if a middle row has been deleted
+         * No need to rearrange if only the last row has been deleted
+         */
+        if (middleRowDeleted)
+            [self cleanUpSoundRowViewArr:temp];
+        
         self.soundRowViews = temp;
     }
     // Set the currentSoundView back to nil.
     [self.currentSoundView setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:0.5]];
     self.currentSoundView = nil;
+}
+
+/* 
+ * rearranges the sound rows to fill the gap created by the deleted rows
+ */
+- (void)cleanUpSoundRowViewArr:(NSMutableArray*)soundRowView {
+
+    // accounting for lightBulbView
+    int numRows = 1;
+    
+    for (SoundRowView *row in soundRowView) {
+        if (row.frame.origin.y != numRows * SOUND_ROW_CONTAINER_HEIGHT)
+            row.frame = CGRectMake(0, numRows * SOUND_ROW_CONTAINER_HEIGHT, ROW_LENGTH, ROW_HEIGHT);
+        numRows++;
+    }
 }
 
 - (void)hidePickerView {
@@ -499,7 +542,9 @@ int SPACE       = 2;
 //        [self startPlayingLightBulbsAtIndex:0];
     } else {
         self.isPlaying = NO;
-        [self.lightBulbView greyOut];
+//        [self.lightBulbView greyOut];
+        // [self setLightBulbToGreyAt:self.currentLightBulb.integerValue];
+        // NSLog(@"current light bulb: %d", self.currentLightBulb.intValue);
         [self.playButton setTitle:@"Play" forState:UIControlStateNormal];
     }
 }
@@ -543,6 +588,8 @@ int SPACE       = 2;
     self.globalCount++;
     if (self.isPlaying) {
         [self performSelector:@selector(timerFireMethod:) withObject:nil afterDelay:[self bpmToSixteenth]];
+    } else {
+        [self setLightsOff];
     }
 }
 
