@@ -24,6 +24,7 @@
 
 - (IBAction)pickerButtonPushed;
 - (IBAction)pickerDeleteButtonPushed:(UIButton *)sender;
+- (IBAction)pickerCancelButtonPushed:(UIButton *)sender;
 
 - (IBAction)playButtonPushed:(UIButton *)sender;
 

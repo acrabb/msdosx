@@ -306,7 +306,7 @@ int SPACE       = 2;
 //    self.soundFilePicker.showsSelectionIndicator = YES;
     [self.view addSubview:self.pickerView];
     [UIView beginAnimations:nil context:NULL];
-    [self.pickerView setFrame:CGRectMake(0.0f, 0.0f, 280.0f, 300.0f)];
+    [self.pickerView setFrame:CGRectMake(0.0f, 0.0f, 480.0f, 300.0f)];
     [UIView commitAnimations];
     
     // Get the superview, and set it as the current sound row
@@ -413,7 +413,7 @@ int SPACE       = 2;
         // NOTE: Delete logic assumes that soundRowViews array is in order of the view.
         for (SoundRowView *row in self.soundRowViews) {
             if (deleted > 0) {
-                [row moveUp:deleted];
+//                [row moveUp:deleted];
             }
             NSLog(@"Checking sound row '%@'...", row.soundButton.titleLabel.text);
             if ([row.soundButton.titleLabel.text isEqualToString:selectedSoundName]) {
@@ -430,9 +430,13 @@ int SPACE       = 2;
     self.currentSoundView = nil;
 }
 
+- (IBAction)pickerCancelButtonPushed:(UIButton *)sender {
+    [self hidePickerView];
+}
+
 - (void)hidePickerView {
     [UIView beginAnimations:nil context:NULL];
-    [self.pickerView setFrame:CGRectMake(-280.0f, 0.0f, 280.0f, 300.0f)];
+    [self.pickerView setFrame:CGRectMake(-480.0f, 0.0f, 480.0f, 300.0f)];
     [UIView commitAnimations];
     [self.pickerView removeFromSuperview];
 
