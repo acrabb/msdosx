@@ -33,8 +33,8 @@
 @property (strong, nonatomic) AVAudioRecorder       *audioRecorder;
 @property (strong, nonatomic) NSTimer               *playTimer;
 @property (strong, nonatomic) NSMutableDictionary   *soundNameToRowDic; // TODO
-@property (strong)            AVAudioPlayer         *player;
 @property (strong, nonatomic) NSMutableArray        *alphabetizedFiles;
+@property (strong)            NSMutableDictionary   *audioPlayers;
 
 // OTHER VARS
 @property NSInteger                                 tempo; // TODO
@@ -71,7 +71,7 @@
 @synthesize audioRecorder       = _audioRecorder;
 @synthesize soundNameToRowDic   = _soundNameToRowDic;
 @synthesize alphabetizedFiles   = _alphabetizedFiles;
-@synthesize player              = _player;
+@synthesize audioPlayers        = _audioPlayers;
 
 // OTHER VARS
 @synthesize isRecording         = _isRecording;
@@ -117,12 +117,13 @@ int SPACE       = 2;
     // TODO: Set the tempo and tempo setter
     self.tempo = 100;
     [self setBpmNumberLabelText:self.tempo];
+    self.audioPlayers = [[NSMutableDictionary alloc] initWithCapacity:MAX_SOUND_ROWS];
     
     /*** Fill dictionary with sounds from folder ***/
     [self fillDictionaryWithSounds];
     
     // Set the label to a default value.
-    self.recordProgressLabel.text = @"Add new sound";
+//    self.recordProgressLabel.text = @"Add new sound";
     
     // add light bulb view
     BeatBoxLightBulbView *lightBulbView = [[BeatBoxLightBulbView alloc] initWithFrame:CGRectMake(0, 0, ROW_LENGTH, ROW_HEIGHT) andController:self];
@@ -133,9 +134,11 @@ int SPACE       = 2;
      * Initialize the rows with as many sounds as we can fit in
      * some of the sounds we
      */
-    NSArray *BBSoundRows = [self.soundNameToRowDic allValues];
-    for (BeatBoxSoundRow* BBSoundRow in BBSoundRows) {
+    NSArray *bBSoundRows = [self.soundNameToRowDic allValues];
+    for (BeatBoxSoundRow* bBSoundRow in bBSoundRows) {
     
+        [self addNextRowToView:bBSoundRow];
+        /*
         // Is there enough space for a new sound row?
         if (self.soundRowViews.count >= MAX_SOUND_ROWS)
             break;
@@ -145,10 +148,12 @@ int SPACE       = 2;
                                                            andController:self];
         [self.soundRowViews addObject:soundRowView];
         [self.view addSubview:soundRowView];
+        [self.audioPlayers setObject:[self createAudioPlayerWithSound:bBSoundRow] forKey:bBSoundRow.soundName];
             
         NSLog(@"soundRowView array updated, new size: %d", self.soundRowViews.count);
-        [self linkSound:BBSoundRow withView:soundRowView];
-        [self.soundObjectsInView addObject:BBSoundRow];
+        [self linkSound:bBSoundRow withView:soundRowView];
+        [self.soundObjectsInView addObject:bBSoundRow];
+         */
     }
     
     // TODO: Need to set the pickerView's layer to always be on top, regardless of add order.
@@ -172,7 +177,7 @@ int SPACE       = 2;
 
 - (void)setLightBulbToGreyAt:(NSInteger)lightBulbIndex {
     UIImageView *lightBulb = (UIImageView*)[self.lightBulbView viewWithTag:lightBulbIndex + 1];
-    NSLog(@"current image: %@",lightBulb.image.description);
+//    NSLog(@"current image: %@",lightBulb.image.description);
     [lightBulb setImage:[UIImage imageNamed:@"led-circle-grey-md.png"]];
 }
 
@@ -180,7 +185,7 @@ int SPACE       = 2;
     for (id lightBulb in [self.lightBulbView subviews]) {
         if ([lightBulb isKindOfClass:[UIImageView class]]) {
             UIImageView *lightBulbImageView = (UIImageView*)lightBulb;
-            NSLog(@"current lightBulb to set off: %@", [lightBulbImageView description]);
+//            NSLog(@"current lightBulb to set off: %@", [lightBulbImageView description]);
             [lightBulbImageView setImage:[UIImage imageNamed:@"led-circle-grey-md.png"]];
         }
     }
@@ -219,8 +224,6 @@ int SPACE       = 2;
     
     [self setLightBulbToGreenAt:index];
     [self setLightBulbToGreyAt:[self getPrevLightBulbIndex]];
-    
-//    self.currentLightBulb = [NSNumber numberWithInt:(index + 1)];
 }
 
     
@@ -232,11 +235,20 @@ int SPACE       = 2;
         // create the soundRowView for this sound
         SoundRowView *soundRowView = [[SoundRowView alloc] initWithFrame:[self getCGRectForNextSoundRowView]
                                                        andController:self];
+        
+        
         [self.soundRowViews addObject:soundRowView];
         [self.view addSubview:soundRowView];
     
         NSLog(@"soundRowView array updated, new size: %d", self.soundRowViews.count);
         [self linkSound:soundObject withView:soundRowView];
+        
+        // Also create the AudioPlayer object for this sound.
+        AVAudioPlayer *player = [self createAudioPlayerWithSound:soundObject];
+        [self.audioPlayers setObject:player forKey:soundObject.soundName];
+        [player prepareToPlay];
+//        [self.audioPlayers addObject:player];
+        
         [self.soundObjectsInView addObject:soundObject];
     }
 }
@@ -312,6 +324,10 @@ int SPACE       = 2;
 
 // Puts the subview IN view.
 - (IBAction)soundNameButtonPushed:(UIButton *)sender {
+    // Stop the audio.
+    if (self.isPlaying) {
+        [self stop];
+    }
     // Display sound file
 //    picker.self.soundFilePicker.dataSource = self;
     self.soundFilePicker.delegate = self;
@@ -322,9 +338,9 @@ int SPACE       = 2;
     [UIView commitAnimations];
     
     // Get the superview, and set it as the current sound row
-    [self.currentSoundView setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:0.5]];
+//    [self.currentSoundView setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:0.5]];
     self.currentSoundView = (SoundRowView*)[sender superview];
-    [self.currentSoundView setBackgroundColor:[UIColor redColor]];
+//    [self.currentSoundView setBackgroundColor:[UIColor redColor]];
 }
 
 /*
@@ -415,6 +431,7 @@ int SPACE       = 2;
         
         // Delete the sound name k,v pair from the dictionary.
         [self.soundNameToRowDic removeObjectForKey:selectedSoundName];
+        [self.audioPlayers removeObjectForKey:selectedSoundName];
         
         // Delete any soundRow associated with this name.
         if (self.soundRowViews.count == 0) {
@@ -519,7 +536,7 @@ int SPACE       = 2;
         BOOL isOn = [[soundView.noteButtonArray objectAtIndex:i] isSelected];
         [sound.sixteenthNoteArray setObject:[NSNumber numberWithBool:isOn] atIndexedSubscript:i];
     }
-    NSLog(@"Sound array: %@", sound.sixteenthNoteArray);
+//    NSLog(@"Sound array: %@", sound.sixteenthNoteArray);
     // TODO: Set sound.isSelected to match soundView.isSelected (isActivated)
 }
 
@@ -544,17 +561,19 @@ int SPACE       = 2;
         [self play];
 //        [self startPlayingLightBulbsAtIndex:0];
     } else {
-        self.isPlaying = NO;
-//        [self.lightBulbView greyOut];
-        // [self setLightBulbToGreyAt:self.currentLightBulb.integerValue];
-        // NSLog(@"current light bulb: %d", self.currentLightBulb.intValue);
-        [self.playButton setTitle:@"Play" forState:UIControlStateNormal];
+        [self stop];
     }
+}
+
+- (void)stop {
+    self.isPlaying = NO;
+    [self.playButton setTitle:@"Play" forState:UIControlStateNormal];
 }
 
 /*
     START THE PLAYBACK LOOP.
     Set counter to 0 and start timer.
+    WE SHOULD BE USING OPENAL!!! AVAUDIOPLAYER IS TOO SLOW.
  */
 - (void)play {
     NSLog(@">> Beginning play loop!");
@@ -572,19 +591,16 @@ int SPACE       = 2;
     // For now...
     noteNum = self.globalCount % 16;
     [self playLightBulbAtIndex:noteNum];
-//    NSLog(@">>> TimerFireMethod called on count: %d for beat: %d", self.globalCount, noteNum);
-//    AVAudioPlayer *player;
-    // For current sounds...
+    AVAudioPlayer *player;
     for (BeatBoxSoundRow *sound in self.soundObjectsInView) {
-        // ...if the sound is selected...
         if (sound.isSelected) {
 //            noteNum = self.globalCount % sound.notesPerMeasure;
-            // ...if the note is on for this count...
             if ([[sound.sixteenthNoteArray objectAtIndex:noteNum] boolValue] == YES) {
-                // ...play the sound!
-//                NSLog(@"Playing sound: %@.", sound.soundName);
-                self.player = [self createAudioPlayerWithSound:sound];
-                [self playPlaybackForPlayer:self.player];
+                NSLog(@"Playing sound: %@.", sound.soundName);
+                player = [self.audioPlayers objectForKey:sound.soundName];
+//                [player stop];
+//                player.currentTime = 0.0;
+                [self playPlaybackForPlayer:player];
             }
         }
     }
@@ -605,10 +621,12 @@ int SPACE       = 2;
     NSData *fileData = [NSData dataWithContentsOfFile:[self getFullPathForSoundRow:sound]
                                               options:NSDataReadingMapped
                                                 error:nil];
-//    AVAudioPlayer* player = [[AVAudioPlayer alloc] initWithData:fileData error:nil];
-    self.player = [[AVAudioPlayer alloc] initWithData:fileData error:nil];
+    AVAudioPlayer* player = [[AVAudioPlayer alloc] initWithData:fileData error:nil];
+    player.delegate = self;
+    player.enableRate = YES;
+    player.rate = 1;
     
-    return self.player;
+    return player;
 }
 
 /*
@@ -616,14 +634,9 @@ int SPACE       = 2;
  */
 - (void)playPlaybackForPlayer:(AVAudioPlayer*)player {
     if (player != nil){
-        player.delegate = self;
 //        NSLog(@">>> About to play player: %@", player);
-        if ([player prepareToPlay] && [player play]){
-//            NSLog(@"Started playing the recorded audio.");
-            
-        } else {
-            NSLog(@"Could not play the audio :(");
-        }
+        player.currentTime = 0;
+        [player play];
     } else {
         NSLog(@"nil AVAudioPlayer received :(");
     }
@@ -631,7 +644,7 @@ int SPACE       = 2;
 
 /*
  * Calc 16th milliseconds from what bpm points to.
- * Equation: 60000/bpm/4 = 16th ms
+ * Equation: 60000/bpm/4 = 16th in ms (* 1000 = 16th in seconds)
  */
 - (float)bpmToSixteenth {
     return ((60.0 / self.tempo) / 4.0);
@@ -643,6 +656,10 @@ int SPACE       = 2;
  ***** METHODS FOR RECORDING SOUNDS
  ***************************************************************************/
 - (IBAction)addNewSound {
+    // TODO: Stop the audio.
+    if (self.isPlaying) {
+        [self stop];
+    }
     UIAlertView *alertView = [[UIAlertView alloc]
                                 initWithTitle:@"File Name"
                                 message:@"Please enter a name for this sound:"
@@ -663,6 +680,8 @@ int SPACE       = 2;
         NSString *text = [[alertView textFieldAtIndex:0] text];
         if (![text isEqualToString:@""]) {
             NSLog(@"User pressed the OK button, start recording the sound...");
+            // TODO: Display a view saying prepare to record.
+            // Display the countdown on this view.
             [self startRecordCountdown:[[alertView textFieldAtIndex:0] text]];
         } else {
             NSLog(@"User entered empty string.");
@@ -679,8 +698,16 @@ int SPACE       = 2;
 - (void)startRecordCountdown:(NSString*)soundName {
     self.recordedFileName = soundName;
     self.counterSecond = 3;
+    [self prepareToRecordForName:soundName];
     [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(countLabel:) userInfo:nil repeats:YES];
 }
+
+
+- (void)countLabel2:(NSTimer*)timer {
+    
+}
+
+
 /*
     Called by the timer to countdown to recording.
  */
@@ -689,9 +716,43 @@ int SPACE       = 2;
         self.recordProgressLabel.text = [NSString stringWithFormat:@"%d", self.counterSecond--];
     } else {
         [timer invalidate];
-        self.recordProgressLabel.text = @"Go!";
-        [self recordSoundWithName:self.recordedFileName];
+//        self.recordProgressLabel.text = @"Go!";
+//        [self recordSoundWithName:self.recordedFileName];
+        [self record];
         
+    }
+}
+
+-(void) prepareToRecordForName:(NSString*)name {
+    // Recordig settings.
+    NSError *error = nil;
+    NSString *pathAsString = [self.soundDirectoryPath stringByAppendingString:[name stringByAppendingString:M4AEXTENSION]];
+    NSURL *audioRecordingURL = [NSURL fileURLWithPath:pathAsString];
+    
+    // Initialize the recorder.
+    self.audioRecorder = [self.audioRecorder initWithURL:audioRecordingURL settings:[self audioRecordingSettings] error:&error];
+    self.audioRecorder.delegate = self;
+    [self.audioRecorder prepareToRecord];
+}
+
+- (void)record {
+    if (self.audioRecorder != nil) {
+        /* Prepare the recorder and then start the recording */
+        if ([self.audioRecorder record]){
+//            NSLog(@"Successfully started to record in %@", audioRecordingURL);
+            self.recordProgressLabel.text = @"Go!";
+            
+            /* After 1 second, let's stop the recording process */
+            [self performSelector:@selector(stopRecordingOnAudioRecorder:)
+                       withObject:self.audioRecorder afterDelay:0.5f];
+            
+            //self.recordedFileName = name;
+        } else {
+            NSLog(@"Failed to record.");
+            self.audioRecorder = nil;
+        }
+    } else {
+        NSLog(@"Failed to create an instance of the audio recorder.");
     }
 }
 
@@ -714,7 +775,7 @@ int SPACE       = 2;
             
             /* After 1 second, let's stop the recording process */
             [self performSelector:@selector(stopRecordingOnAudioRecorder:)
-                       withObject:self.audioRecorder afterDelay:1.0f];
+                       withObject:self.audioRecorder afterDelay:0.5f];
             
             //self.recordedFileName = name;
         } else {
@@ -741,7 +802,8 @@ int SPACE       = 2;
     
     [settings setValue:[NSNumber numberWithInteger:kAudioFormatAppleLossless]
                 forKey:AVFormatIDKey];
-    [settings setValue:[NSNumber numberWithFloat:44100.0f]
+    [settings setValue:[NSNumber numberWithFloat:88200.0f]
+//    [settings setValue:[NSNumber numberWithFloat:44100.0f]
                 forKey:AVSampleRateKey];
     [settings setValue:[NSNumber numberWithInteger:1]
                 forKey:AVNumberOfChannelsKey];
@@ -755,7 +817,7 @@ int SPACE       = 2;
 - (void)stopRecordingOnAudioRecorder:(AVAudioRecorder *)paramRecorder {
     
     [paramRecorder stop];
-    self.recordProgressLabel.text = @"Add a new sound";
+    self.recordProgressLabel.text = @"Record Sound";
     
     NSLog(@"url: %@",paramRecorder.url.lastPathComponent);
     
