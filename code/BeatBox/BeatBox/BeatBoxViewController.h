@@ -19,6 +19,7 @@
 @property BOOL isPlaying;
 @property (strong, nonatomic) IBOutlet UIView *pickerView;
 @property (strong, nonatomic) IBOutlet UILabel *bpmNumberLabel;
+@property (strong, nonatomic) IBOutlet UIView *countDownView;
 
 - (void)recordSoundWithName:(NSString*)name;
 

@@ -19,10 +19,10 @@
 
 // UI OUTLETS
 @property (strong, nonatomic) IBOutlet UIButton     *playButton;
-@property (strong, nonatomic) IBOutlet UILabel      *recordProgressLabel;
 @property (strong, nonatomic) IBOutlet UIPickerView *soundFilePicker;
 
 @property (strong, nonatomic) SoundRowView          *currentSoundView;
+@property (strong, nonatomic) IBOutlet UILabel *countDownViewLabel;
 @property (strong, nonatomic) NSMutableArray        *soundObjectsInView;
 @property (strong, nonatomic) NSMutableArray        *soundRowViews;
 @property (strong, nonatomic) NSMutableArray        *activatedSounds;
@@ -46,6 +46,7 @@
 @property BOOL                                      isRecording;
 @property (strong, nonatomic) NSTimer*              lightBulbTimer;
 @property (strong, nonatomic) NSNumber*             currentLightBulb;
+@property (strong, nonatomic) IBOutlet UIView       *recordingActionView;
 
 @end
 
@@ -58,7 +59,6 @@
 
 // UI OBJECTS
 @synthesize playButton          = _playButton;
-@synthesize recordProgressLabel = _recordProgressLabel;
 @synthesize soundFilePicker     = _soundFilePicker;
 @synthesize pickerView          = _pickerView;
 @synthesize soundRowViews       = _soundRowViews;
@@ -66,6 +66,8 @@
 @synthesize soundObjectsInView  = _soundObjectsInView;
 @synthesize bpmNumberLabel      = _bpmNumberLabel;
 @synthesize lightBulbView       = _lightBulbView;
+@synthesize countDownView       = _countDownView;
+@synthesize recordingActionView = _recordingActionView;
 
 // NON-UI OBJECTS
 @synthesize audioRecorder       = _audioRecorder;
@@ -95,12 +97,14 @@ int SPACE       = 2;
 
 /**
  * viewDidLoad:
- * set the recordProgressLabel text to empty string.
  */
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    
+    self.countDownView.hidden = YES;
+    self.countDownViewLabel.text = @"";
     
     self.view.backgroundColor = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"Background_04.png"]];
     
@@ -125,7 +129,6 @@ int SPACE       = 2;
     [self fillDictionaryWithSounds];
     
     // Set the label to a default value.
-//    self.recordProgressLabel.text = @"Add new sound";
     
     // add light bulb view
     BeatBoxLightBulbView *lightBulbView = [[BeatBoxLightBulbView alloc] initWithFrame:CGRectMake(0, 0, ROW_LENGTH, ROW_HEIGHT) andController:self];
@@ -160,7 +163,37 @@ int SPACE       = 2;
     
     // TODO: Need to set the pickerView's layer to always be on top, regardless of add order.
 //    [self.view addSubview:self.pickerView];
+
+    // UIView *newCountDown = self.countDownView.copy;
+    [self putCountDownViewOnTop];
+    
     NSLog(@"soundObjectsInView size: %d", self.soundObjectsInView.count);
+}
+
+- (IBAction)cancelRecording:(UIButton *)sender {
+    
+}
+
+- (IBAction)RetryRecording:(UIButton *)sender {
+}
+
+- (IBAction)saveRecording:(UIButton *)sender {
+}
+
+- (IBAction)playRecording:(UIButton *)sender {
+}
+
+- (void)hideRecordingActionView {
+    self.recordingActionView.hidden = YES;
+}
+
+- (void)showRecordingActionView {
+    self.recordingActionView.hidden = NO;
+}
+
+- (void)putCountDownViewOnTop {
+    [self.countDownView removeFromSuperview];
+    [self.view addSubview:self.countDownView];
 }
 
 - (CGRect)getCGRectForNextSoundRowView {
@@ -240,6 +273,7 @@ int SPACE       = 2;
         
         
         [self.soundRowViews addObject:soundRowView];
+        
         [self.view addSubview:soundRowView];
     
         NSLog(@"soundRowView array updated, new size: %d", self.soundRowViews.count);
@@ -253,6 +287,7 @@ int SPACE       = 2;
         
         [self.soundObjectsInView addObject:soundObject];
     }
+    [self putCountDownViewOnTop];
 }
 
 /*
@@ -416,7 +451,7 @@ int SPACE       = 2;
     // Set the currentSoundView back to nil.
     [self.currentSoundView setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:0.5]];
     self.currentSoundView = nil;
-    
+    [self putCountDownViewOnTop];
 }
 
 - (NSArray*)findNewSoundsFor:(NSMutableArray*)soundRowViews {
@@ -693,6 +728,7 @@ int SPACE       = 2;
 /***************************************************************************
  ***** METHODS FOR RECORDING SOUNDS
  ***************************************************************************/
+
 - (IBAction)addNewSound {
     // TODO: Stop the audio.
     if (self.isPlaying) {
@@ -765,6 +801,10 @@ int SPACE       = 2;
     self.recordedFileName = soundName;
     self.counterSecond = 3;
     [self prepareToRecordForName:soundName];
+
+    self.countDownViewLabel.text = @"";
+    self.countDownView.hidden = NO;
+    
     [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(countLabel:) userInfo:nil repeats:YES];
 }
 
@@ -778,14 +818,13 @@ int SPACE       = 2;
     Called by the timer to countdown to recording.
  */
 -(void)countLabel:(NSTimer*)timer {
+    
     if (self.counterSecond > 0) {
-        self.recordProgressLabel.text = [NSString stringWithFormat:@"%d", self.counterSecond--];
+        self.countDownViewLabel.text = [NSString stringWithFormat:@"%d", self.counterSecond];
+        self.counterSecond--;
     } else {
         [timer invalidate];
-//        self.recordProgressLabel.text = @"Go!";
-//        [self recordSoundWithName:self.recordedFileName];
         [self record];
-        
     }
 }
 
@@ -806,13 +845,12 @@ int SPACE       = 2;
         /* Prepare the recorder and then start the recording */
         if ([self.audioRecorder record]){
 //            NSLog(@"Successfully started to record in %@", audioRecordingURL);
-            self.recordProgressLabel.text = @"Go!";
+            self.countDownViewLabel.text = @"Go";
             
             /* After 1 second, let's stop the recording process */
             [self performSelector:@selector(stopRecordingOnAudioRecorder:)
                        withObject:self.audioRecorder afterDelay:0.5f];
             
-            //self.recordedFileName = name;
         } else {
             NSLog(@"Failed to record.");
             self.audioRecorder = nil;
@@ -883,7 +921,7 @@ int SPACE       = 2;
 - (void)stopRecordingOnAudioRecorder:(AVAudioRecorder *)paramRecorder {
     
     [paramRecorder stop];
-    self.recordProgressLabel.text = @"Record Sound";
+    self.countDownViewLabel.text = @"Done";
     
     NSLog(@"url: %@",paramRecorder.url.lastPathComponent);
     
@@ -908,14 +946,10 @@ int SPACE       = 2;
     
     for (NSString* key in [self.soundNameToRowDic allKeys])
         NSLog(@"key: %@\tvalue: %@", key, [self.soundNameToRowDic objectForKey:key]);
-    
+    self.countDownView.hidden = YES;
     // resetting Record button title
 //    [self.recButton setTitle:@"REC" forState:UIControlStateNormal];
 }
-
-
-
-
 
 /***************************************************************************
  ***** MISC METHODS
