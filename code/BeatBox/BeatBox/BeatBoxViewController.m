@@ -102,6 +102,8 @@ int SPACE       = 2;
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
+    self.view.backgroundColor = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"Background_04.png"]];
+    
     // Allocate space for the recorder and player.
     self.audioRecorder  = [AVAudioRecorder alloc];
     
@@ -593,14 +595,16 @@ int SPACE       = 2;
     [self playLightBulbAtIndex:noteNum];
     AVAudioPlayer *player;
     for (BeatBoxSoundRow *sound in self.soundObjectsInView) {
+        player = [self.audioPlayers objectForKey:sound.soundName];
+        [player stop];
         if (sound.isSelected) {
 //            noteNum = self.globalCount % sound.notesPerMeasure;
             if ([[sound.sixteenthNoteArray objectAtIndex:noteNum] boolValue] == YES) {
                 NSLog(@"Playing sound: %@.", sound.soundName);
-                player = [self.audioPlayers objectForKey:sound.soundName];
+//                player = [self.audioPlayers objectForKey:sound.soundName];
 //                [player stop];
 //                player.currentTime = 0.0;
-                [self playPlaybackForPlayer:player];
+                [self playPlaybackForPlayer:player]; //plays from 0.
             }
         }
     }
