@@ -261,6 +261,42 @@ int SPACE       = 2;
     [self setLightBulbToGreyAt:[self getPrevLightBulbIndex]];
 }
 
+/*
+- (void)replaceRowView:(SoundRowView *)oldSoundRowView with:(NSString*)soundName {
+
+        // create the soundRowView for this sound
+    
+        SoundRowView *soundRowView = [[SoundRowView alloc] initWithFrame:[oldSoundRowView frame]
+andController:self];
+    
+        [soundRowView.soundButton setTitle:soundName forState:UIControlStateNormal];
+        soundRowView.noteButtonArray = oldSoundRowView.noteButtonArray.copy;
+    
+        [self.soundRowViews removeObject:oldSoundRowView];
+        [oldSoundRowView removeFromSuperview];
+    
+        [self.soundRowViews addObject:soundRowView];
+        [self.view addSubview:soundRowView];
+        
+        NSLog(@"soundRowView array updated, new size: %d", self.soundRowViews.count);
+        // [self linkSound:soundObject withView:soundRowView];
+        
+        // Also create the AudioPlayer object for this sound.
+//        SoundRowView *
+    
+    
+    
+        AVAudioPlayer *player = [self createAudioPlayerWithSound:soundObject];
+        [self.audioPlayers setObject:player forKey:soundName];
+        [player prepareToPlay];
+        //        [self.audioPlayers addObject:player];
+        
+        [self.soundObjectsInView addObject:soundObject];
+    }
+    [self putCountDownViewOnTop];
+    
+}
+ */
     
 - (void)addNextRowToView:(BeatBoxSoundRow *)soundObject {
 
@@ -270,13 +306,12 @@ int SPACE       = 2;
         // create the soundRowView for this sound
         SoundRowView *soundRowView = [[SoundRowView alloc] initWithFrame:[self getCGRectForNextSoundRowView]
                                                        andController:self];
-        
-        
         [self.soundRowViews addObject:soundRowView];
         
         [self.view addSubview:soundRowView];
     
         NSLog(@"soundRowView array updated, new size: %d", self.soundRowViews.count);
+
         [self linkSound:soundObject withView:soundRowView];
         
         // Also create the AudioPlayer object for this sound.
@@ -596,6 +631,11 @@ int SPACE       = 2;
 - (void) linkSound:(BeatBoxSoundRow *) sound withView:(SoundRowView *) soundView {
 
     NSLog(@"Linking sound: %@ with row: %@", sound.soundName, soundView.description);
+
+    [self.soundRowViews removeObject:soundView];
+    NSString *oldName = soundView.soundButton.titleLabel.text;
+
+    BeatBoxSoundRow *oldSound = [self.soundNameToRowDic objectForKey:oldName];
     
     // Set the label of the button in the soundView to be the name of the sound.
     [soundView.soundButton setTitle:sound.soundName forState:UIControlStateNormal];
@@ -603,12 +643,40 @@ int SPACE       = 2;
     // Set the 16th note array in the sound to match the soundView's array
     NSLog(@"notes per measure: %d", sound.notesPerMeasure);
     
-    for (int i=0; i < sound.notesPerMeasure; i++) {
-        BOOL isOn = [[soundView.noteButtonArray objectAtIndex:i] isSelected];
-        [sound.sixteenthNoteArray setObject:[NSNumber numberWithBool:isOn] atIndexedSubscript:i];
+    BOOL old = NO;
+    for (BeatBoxSoundRow *oldSoundInView in self.soundObjectsInView) {
+        NSLog(@"in:%@\told:%@", oldSoundInView.soundName, oldName);
+        if ([oldSoundInView.soundName isEqualToString:oldName]) {
+            int i = 0;
+            for (NSNumber *note in oldSoundInView.sixteenthNoteArray) {
+                if ([note boolValue] == YES) {
+                    NSLog(@"%d is pushed", i);
+                    [sound.sixteenthNoteArray setObject:[NSNumber numberWithBool:YES] atIndexedSubscript:i];
+                } else {
+                    NSLog(@"%d is NOT pushed", i);
+                    [sound.sixteenthNoteArray setObject:[NSNumber numberWithBool:NO] atIndexedSubscript:i];
+                }
+                i++;
+            }
+            old = YES;
+            break;
+        }
     }
-//    NSLog(@"Sound array: %@", sound.sixteenthNoteArray);
-    // TODO: Set sound.isSelected to match soundView.isSelected (isActivated)
+    
+    if (!old) {
+            NSLog(@"Not an old row");
+        for (int i=0; i < sound.notesPerMeasure; i++)
+            [sound.sixteenthNoteArray setObject:[NSNumber numberWithBool:NO] atIndexedSubscript:i];
+    }
+    
+    [self.soundRowViews addObject:soundView];
+    [self.soundObjectsInView removeObject:oldSound];
+    [self.soundObjectsInView addObject:sound];
+    
+    if (![self.audioPlayers objectForKey:sound.soundName]) {
+        AVAudioPlayer *player = [self createAudioPlayerWithSound:sound];
+        [self.audioPlayers setObject:player forKey:sound.soundName];
+    }
 }
 
 
@@ -666,7 +734,7 @@ int SPACE       = 2;
     for (BeatBoxSoundRow *sound in self.soundObjectsInView) {
         player = [self.audioPlayers objectForKey:sound.soundName];
         [player stop];
-        if (sound.isSelected) {
+//        if (sound.isSelected) {
 //            noteNum = self.globalCount % sound.notesPerMeasure;
             if ([[sound.sixteenthNoteArray objectAtIndex:noteNum] boolValue] == YES) {
                 NSLog(@"Playing sound: %@.", sound.soundName);
@@ -675,7 +743,7 @@ int SPACE       = 2;
 //                player.currentTime = 0.0;
                 [self playPlaybackForPlayer:player]; //plays from 0.
             }
-        }
+//        }
     }
     self.globalCount++;
     if (self.isPlaying) {
@@ -974,7 +1042,7 @@ int SPACE       = 2;
     
     // Get the sound associated with the button.
     SoundRowView *row = (SoundRowView*)[sender superview];
-
+    
     NSString *soundName = row.soundButton.titleLabel.text;
     
     NSLog(@"sound: %@", soundName);
