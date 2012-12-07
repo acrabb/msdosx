@@ -324,25 +324,26 @@ int SPACE       = 2;
 
 /*** CODE FOR THE FILE PICKER ***/
 
-// Puts the subview IN view.
-- (IBAction)soundNameButtonPushed:(UIButton *)sender {
-    // Stop the audio.
-    if (self.isPlaying) {
+- (void)popPickerView:(SoundRowView*)soundRowView {
+
+    if (self.isPlaying)
         [self stop];
-    }
-    // Display sound file
-//    picker.self.soundFilePicker.dataSource = self;
+    
     self.soundFilePicker.delegate = self;
-//    self.soundFilePicker.showsSelectionIndicator = YES;
+    
     [self.view addSubview:self.pickerView];
     [UIView beginAnimations:nil context:NULL];
+    
     [self.pickerView setFrame:CGRectMake(0.0f, 0.0f, 480.0f, 300.0f)];
     [UIView commitAnimations];
     
     // Get the superview, and set it as the current sound row
-//    [self.currentSoundView setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:0.5]];
-    self.currentSoundView = (SoundRowView*)[sender superview];
-//    [self.currentSoundView setBackgroundColor:[UIColor redColor]];
+    self.currentSoundView = soundRowView;
+}
+
+// Puts the subview IN view.
+- (IBAction)soundNameButtonPushed:(UIButton *)sender {
+    [self popPickerView:(SoundRowView*)[sender superview]];
 }
 
 /*
@@ -398,6 +399,7 @@ int SPACE       = 2;
 
 // Puts the subview OUT of view.
 - (IBAction)pickerButtonPushed {
+    
     [self hidePickerView];
     int index = [self.soundFilePicker selectedRowInComponent:0];
     // On sound selection
@@ -417,11 +419,32 @@ int SPACE       = 2;
     
 }
 
+- (NSArray*)findNewSoundsFor:(NSMutableArray*)soundRowViews {
+    
+    // all sound names
+    NSMutableArray *bBSoundObjNames = [[self.soundNameToRowDic allKeys] mutableCopy];
+    
+    for (id soundRowView in soundRowViews) {
+        
+        SoundRowView *rowView = (SoundRowView*)soundRowView;
+        // sound name
+
+        NSString *soundNameInView = rowView.soundButton.titleLabel.text;
+        
+        [bBSoundObjNames removeObject:soundNameInView];
+    }
+    return (NSArray*)bBSoundObjNames;
+}
+
 - (IBAction)pickerDeleteButtonPushed:(UIButton *)sender {
+    
     [self hidePickerView];
+    
     int index = [self.soundFilePicker selectedRowInComponent:0];
+    
     if (index == 0) {
         // Do nothing...but that's not good UX.
+    
     } else {
         // Get the selected sound name
         NSString* selectedSoundName = [self.alphabetizedFiles objectAtIndex:(index-1)];
@@ -435,15 +458,16 @@ int SPACE       = 2;
         [self.soundNameToRowDic removeObjectForKey:selectedSoundName];
         [self.audioPlayers removeObjectForKey:selectedSoundName];
         
-        // Delete any soundRow associated with this name.
         if (self.soundRowViews.count == 0) {
             NSLog(@"Empty soundRowViews!! :(");
         }
+        
         NSMutableArray *temp = [self.soundRowViews mutableCopy];
         
         BOOL rowDeleted = NO;
         BOOL middleRowDeleted = NO;
         
+        // Delete any soundRow associated with this name
         for (SoundRowView *row in self.soundRowViews) {
             /* 
              * Previous row is a middle row
@@ -470,6 +494,16 @@ int SPACE       = 2;
             [self cleanUpSoundRowViewArr:temp];
         
         self.soundRowViews = temp;
+        
+        if (rowDeleted && self.soundNameToRowDic.count > temp.count) {
+            NSArray* soundObjectNames = [self findNewSoundsFor:temp];
+            for (NSString *soundName in soundObjectNames) {
+                if (self.soundRowViews.count >= MAX_SOUND_ROWS)
+                    break;
+                else
+                    [self addNextRowToView:[self.soundNameToRowDic objectForKey:soundName]];
+            }
+        }
     }
     // Set the currentSoundView back to nil.
     [self.currentSoundView setBackgroundColor:[UIColor colorWithWhite:1.0 alpha:0.5]];
@@ -674,6 +708,34 @@ int SPACE       = 2;
     [alertView show];
 }
 
+/*
+    // add a new row only if there's enough space
+    if (self.soundRowViews.count < MAX_SOUND_ROWS) {
+        
+        // [self addNextRowToView: ]
+        
+        // create the soundRowView for this sound
+        SoundRowView *soundRowView = [[SoundRowView alloc] initWithFrame:[self getCGRectForNextSoundRowView] andController:self];
+    
+        // pop up the view
+        [self popPickerView:soundRowView];
+
+        
+        // add the soundRowView to the view
+        [self.soundRowViews addObject:soundRowView];
+        [self.view addSubview:soundRowView];
+        
+        [self linkSound:soundObject withView:soundRowView];
+        
+        // Also create the AudioPlayer object for this sound.
+        AVAudioPlayer *player = [self createAudioPlayerWithSound:soundObject];
+        [self.audioPlayers setObject:player forKey:soundObject.soundName];
+        [player prepareToPlay];
+        //        [self.audioPlayers addObject:player];
+        
+        [self.soundObjectsInView addObject:soundObject];
+}
+*/
 
 /*
     This gets called when a button on UIAlert view is clicked by user
