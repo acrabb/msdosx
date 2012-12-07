@@ -47,6 +47,7 @@
 @property (strong, nonatomic) NSTimer*              lightBulbTimer;
 @property (strong, nonatomic) NSNumber*             currentLightBulb;
 @property (strong, nonatomic) IBOutlet UIView       *recordingActionView;
+@property (strong, nonatomic) NSString*             recordedFilePath;
 
 @end
 
@@ -104,6 +105,7 @@ int SPACE       = 2;
 	// Do any additional setup after loading the view, typically from a nib.
     
     self.countDownView.hidden = YES;
+    self.recordingActionView.hidden = YES;
     self.countDownViewLabel.text = @"";
     
     self.view.backgroundColor = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"Background_04.png"]];
@@ -141,46 +143,44 @@ int SPACE       = 2;
      */
     NSArray *bBSoundRows = [self.soundNameToRowDic allValues];
     for (BeatBoxSoundRow* bBSoundRow in bBSoundRows) {
-    
         [self addNextRowToView:bBSoundRow];
-        /*
-        // Is there enough space for a new sound row?
-        if (self.soundRowViews.count >= MAX_SOUND_ROWS)
-            break;
-        
-        // create the soundRowView for this sound
-        SoundRowView *soundRowView = [[SoundRowView alloc] initWithFrame:[self getCGRectForNextSoundRowView]
-                                                           andController:self];
-        [self.soundRowViews addObject:soundRowView];
-        [self.view addSubview:soundRowView];
-        [self.audioPlayers setObject:[self createAudioPlayerWithSound:bBSoundRow] forKey:bBSoundRow.soundName];
-            
-        NSLog(@"soundRowView array updated, new size: %d", self.soundRowViews.count);
-        [self linkSound:bBSoundRow withView:soundRowView];
-        [self.soundObjectsInView addObject:bBSoundRow];
-         */
     }
-    
-    // TODO: Need to set the pickerView's layer to always be on top, regardless of add order.
-//    [self.view addSubview:self.pickerView];
 
-    // UIView *newCountDown = self.countDownView.copy;
     [self putCountDownViewOnTop];
     
     NSLog(@"soundObjectsInView size: %d", self.soundObjectsInView.count);
 }
 
 - (IBAction)cancelRecording:(UIButton *)sender {
-    
+    [self deleteFileWithPath:self.recordedFilePath];
+    self.recordingActionView.hidden = YES;
+    self.countDownView.hidden = YES;
 }
 
 - (IBAction)RetryRecording:(UIButton *)sender {
+    [self deleteFileWithPath:self.recordedFilePath];
+    self.recordingActionView.hidden = YES;
+    [self startRecordCountdown:self.recordedFileName];
 }
 
 - (IBAction)saveRecording:(UIButton *)sender {
-}
+    
+    BeatBoxSoundRow *recordedSound = [[BeatBoxSoundRow alloc] initWithPath:self.recordedFilePath];
+    
+    NSLog(@"sound file stored: %@ \n\tin %@", recordedSound.soundName, recordedSound.soundFilePath);
+    
+    [self.soundNameToRowDic setObject:recordedSound forKey:recordedSound.soundName];
+    if (self.currentSoundView == nil) {
+        [self addNextRowToView:recordedSound];
+    } else {
+        [self linkSound:recordedSound withView:self.currentSoundView];
+    }
+    
+    for (NSString* key in [self.soundNameToRowDic allKeys])
+        NSLog(@"key: %@\tvalue: %@", key, [self.soundNameToRowDic objectForKey:key]);
 
-- (IBAction)playRecording:(UIButton *)sender {
+    self.recordingActionView.hidden = YES;
+    self.countDownView.hidden = YES;
 }
 
 - (void)hideRecordingActionView {
@@ -921,34 +921,10 @@ int SPACE       = 2;
 - (void)stopRecordingOnAudioRecorder:(AVAudioRecorder *)paramRecorder {
     
     [paramRecorder stop];
+
     self.countDownViewLabel.text = @"Done";
-    
-    NSLog(@"url: %@",paramRecorder.url.lastPathComponent);
-    
-    
-    //TODO FileManager???
-    //TODO FileManager???
-    //TODO FileManager???
-    //TODO FileManager???
-    //TODO FileManager???
-    
-    // TODO: save the recorded file
-    BeatBoxSoundRow *recordedSound = [[BeatBoxSoundRow alloc] initWithPath:paramRecorder.url.lastPathComponent];
-    
-    NSLog(@"sound file stored: %@ \n\tin %@", recordedSound.soundName, recordedSound.soundFilePath);
-    
-    [self.soundNameToRowDic setObject:recordedSound forKey:recordedSound.soundName];
-    if (self.currentSoundView == nil) {
-        [self addNextRowToView:recordedSound];
-    } else {
-        [self linkSound:recordedSound withView:self.currentSoundView];
-    }
-    
-    for (NSString* key in [self.soundNameToRowDic allKeys])
-        NSLog(@"key: %@\tvalue: %@", key, [self.soundNameToRowDic objectForKey:key]);
-    self.countDownView.hidden = YES;
-    // resetting Record button title
-//    [self.recButton setTitle:@"REC" forState:UIControlStateNormal];
+    self.recordedFilePath = paramRecorder.url.lastPathComponent;
+    self.recordingActionView.hidden = NO;
 }
 
 /***************************************************************************
