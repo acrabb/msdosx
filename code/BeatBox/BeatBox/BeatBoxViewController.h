@@ -11,6 +11,12 @@
 #import "BeatBoxSoundRow.h"
 #import "SoundRowView.h"
 
+
+#import <OpenAl/al.h>
+#import <OpenAl/alc.h>
+#include <AudioToolbox/AudioToolbox.h>
+
+
 @interface BeatBoxViewController : UIViewController
 <AVAudioPlayerDelegate, AVAudioRecorderDelegate, UIAlertViewDelegate,
     UIPickerViewDataSource,

@@ -6,10 +6,13 @@
 //  Copyright (c) 2012 André Crabb. All rights reserved.
 //
 
+#import "BeatBoxModel.h"
 #import "BeatBoxViewController.h"
 #import "BeatBoxSoundRow.h"
 #import "SoundRowView.h"
 #import "BeatBoxLightBulbView.h"
+
+
 
 
 /***************************************************************************
@@ -46,6 +49,10 @@
 @property BOOL                                      isRecording;
 @property (strong, nonatomic) NSTimer*              lightBulbTimer;
 @property (strong, nonatomic) NSNumber*             currentLightBulb;
+@property (strong, nonatomic) BeatBoxModel*         ourModel;
+
+@property (strong, nonatomic) NSMutableDictionary   *audioSources;
+@property (strong, nonatomic) NSMutableDictionary   *audioBuffers;
 
 @end
 
@@ -81,6 +88,10 @@
 @synthesize globalCount         = _globalCount;
 @synthesize lightBulbTimer      = _lightBulbTimer;
 @synthesize currentLightBulb    = _currentLightBulb;
+
+@synthesize audioSources        = _audioSources;
+@synthesize audioBuffers        = _audioBuffers;
+
 NSString*   M4AEXTENSION        = @".m4a";
 
 int MAX_SOUND_ROWS = 6;
@@ -88,6 +99,13 @@ int SOUND_ROW_CONTAINER_HEIGHT = 36;
 int ROW_HEIGHT  = 34;
 int ROW_LENGTH  = 480;
 int SPACE       = 2;
+
+ALCdevice   *openALDevice;
+ALCcontext  *openALContext;
+ALuint      outputSources;
+ALuint      outputBuffers;
+
+int counter = 0;
 
 /***************************************************************************
  ***** METHODS FOR THE VIEW
@@ -101,25 +119,24 @@ int SPACE       = 2;
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    [self createOpenALDevice];
+    [self createOpenALContext];
+    [self createOutputBuffers:MAX_SOUND_ROWS];
+    [self createOutputSources:MAX_SOUND_ROWS];
     
     self.view.backgroundColor = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"Background_04.png"]];
     
     // Allocate space for the recorder and player.
     self.audioRecorder  = [AVAudioRecorder alloc];
     
-    // TODO: Initialize DrumMachine with the stored settings
-    /*
-     Tempo
-     Array of sounds (array of soundRowView subviews)
-     isPlaying = NO
-     isRecording = NO
-     noteArray for each sound
-     */
-    
+ 
     // TODO: Set the tempo and tempo setter
     self.tempo = 100;
     [self setBpmNumberLabelText:self.tempo];
     self.audioPlayers = [[NSMutableDictionary alloc] initWithCapacity:MAX_SOUND_ROWS];
+    // OpenAL
+    self.audioBuffers = [[NSMutableDictionary alloc] initWithCapacity:MAX_SOUND_ROWS];
+    self.audioSources = [[NSMutableDictionary alloc] initWithCapacity:MAX_SOUND_ROWS];
     
     /*** Fill dictionary with sounds from folder ***/
     [self fillDictionaryWithSounds];
@@ -138,30 +155,212 @@ int SPACE       = 2;
      */
     NSArray *bBSoundRows = [self.soundNameToRowDic allValues];
     for (BeatBoxSoundRow* bBSoundRow in bBSoundRows) {
-    
         [self addNextRowToView:bBSoundRow];
-        /*
-        // Is there enough space for a new sound row?
-        if (self.soundRowViews.count >= MAX_SOUND_ROWS)
-            break;
-        
-        // create the soundRowView for this sound
-        SoundRowView *soundRowView = [[SoundRowView alloc] initWithFrame:[self getCGRectForNextSoundRowView]
-                                                           andController:self];
-        [self.soundRowViews addObject:soundRowView];
-        [self.view addSubview:soundRowView];
-        [self.audioPlayers setObject:[self createAudioPlayerWithSound:bBSoundRow] forKey:bBSoundRow.soundName];
-            
-        NSLog(@"soundRowView array updated, new size: %d", self.soundRowViews.count);
-        [self linkSound:bBSoundRow withView:soundRowView];
-        [self.soundObjectsInView addObject:bBSoundRow];
-         */
+    }
+
+    NSLog(@"soundObjectsInView size: %d", self.soundObjectsInView.count);
+    
+    
+    
+    /////////////////////////////////////////////
+    // OpenAL testing
+    //////////////////
+    
+    //    self.ourModel = [[BeatBoxModel alloc] init];
+    
+    /*/
+    
+    ALuint outputBuffer = [self createOutputBuffer];
+    ALuint outputSource = [self createOutputSource];
+    
+    NSString *filePath = [self getFullPathForSoundRow:[self.soundObjectsInView objectAtIndex:0]];
+    AudioFileID afid = [self getAFIDForFilePath:filePath];
+    UInt32 bytesRead = [self getBytesReadForAFID:afid];
+    void* audioData = [self allocMemoryForBytes:bytesRead forAFID:afid];
+    [self copyAudioData:audioData forLength:bytesRead toBuffer:outputBuffer];
+    
+    [self attachBuffer:outputBuffer toSource:outputSource];
+    [self playAudioForSource:outputSource];
+    
+    [NSThread sleepForTimeInterval:1];
+     /**/
+    // More cleaning.
+    //    NSLog(@"Cleaning.");
+    //    alDeleteSources(1, &outputSource);
+    //    alDeleteBuffers(1, &outputBuffer);
+    //    alcDestroyContext(openALContext);
+    //    alcCloseDevice(openALDevice);
+    //    NSLog(@"Done cleaning.");
+    
+    /////////////////////////////////////////////
+}
+
+/**
+ * viewDidUnload:
+ *  Stop recording if we are.
+ *  Set the audioRecorder to nil
+ */
+- (void) viewDidUnload {
+    [super viewDidUnload];
+    // Stop recording if we are
+    if ([self.audioRecorder isRecording]) {
+        [self.audioRecorder stop];
+    }
+    self.audioRecorder = nil;
+    
+    NSLog(@"Cleaning.");
+    ALuint outputSource;
+    for (NSNumber *src in self.audioSources.allValues) {
+        outputSource = [src unsignedIntValue];
+        alDeleteSources(1, &outputSource);
     }
     
-    // TODO: Need to set the pickerView's layer to always be on top, regardless of add order.
-//    [self.view addSubview:self.pickerView];
-    NSLog(@"soundObjectsInView size: %d", self.soundObjectsInView.count);
+    ALuint outputBuffer;
+    for (NSNumber *buf in self.audioBuffers.allValues) {
+        outputBuffer = [buf unsignedIntValue];
+        alDeleteBuffers(1, &outputBuffer);
+    }
+    
+    alcDestroyContext(openALContext);
+    alcCloseDevice(openALDevice);
 }
+
+/**
+ * awakeFromNib:
+ */
+- (void)awakeFromNib {
+}
+
+
+
+- (void) createOpenALDevice {
+    NSLog(@"Creating a device.");
+    openALDevice = alcOpenDevice(NULL);
+    // Check errors.
+    ALenum error = alGetError();
+    if (AL_NO_ERROR != error) {
+        NSLog(@"Error %d when attemping to open device", error);
+    }
+}
+    
+- (void) createOpenALContext {
+    NSLog(@"Creating a context.");
+    openALContext = alcCreateContext(openALDevice, NULL);
+    alcMakeContextCurrent(openALContext);
+}
+
+- (ALuint) createOutputSources:(int)num {
+    ALuint outputSource;
+    alGenSources(num, &outputSource);
+    NSLog(@"Creating a source: %i", outputSource);
+    // You can set various source parameters using alSourcef. For example, you can set the pitch and gain:
+    alSourcef(&outputSource, AL_PITCH, 1.0f);
+    alSourcef(outputSource, AL_GAIN, 1.0f);
+    return outputSource;
+}
+
+- (ALuint) createOutputBuffers:(int)num {
+    // Create a BUFFER
+    ALuint outputBuffer;
+    alGenBuffers(num, &outputBuffer);
+    NSLog(@"Creating a buffer %i:", outputBuffer);
+    return outputBuffer;
+}
+
+- (AudioFileID) getAFIDForFilePath:(NSString *)filePath {
+    // Get reference to file.
+    NSURL* fileUrl = [NSURL fileURLWithPath:filePath];
+    // Open file and get AudioFileID
+    AudioFileID afid;
+    OSStatus openResult = AudioFileOpenURL((__bridge CFURLRef)fileUrl, kAudioFileReadPermission, 0, &afid);
+    if (0 != openResult) {
+        NSLog(@"An error occurred when attempting to open the audio file %@: %ld", filePath, openResult);
+        return 0;
+    }
+    return afid;
+}
+
+- (UInt32) getBytesReadForAFID:(AudioFileID)afid {
+    // Get file size.
+    UInt64 fileSizeInBytes = 0;
+    UInt32 propSize = sizeof(fileSizeInBytes);
+    OSStatus getSizeResult = AudioFileGetProperty(afid, kAudioFilePropertyAudioDataByteCount, &propSize, &fileSizeInBytes);
+    if (0 != getSizeResult) {
+        NSLog(@"An error occurred when attempting to determine the size of afid %@: %ld", afid, getSizeResult);
+    }
+    UInt32 bytesRead = (UInt32)fileSizeInBytes;
+    return bytesRead;
+}
+
+- (void*) allocMemoryForBytes:(UInt32)bytesRead
+                     forAFID:(AudioFileID)afid {
+    // Set memory for audio data.
+    void* audioData = malloc(bytesRead);
+    // Fill the buffer with file data.
+    OSStatus readBytesResult = AudioFileReadBytes(afid, false, 0, &bytesRead, audioData);
+    if (0 != readBytesResult) {
+        NSLog(@"An error occurred when attempting to read data from bytesRead %lu: %ld", bytesRead, readBytesResult);
+    }
+    // Close file
+    AudioFileClose(afid);
+    return audioData;
+}
+
+- (void) copyAudioData:(void*)audioData
+             forLength:(UInt32)bytesRead
+              toBuffer:(ALuint)outputBuffer {
+    // Copy data to al buffer
+    alBufferData(outputBuffer, AL_FORMAT_STEREO16, audioData, bytesRead, 44100);
+    // clean...
+    if (audioData) {
+        free(audioData);
+        audioData = NULL;
+    }
+}
+
+- (void) attachBuffer:(ALuint)outputBuffer
+             toSource:(ALuint)outputSource {
+    alSourcei(outputSource, AL_BUFFER, outputBuffer);
+}
+
+- (void) playAudioForSource:(ALuint)outputSource {
+    // Play!!
+    NSLog(@"Playing.");
+    alSourcePlay(outputSource);
+    NSLog(@"Done playing.");
+}
+
+
+- (void) newSoundSetUp:(BeatBoxSoundRow*)sound {
+    
+//	ALuint outputBuffer = [self createOutputBuffer];
+//    ALuint outputSource = [self createOutputSource];
+	ALuint outputBuffer = outputBuffers + counter;
+    ALuint outputSource = outputSources + counter;
+    
+    NSLog(@">>> Buffer %i; source %i", outputBuffer, outputSource);
+    
+    NSLog(@">>> Adding buffer and source to dicts");
+    [self.audioBuffers setObject:[NSNumber numberWithUnsignedInt:outputBuffer] forKey:sound.soundName];
+    [self.audioSources setObject:[NSNumber numberWithUnsignedInt:outputSource] forKey:sound.soundName];
+    
+	NSString *filePath = [self getFullPathForSoundRow:[self.soundObjectsInView objectAtIndex:0]];
+    NSLog(@">>> Adding sound for path %@", filePath);
+    AudioFileID afid = [self getAFIDForFilePath:filePath];
+    UInt32 bytesRead = [self getBytesReadForAFID:afid];
+    void* audioData = [self allocMemoryForBytes:bytesRead forAFID:afid];
+    [self copyAudioData:audioData forLength:bytesRead toBuffer:outputBuffer];
+    
+    
+    NSLog(@">>> Attaching buffer %i to source %i", outputBuffer, outputSource);
+    [self attachBuffer:outputBuffer toSource:outputSource];
+    
+    NSLog(@"Playing audio for source: %i", outputSource);
+    [self playAudioForSource:outputSource];
+    counter++;
+}
+
+
 
 - (CGRect)getCGRectForNextSoundRowView {
     return CGRectMake(0, (self.soundRowViews.count + 1) * SOUND_ROW_CONTAINER_HEIGHT, ROW_LENGTH, ROW_HEIGHT);
@@ -241,17 +440,25 @@ int SPACE       = 2;
         
         [self.soundRowViews addObject:soundRowView];
         [self.view addSubview:soundRowView];
-    
+        [self.soundObjectsInView addObject:soundObject];
+        
         NSLog(@"soundRowView array updated, new size: %d", self.soundRowViews.count);
         [self linkSound:soundObject withView:soundRowView];
         
         // Also create the AudioPlayer object for this sound.
         AVAudioPlayer *player = [self createAudioPlayerWithSound:soundObject];
         [self.audioPlayers setObject:player forKey:soundObject.soundName];
-        [player prepareToPlay];
-//        [self.audioPlayers addObject:player];
         
-        [self.soundObjectsInView addObject:soundObject];
+        // TODO: move this to LinkSound fn
+        // OpenAL
+//        ALuint audioBuffer = [self createOutputBuffer];
+//        ALuint audioSource = [self createOutputSource];
+//        [self.audioBuffers setObject:[NSNumber numberWithUnsignedInt:audioBuffer] forKey:soundObject.soundName];
+//        [self.audioSources setObject:[NSNumber numberWithUnsignedInt:audioBuffer] forKey:soundObject.soundName];
+        
+        
+//        [player prepareToPlay];
+        
     }
 }
 
@@ -301,25 +508,7 @@ int SPACE       = 2;
     }
 }
 
-/**
- * viewDidUnload:
- *  Stop recording if we are.
- *  Set the audioRecorder to nil
- */
-- (void) viewDidUnload {
-    [super viewDidUnload];
-    // Stop recording if we are
-    if ([self.audioRecorder isRecording]) {
-        [self.audioRecorder stop];
-    }
-    self.audioRecorder = nil;
-}
 
-/**
- * awakeFromNib:
- */
-- (void)awakeFromNib {
-}
 
 
 /*** CODE FOR THE FILE PICKER ***/
@@ -434,6 +623,9 @@ int SPACE       = 2;
         // Delete the sound name k,v pair from the dictionary.
         [self.soundNameToRowDic removeObjectForKey:selectedSoundName];
         [self.audioPlayers removeObjectForKey:selectedSoundName];
+        //OpenAL
+        [self.audioBuffers removeObjectForKey:selectedSoundName];
+        [self.audioSources removeObjectForKey:selectedSoundName];
         
         // Delete any soundRow associated with this name.
         if (self.soundRowViews.count == 0) {
@@ -540,6 +732,9 @@ int SPACE       = 2;
     }
 //    NSLog(@"Sound array: %@", sound.sixteenthNoteArray);
     // TODO: Set sound.isSelected to match soundView.isSelected (isActivated)
+    
+    // OpenAL
+    [self newSoundSetUp:sound];
 }
 
 
@@ -601,10 +796,12 @@ int SPACE       = 2;
 //            noteNum = self.globalCount % sound.notesPerMeasure;
             if ([[sound.sixteenthNoteArray objectAtIndex:noteNum] boolValue] == YES) {
                 NSLog(@"Playing sound: %@.", sound.soundName);
-//                player = [self.audioPlayers objectForKey:sound.soundName];
-//                [player stop];
-//                player.currentTime = 0.0;
-                [self playPlaybackForPlayer:player]; //plays from 0.
+                // OpenAL
+                ALuint outSource = [[self.audioSources objectForKey:sound.soundName] unsignedIntValue];
+                NSLog(@">>> About to play for source %i", outSource);
+                alSourcePlay(outSource);
+                // TODO FORNOW
+//                [self playPlaybackForPlayer:player]; //plays from 0.
             }
         }
     }
@@ -909,10 +1106,10 @@ int SPACE       = 2;
 
     // update the sound object's note array
     BeatBoxSoundRow* soundObject = [self.soundNameToRowDic valueForKey:soundName];
-    NSLog(@"OLD sound array: %@", soundObject.sixteenthNoteArray);
+//    NSLog(@"OLD sound array: %@", soundObject.sixteenthNoteArray);
     [BeatBoxViewController toggleNoteArray:soundObject.sixteenthNoteArray
                                    atIndex:[sender.titleLabel.text intValue]];
-    NSLog(@"NEW sound array: %@", soundObject.sixteenthNoteArray);
+//    NSLog(@"NEW sound array: %@", soundObject.sixteenthNoteArray);
 }
 
 /*

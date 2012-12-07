@@ -31,6 +31,8 @@
 		65592AFC1648C4CD001FA5E6 /* BeatBoxTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 65592AFB1648C4CD001FA5E6 /* BeatBoxTests.m */; };
 		65592B061648C5B1001FA5E6 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65592B051648C5B1001FA5E6 /* AudioToolbox.framework */; };
 		65A7908316717F2C003429D5 /* Background_04.png in Resources */ = {isa = PBXBuildFile; fileRef = 65A7908216717F2C003429D5 /* Background_04.png */; };
+		65A7908616718712003429D5 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65A7908516718712003429D5 /* OpenAL.framework */; };
+		65A7908816718BB0003429D5 /* ElecClick.caf in Resources */ = {isa = PBXBuildFile; fileRef = 65A7908716718BB0003429D5 /* ElecClick.caf */; };
 		65CADD06164B5CEF00A720A2 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65CADD05164B5CEF00A720A2 /* AVFoundation.framework */; };
 		65CADD0E164B701600A720A2 /* BeatBoxModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CADD0D164B701600A720A2 /* BeatBoxModel.m */; };
 		65CADD11164B7B7F00A720A2 /* BeatBoxSoundRow.m in Sources */ = {isa = PBXBuildFile; fileRef = 65CADD10164B7B7F00A720A2 /* BeatBoxSoundRow.m */; };
@@ -79,6 +81,8 @@
 		65592AFB1648C4CD001FA5E6 /* BeatBoxTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BeatBoxTests.m; sourceTree = "<group>"; };
 		65592B051648C5B1001FA5E6 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		65A7908216717F2C003429D5 /* Background_04.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Background_04.png; sourceTree = "<group>"; };
+		65A7908516718712003429D5 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
+		65A7908716718BB0003429D5 /* ElecClick.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = ElecClick.caf; sourceTree = "<group>"; };
 		65CADD05164B5CEF00A720A2 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		65CADD0C164B701600A720A2 /* BeatBoxModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BeatBoxModel.h; sourceTree = "<group>"; };
 		65CADD0D164B701600A720A2 /* BeatBoxModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BeatBoxModel.m; sourceTree = "<group>"; };
@@ -93,6 +97,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65A7908616718712003429D5 /* OpenAL.framework in Frameworks */,
 				65CADD06164B5CEF00A720A2 /* AVFoundation.framework in Frameworks */,
 				65592B061648C5B1001FA5E6 /* AudioToolbox.framework in Frameworks */,
 				65592ACB1648C4CC001FA5E6 /* UIKit.framework in Frameworks */,
@@ -117,6 +122,7 @@
 		65592ABB1648C4CC001FA5E6 = {
 			isa = PBXGroup;
 			children = (
+				65A7908516718712003429D5 /* OpenAL.framework */,
 				65CADD05164B5CEF00A720A2 /* AVFoundation.framework */,
 				65592B051648C5B1001FA5E6 /* AudioToolbox.framework */,
 				65592AD01648C4CC001FA5E6 /* BeatBox */,
@@ -149,6 +155,7 @@
 		65592AD01648C4CC001FA5E6 /* BeatBox */ = {
 			isa = PBXGroup;
 			children = (
+				65A7908716718BB0003429D5 /* ElecClick.caf */,
 				65A7908216717F2C003429D5 /* Background_04.png */,
 				293FC37F165DAECF00DC5A84 /* led-circle-red-md.png */,
 				293FC380165DAECF00DC5A84 /* led-circle-grey-md.png */,
@@ -289,6 +296,7 @@
 				293FC383165DAECF00DC5A84 /* led-circle-grey-md.png in Resources */,
 				293FC384165DAECF00DC5A84 /* led-circle-green-md.png in Resources */,
 				65A7908316717F2C003429D5 /* Background_04.png in Resources */,
+				65A7908816718BB0003429D5 /* ElecClick.caf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
